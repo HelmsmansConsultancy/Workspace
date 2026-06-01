@@ -1,0 +1,57 @@
+# Project
+.spyproject/
+.venv/
+
+
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Windows
+*.pyd
+__pycache__/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Type checking
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Spyder (keep .spyproject/ but ignore runtime files)
+.spyproject/config/transient.ini
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (add exceptions as needed)
+*.csv
+!tests/fixtures/*.csv
