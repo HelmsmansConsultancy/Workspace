@@ -15,7 +15,7 @@ from __future__ import annotations
 import click
 from rich.console import Console
 
-from ohlc_tools.utils.csv_reader import load_ohlc
+from ohlc_tools.utils.csv_reader import load_data
 
 
 console = Console()
@@ -45,7 +45,7 @@ def cli(filepath: str, delimiter: str, output: str, no_index: bool) -> None:
     sep = DELIMITER_ALIASES.get(delimiter.lower(), delimiter)
 
     try:
-        df = load_ohlc(filepath)
+        df = load_data(filepath)
         df.to_csv(output, sep=sep, index=not no_index)
         console.print(f"[green]✓[/] Converted [bold]{filepath}[/] → [bold]{output}[/]"
                       f"  (delimiter={repr(sep)}, rows={len(df):,})")

@@ -16,7 +16,7 @@ import click
 import pandas as pd
 from rich.console import Console
 
-from ohlc_tools.utils.csv_reader import load_ohlc
+from ohlc_tools.utils.csv_reader import load_data
 from ohlc_tools.utils.timeframe import PANDAS_FREQ_ALIASES
 
 
@@ -67,7 +67,7 @@ def cli(filepath: str, timeframe: str, output: str, delimiter: str) -> None:
     rule = PANDAS_FREQ_ALIASES[timeframe.upper()]
 
     try:
-        df      = load_ohlc(filepath)
+        df      = load_data(filepath)
         result  = _resample_ohlc(df, rule)
         result.to_csv(output, sep=delimiter)
 

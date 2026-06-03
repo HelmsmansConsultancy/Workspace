@@ -42,6 +42,7 @@ dev = [
 # ---------------------------------------------------------------------------
 [project.scripts]
 ohlc          = "ohlc_tools.cli:main"
+ohlc-tobar = "ohlc_tools.commands.tobar:cli"
 ohlc-describe = "ohlc_tools.commands.describe:cli"
 ohlc-convert  = "ohlc_tools.commands.convert:cli"
 ohlc-resample = "ohlc_tools.commands.resample:cli"

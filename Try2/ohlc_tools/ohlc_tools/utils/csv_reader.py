@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 import csv
 from pathlib import Path
+from rich.console import Console
 
 import pandas as pd
 
@@ -23,6 +24,8 @@ _TS_COLUMN_NAMES = {
 }
 
 _COMMON_FORMATS = [
+    "%Y%m%d %H:%M:%S.%f",
+"""
     "%Y-%m-%d %H:%M:%S",
     "%Y-%m-%dT%H:%M:%S",
     "%Y-%m-%dT%H:%M:%SZ",
@@ -35,8 +38,10 @@ _COMMON_FORMATS = [
     "%m/%d/%Y",
     "%d.%m.%Y %H:%M:%S",
     "%d.%m.%Y",
+"""
 ]
 
+console = Console()
 
 def _sniff_delimiter(filepath: str) -> str:
     """Return the most likely delimiter by inspecting the first 8 KB."""
@@ -44,6 +49,7 @@ def _sniff_delimiter(filepath: str) -> str:
         sample = fh.read(8192)
     try:
         dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+        console.print(f"Found delimiter {dialect.delimiter}")
         return dialect.delimiter
     except csv.Error:
         return ","
@@ -53,6 +59,7 @@ def _find_ts_column(columns: list[str]) -> str | None:
     """Return the name of the timestamp column, or None."""
     for col in columns:
         if col.strip().lower() in _TS_COLUMN_NAMES:
+            console.print(f"Found Timestamp column {col}")
             return col
     return columns[0] if columns else None
 
@@ -85,8 +92,8 @@ def _parse_timestamps(series: pd.Series) -> pd.DatetimeIndex:
     )
 
 
-def load_ohlc(filepath: str | Path) -> pd.DataFrame:
-    """Load an OHLC CSV file and return a DataFrame with a DatetimeIndex.
+def load_data(filepath: str | Path) -> pd.DataFrame:
+    """Load a CSV file and return a DataFrame with a DatetimeIndex.
 
     Parameters
     ----------
@@ -96,7 +103,7 @@ def load_ohlc(filepath: str | Path) -> pd.DataFrame:
     Returns
     -------
     pd.DataFrame
-        DataFrame indexed by datetime, with at minimum Open/High/Low/Close
+        DataFrame indexed by datetime, with at minimum Bid / Ask
         columns.  Column names are preserved as-is from the source file.
 
     Raises
@@ -111,16 +118,18 @@ def load_ohlc(filepath: str | Path) -> pd.DataFrame:
 
     df = pd.read_csv(filepath, sep=sep, encoding="utf-8-sig", low_memory=False)
     df.columns = df.columns.str.strip()
+    console.print(f"Found columns: {', '.join(df.columns)}")
 
     if df.empty:
         raise ValueError("The CSV file is empty.")
 
+    # ── Parse timestamps ──────────────────────────────────────────────────
     ts_col = _find_ts_column(list(df.columns))
     if ts_col is None:
         raise ValueError("No suitable timestamp column found.")
 
     df.index = _parse_timestamps(df[ts_col].astype(str))
-    df.index.name = "datetime"
+    df.index.name = "DateTime"
     df.drop(columns=[ts_col], inplace=True)
 
     return df

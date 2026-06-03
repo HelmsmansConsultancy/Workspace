@@ -1,0 +1,7 @@
+
+cd ohlc_tools
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned   # one-time
+.\scripts\bootstrap.ps1
+.\.venv\Scripts\Activate.ps1
+ohlc --help
+

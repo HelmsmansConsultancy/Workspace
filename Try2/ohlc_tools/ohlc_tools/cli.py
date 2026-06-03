@@ -9,6 +9,7 @@ import click
 
 from ohlc_tools import __version__
 from ohlc_tools.commands.describe import cli as describe_cmd
+from ohlc_tools.commands.tobar import cli as tobar_cmd
 from ohlc_tools.commands.convert import cli as convert_cmd
 from ohlc_tools.commands.resample import cli as resample_cmd
 
@@ -20,6 +21,7 @@ def main() -> None:
 
 
 main.add_command(describe_cmd, name="describe")
+main.add_command(tobar_cmd, name="tobar")
 main.add_command(convert_cmd,  name="convert")
 main.add_command(resample_cmd, name="resample")
 

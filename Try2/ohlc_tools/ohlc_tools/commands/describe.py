@@ -18,10 +18,9 @@ from rich.console import Console
 from rich.table import Table
 from rich import box
 
-from ohlc_tools.utils.csv_reader import load_ohlc
+from ohlc_tools.utils.csv_reader import load_data
 from ohlc_tools.utils.timeframe import detect_timeframe
 from ohlc_tools.utils.display import human_size, format_datetime
-
 
 console = Console()
 
@@ -29,7 +28,7 @@ console = Console()
 def _build_summary(filepath: str) -> dict:
     """Load an OHLC file and return a summary dict."""
     file_size = os.path.getsize(filepath)
-    df = load_ohlc(filepath)
+    df = load_data(filepath)
 
     timestamps = df.index.sort_values()
     tz = str(timestamps.tzinfo) if timestamps.tzinfo is not None else "Unknown"
