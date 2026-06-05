@@ -44,25 +44,28 @@ def cli(filepath: str, delimiter: str, output: str, no_index: bool) -> None:
         df = load_data(filepath)
         
         # ── Validate required columns ─────────────────────────────────────────
-        required = {"Bid", "Ask", "Volume"}
+        required = {"bid", "ask", "volume"}
         missing = required - set(df.columns)
-        if df.index.name != "DateTime":
-            missing.add("DateTime")
+        print(f"Found index column: {df.index.name}")
+        if df.index.name != "datetime":
+            missing.add("datetime")
         if missing:
-            raise ValueError(f"Missing OHLC columns: {', '.join(sorted(missing))} only found {', '.join(sorted(df.columns))}")
+            missingColumns = ', '.join(sorted(missing))
+            presentColums = ', '.join(sorted(df.columns))
+            raise ValueError(f"Missing OHLC columns: {missingColumns} only found {presentColums}")
 
         
         # ── Parse numeric columns ─────────────────────────────────────────────
-        for col in ("Bid", "Ask", "Volume"):
+        for col in ("bid", "ask", "volume"):
             df[col] = pd.to_numeric(df[col], errors="coerce")
         
-        n_bad = df[["Bid", "Ask"]].isna().any(axis=1).sum()
+        n_bad = df[["bid", "ask"]].isna().any(axis=1).sum()
         if n_bad:
             print(f"      WARNING: Dropping {n_bad:,} rows with invalid Bid/Ask values.")
-            df = df.dropna(subset=["Bid", "Ask"])
+            df = df.dropna(subset=["bid", "ask"])
 
         # ── Mid price ─────────────────────────────────────────────────────────
-        df["Mid"] = (df["Bid"] + df["Ask"]) / 2
+        df["mid"] = (df["bid"] + df["ask"]) / 2
         
         bars = resample_to_1m(df)
         
@@ -74,15 +77,15 @@ def cli(filepath: str, delimiter: str, output: str, no_index: bool) -> None:
 
 def resample_to_1m(ticks: pd.DataFrame) -> pd.DataFrame:
     print("Resampling to 1-minute bars ...")
-    ticks = ticks.set_index("DateTime")
+    ## ticks = ticks.set_index("DateTime")
 
     bars = pd.DataFrame()
-    bars["open"]       = ticks["Mid"].resample("1min").first()
-    bars["high"]       = ticks["Mid"].resample("1min").max()
-    bars["low"]        = ticks["Mid"].resample("1min").min()
-    bars["close"]      = ticks["Mid"].resample("1min").last()
-    bars["volume"]     = ticks["Volume"].resample("1min").sum()
-    bars["tick_count"] = ticks["Mid"].resample("1min").count()
+    bars["open"]       = ticks["mid"].resample("1min").first()
+    bars["high"]       = ticks["mid"].resample("1min").max()
+    bars["low"]        = ticks["mid"].resample("1min").min()
+    bars["close"]      = ticks["mid"].resample("1min").last()
+    bars["volume"]     = ticks["volume"].resample("1min").sum()
+    bars["tick_count"] = ticks["mid"].resample("1min").count()
 
     # Drop empty bars
     bars = bars[bars["tick_count"] > 0].reset_index()

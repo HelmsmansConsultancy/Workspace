@@ -25,20 +25,6 @@ _TS_COLUMN_NAMES = {
 
 _COMMON_FORMATS = [
     "%Y%m%d %H:%M:%S.%f",
-"""
-    "%Y-%m-%d %H:%M:%S",
-    "%Y-%m-%dT%H:%M:%S",
-    "%Y-%m-%dT%H:%M:%SZ",
-    "%Y-%m-%dT%H:%M:%S%z",
-    "%Y-%m-%d %H:%M:%S%z",
-    "%Y-%m-%d",
-    "%d/%m/%Y %H:%M:%S",
-    "%d/%m/%Y",
-    "%m/%d/%Y %H:%M:%S",
-    "%m/%d/%Y",
-    "%d.%m.%Y %H:%M:%S",
-    "%d.%m.%Y",
-"""
 ]
 
 console = Console()
@@ -59,7 +45,7 @@ def _find_ts_column(columns: list[str]) -> str | None:
     """Return the name of the timestamp column, or None."""
     for col in columns:
         if col.strip().lower() in _TS_COLUMN_NAMES:
-            console.print(f"Found Timestamp column {col}")
+            console.print(f"Found timestamp column {col}")
             return col
     return columns[0] if columns else None
 
@@ -118,6 +104,7 @@ def load_data(filepath: str | Path) -> pd.DataFrame:
 
     df = pd.read_csv(filepath, sep=sep, encoding="utf-8-sig", low_memory=False)
     df.columns = df.columns.str.strip()
+    df.columns = df.columns.str.lower()
     console.print(f"Found columns: {', '.join(df.columns)}")
 
     if df.empty:
@@ -129,7 +116,7 @@ def load_data(filepath: str | Path) -> pd.DataFrame:
         raise ValueError("No suitable timestamp column found.")
 
     df.index = _parse_timestamps(df[ts_col].astype(str))
-    df.index.name = "DateTime"
+    df.index.name = "datetime"
     df.drop(columns=[ts_col], inplace=True)
 
     return df
