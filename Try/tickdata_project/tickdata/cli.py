@@ -1,11 +1,32 @@
 import click
+from rich.console import Console
 from tickdata.commands.describe import describe
 from tickdata.commands.append import append
 
-@click.group()
-def tickdata():
+SUBCOMMANDS = ['describe', 'append']
+
+console = Console()
+
+def run_subcommand(name):
+    click.echo(f"Running: {name}")
+
+def interactive_menu():
+    click.echo("What do you want to do?")
+    for i, name in enumerate(SUBCOMMANDS, 1):
+        click.echo(f"  {i}. {name}")
+    idx = click.prompt(
+        "Enter number",
+        type=click.IntRange(1, len(SUBCOMMANDS))
+    )
+    return SUBCOMMANDS[idx - 1]
+
+@click.group(invoke_without_command=True)
+@click.pass_context
+def tickdata(ctx):
     """Tick data management tool."""
-    pass
+    if ctx.invoked_subcommand is None:
+        choice = interactive_menu()
+        ctx.invoke(ctx.command.commands[choice])
 
 tickdata.add_command(describe)
 tickdata.add_command(append)
