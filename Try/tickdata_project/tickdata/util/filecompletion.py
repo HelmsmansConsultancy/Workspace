@@ -1,6 +1,6 @@
 import os
+from prompt_toolkit import prompt
 from tickdata.data.filecompleter import FileCompleter
-
 from tickdata.data.filecompleter import FileCompleter
 
 
