@@ -58,7 +58,7 @@ def load_tickdata(filename: str | Path) -> CsvFile:
     ValueError
         If no valid timestamp column or OHLC columns can be found.
     """
-    csv = CsvFile("", 0, "", "", [])
+    csv = CsvFile("", 0, "", "", [], None)
     csv.filename = str(filename)
     csv.filesize = os.path.getsize(filename)
     csv.delimiter = _sniff_delimiter(filename)
@@ -67,6 +67,8 @@ def load_tickdata(filename: str | Path) -> CsvFile:
     console.print(f"Found columns: {', '.join(csv.df.columns)}")
 
     csv.timestamp = _find_ts_column(csv.columns)
+
+    return csv
 
 
 

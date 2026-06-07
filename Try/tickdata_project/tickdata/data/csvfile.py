@@ -1,5 +1,6 @@
 
 from dataclasses import dataclass
+import pandas as pd
 
 @dataclass
 class CsvFile:
@@ -8,3 +9,4 @@ class CsvFile:
     delimiter: str
     timestamp: str
     columns: list[str]
+    df: pd.DataFrame

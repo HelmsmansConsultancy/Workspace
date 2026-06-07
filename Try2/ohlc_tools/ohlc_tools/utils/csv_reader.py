@@ -40,7 +40,6 @@ def _sniff_delimiter(filepath: str) -> str:
     except csv.Error:
         return ","
 
-
 def _find_ts_column(columns: list[str]) -> str | None:
     """Return the name of the timestamp column, or None."""
     for col in columns:
