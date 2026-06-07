@@ -3,5 +3,7 @@
 /Visual Studio
 __pycache__
 tickdata.egg-info
+.spyproject
+.vs
 
 

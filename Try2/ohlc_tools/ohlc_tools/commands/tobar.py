@@ -63,9 +63,6 @@ def cli(filepath: str, delimiter: str, output: str, no_index: bool) -> None:
         if n_bad:
             print(f"      WARNING: Dropping {n_bad:,} rows with invalid Bid/Ask values.")
             df = df.dropna(subset=["bid", "ask"])
-
-        # ── Mid price ─────────────────────────────────────────────────────────
-        df["mid"] = (df["bid"] + df["ask"]) / 2
         
         bars = resample_to_1m(df)
         
@@ -80,12 +77,17 @@ def resample_to_1m(ticks: pd.DataFrame) -> pd.DataFrame:
     ## ticks = ticks.set_index("DateTime")
 
     bars = pd.DataFrame()
-    bars["open"]       = ticks["mid"].resample("1min").first()
-    bars["high"]       = ticks["mid"].resample("1min").max()
-    bars["low"]        = ticks["mid"].resample("1min").min()
-    bars["close"]      = ticks["mid"].resample("1min").last()
-    bars["volume"]     = ticks["volume"].resample("1min").sum()
-    bars["tick_count"] = ticks["mid"].resample("1min").count()
+    bars["ask_open"]       = ticks["ask"].resample("1min").first()
+    bars["ask_high"]       = ticks["ask"].resample("1min").max()
+    bars["ask_low"]        = ticks["ask"].resample("1min").min()
+    bars["ask_close"]      = ticks["ask"].resample("1min").last()
+    bars["bid_open"]       = ticks["bid"].resample("1min").first()
+    bars["bid_high"]       = ticks["bid"].resample("1min").max()
+    bars["bid_low"]        = ticks["bid"].resample("1min").min()
+    bars["bid_close"]      = ticks["bid"].resample("1min").last()
+    bars["volume"]         = ticks["volume"].resample("1min").sum()
+    bars["tick_count"]     = ticks["timestamp"].resample("1min").count()
+    bars["timestamp"]      = ticks["timestamp"].resample("1min").first()
 
     # Drop empty bars
     bars = bars[bars["tick_count"] > 0].reset_index()

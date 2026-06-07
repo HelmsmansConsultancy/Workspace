@@ -117,6 +117,6 @@ def load_data(filepath: str | Path) -> pd.DataFrame:
 
     df.index = _parse_timestamps(df[ts_col].astype(str))
     df.index.name = "datetime"
-    df.drop(columns=[ts_col], inplace=True)
+    ## df.drop(columns=[ts_col], inplace=True)
 
     return df
