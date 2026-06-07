@@ -2,13 +2,11 @@ import click
 from rich.console import Console
 from tickdata.commands.describe import describe
 from tickdata.commands.append import append
+from tickdata.commands.compare import compare
 
-SUBCOMMANDS = ['describe', 'append']
+SUBCOMMANDS = ['describe', 'append', 'compare']
 
 console = Console()
-
-def run_subcommand(name):
-    click.echo(f"Running: {name}")
 
 def interactive_menu():
     click.echo("What do you want to do?")
@@ -30,3 +28,4 @@ def tickdata(ctx):
 
 tickdata.add_command(describe)
 tickdata.add_command(append)
+tickdata.add_command(compare)
