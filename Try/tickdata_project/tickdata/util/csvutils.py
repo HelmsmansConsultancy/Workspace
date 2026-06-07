@@ -1,11 +1,22 @@
 import csv
+import os
 from pathlib import Path
 from rich.console import Console
-from tickdata.data import CsvFile
+from tickdata.data.csvfile import CsvFile
 
 import pandas as pd
 
 console = Console()
+# Columns we accept as the timestamp / date column
+_TS_COLUMN_NAMES = {
+    "date", "time", "datetime", "timestamp",
+    "open_time", "opentime", "close_time", "closetime",
+    "date_time", "bar_time",
+}
+
+_COMMON_FORMATS = [
+    "%Y%m%d %H:%M:%S.%f",
+]
 
 def _sniff_delimiter(filepath: str) -> str:
     """Return the most likely delimiter by inspecting the first 8 KB."""
@@ -26,12 +37,12 @@ def _find_ts_column(columns: list[str]) -> str | None:
             return col
     return columns[0] if columns else None
 
-def load_tickdata(filepath: str | Path) -> CsvFile:
+def load_tickdata(filename: str | Path) -> CsvFile:
     """Load a CSV file and return a DataFrame with a DatetimeIndex.
 
     Parameters
     ----------
-    filepath : str | Path
+    filename : str | Path
         Path to the CSV file.
 
     Returns
@@ -43,15 +54,15 @@ def load_tickdata(filepath: str | Path) -> CsvFile:
     Raises
     ------
     FileNotFoundError
-        If *filepath* does not exist.
+        If *filename* does not exist.
     ValueError
         If no valid timestamp column or OHLC columns can be found.
     """
-    csv = CsvFile()
-    csv.filepath = str(filepath)
-    csv.filesize = os.path.getsize(filepath)
-    csv.delimiter = _sniff_delimiter(filepath)
-    csv.df = pd.read_csv(csv.filepath, sep=csv.delimiter, encoding="utf-8-sig", low_memory=False)
+    csv = CsvFile("", 0, "", "", [])
+    csv.filename = str(filename)
+    csv.filesize = os.path.getsize(filename)
+    csv.delimiter = _sniff_delimiter(filename)
+    csv.df = pd.read_csv(csv.filename, sep=csv.delimiter, encoding="utf-8-sig", low_memory=False)
     csv.columns = list(csv.df.columns.str.strip())
     console.print(f"Found columns: {', '.join(csv.df.columns)}")
 

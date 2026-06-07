@@ -7,8 +7,14 @@ name = "tickdata"
 version = "0.1.0"
 description = "Tick data management CLI"
 requires-python = ">=3.9"
+
 dependencies = [
-    "click>=8.0",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "rich>=13.0",       # pretty terminal output
+    "click>=8.0",       # CLI framework
+    "rich>=13.0",
+    "pytz>=2024.1",     # timezone handling
 ]
 
 [project.scripts]
