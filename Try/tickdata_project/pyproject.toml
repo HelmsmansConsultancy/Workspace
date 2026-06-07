@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tickdata"
+version = "0.1.0"
+description = "Tick data management CLI"
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.0",
+]
+
+[project.scripts]
+tickdata = "tickdata.cli:tickdata"
