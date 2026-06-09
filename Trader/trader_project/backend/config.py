@@ -6,8 +6,8 @@ from pathlib import Path
 
 # ── Window ───────────────────────────────────────────────────────────────────
 APP_TITLE     = "Random Joke"
-WINDOW_WIDTH  = 640
-WINDOW_HEIGHT = 480
+WINDOW_WIDTH  = 800
+WINDOW_HEIGHT = 800
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 BASE_DIR     = Path(__file__).resolve().parent.parent
@@ -23,3 +23,7 @@ JS_UI_PATH  = STATIC_DIR   / "js"   / "ui.js"
 # ── Joke API ──────────────────────────────────────────────────────────────────
 JOKE_API_URL    = "https://official-joke-api.appspot.com/random_joke"
 REQUEST_TIMEOUT = 10  # seconds
+
+# ── XML parsing ───────────────────────────────────────────────────────────────
+MAX_FILE_SIZE_MB = 10
+MAX_DEPTH        = 8   # how deep to recurse into nested elements

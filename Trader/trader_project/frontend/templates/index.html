@@ -9,22 +9,50 @@
 </head>
 <body>
 
-  <main class="container">
-    <header class="app-header">
-      <span class="app-icon">🎭</span>
-      <h1 class="app-title">Joke Machine</h1>
-    </header>
+    <main class="container">
+        <header class="app-header">
+            <span class="app-icon">🎭</span>
+            <h1 class="app-title">Joke Machine</h1>
+        </header>
 
-    <button id="btn" class="btn-primary" onclick="ui.fetchJoke()">
-      Tell me a joke
-    </button>
+        <button id="btn" class="btn-primary" onclick="ui.fetchJoke()">
+            Tell me a joke
+        </button>
 
-    <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
-      <p id="setup"     class="joke-setup"></p>
-      <p id="punchline" class="joke-punchline"></p>
-      <p id="error"     class="joke-error" role="alert"></p>
-    </section>
-  </main>
+        <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
+            <p id="setup" class="joke-setup"></p>
+            <p id="punchline" class="joke-punchline"></p>
+            <p id="error" class="joke-error" role="alert"></p>
+        </section>
+
+
+        <!-- Upload zone -->
+        <label class="upload-zone" id="upload-zone">
+            <input type="file" id="file-input" accept=".xml,text/xml,application/xml" />
+            <span class="upload-icon">📂</span>
+            <span class="upload-label" id="upload-label">Click to choose an XML file</span>
+            <span class="upload-hint">.xml files only · max 10 MB</span>
+        </label>
+
+        <!-- Status / error bar -->
+        <p class="status-bar" id="status-bar" role="status" aria-live="polite"></p>
+
+        <!-- Results table — hidden until data arrives -->
+        <section class="results" id="results" hidden>
+            <div class="results-header">
+                <span id="results-count" class="results-count"></span>
+                <button class="btn-clear" id="btn-clear" onclick="ui.clear()">✕ Clear</button>
+            </div>
+            <div class="table-wrap">
+                <table class="kv-table">
+                    <thead>
+                        <tr><th>Key</th><th>Value</th></tr>
+                    </thead>
+                    <tbody id="kv-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
   <!-- main.py replaces these tokens with the contents of api.js and ui.js -->
   __INLINE_JS_API__
