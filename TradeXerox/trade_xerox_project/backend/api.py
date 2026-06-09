@@ -6,8 +6,9 @@ Every public method on JokeApi is callable from the frontend via
 Methods must return JSON-serialisable values (dict, list, str, int, None).
 """
 
-from .joke_service import fetch_joke, JokeServiceError
+from .joke_api import JokeApi
 
+jokeApi = JokeApi()  # noqa: N816
 
 class Api:
     """Exposes backend functionality to the web front-end."""
@@ -22,10 +23,4 @@ class Api:
         Returns on failure:
             {"ok": false, "error": "<human-readable message>"}
         """
-        try:
-            joke = fetch_joke()
-            return {"ok": True, "setup": joke["setup"], "punchline": joke["punchline"]}
-        except JokeServiceError as exc:
-            return {"ok": False, "error": str(exc)}
-        except Exception as exc:  # noqa: BLE001
-            return {"ok": False, "error": f"Unexpected error: {exc}"}
+        return jokeApi.get_joke()
