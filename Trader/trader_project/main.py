@@ -1,34 +1,43 @@
 """
 joke_app — entry point
 Run:  python main.py
+
+Asset loading strategy
+──────────────────────
+pywebview's html= mode has no base URL, so browsers block external
+file:// loads for <link> and <script src>.  We therefore read each
+asset from disk at startup and inline it directly into the HTML string.
+The file structure (separate CSS / JS files) is preserved for development;
+main.py is the only place that knows about the assembly.
 """
 
 import webview
 from backend.api import JokeApi
 from backend.config import (
     APP_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT,
-    HTML_PATH, CSS_URI, JS_API_URI, JS_UI_URI,
+    HTML_PATH, CSS_PATH, JS_API_PATH, JS_UI_PATH,
 )
 
 
-def load_html() -> str:
-    """
-    Read index.html and replace placeholder tokens with absolute file:// URIs
-    so pywebview can resolve CSS and JS regardless of working directory.
-    """
-    html = HTML_PATH.read_text(encoding="utf-8")
-    html = html.replace("__CSS_URI__",    CSS_URI)
-    html = html.replace("__JS_API_URI__", JS_API_URI)
-    html = html.replace("__JS_UI_URI__",  JS_UI_URI)
+def build_html() -> str:
+    """Inline CSS and JS into the HTML template and return the full string."""
+    css    = CSS_PATH.read_text(encoding="utf-8")
+    js_api = JS_API_PATH.read_text(encoding="utf-8")
+    js_ui  = JS_UI_PATH.read_text(encoding="utf-8")
+    html   = HTML_PATH.read_text(encoding="utf-8")
+
+    html = html.replace("__INLINE_CSS__",    f"<style>\n{css}\n</style>")
+    html = html.replace("__INLINE_JS_API__", f"<script>\n{js_api}\n</script>")
+    html = html.replace("__INLINE_JS_UI__",  f"<script>\n{js_ui}\n</script>")
     return html
 
 
 def main() -> None:
     api = JokeApi()
 
-    window = webview.create_window(
+    webview.create_window(
         title=APP_TITLE,
-        html=load_html(),        # pass resolved HTML string, not a file URL
+        html=build_html(),
         js_api=api,
         width=WINDOW_WIDTH,
         height=WINDOW_HEIGHT,
