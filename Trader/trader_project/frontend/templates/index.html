@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Joke</title>
+  <link rel="stylesheet" href="../static/css/main.css" />
+</head>
+<body>
+
+  <main class="container">
+    <header class="app-header">
+      <span class="app-icon">🎭</span>
+      <h1 class="app-title">Joke Machine</h1>
+    </header>
+
+    <button id="btn" class="btn-primary" onclick="ui.fetchJoke()">
+      Tell me a joke
+    </button>
+
+    <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
+      <p id="setup"    class="joke-setup"></p>
+      <p id="punchline" class="joke-punchline"></p>
+      <p id="error"    class="joke-error"   role="alert"></p>
+    </section>
+  </main>
+
+  <script src="../static/js/api.js"></script>
+  <script src="../static/js/ui.js"></script>
+
+</body>
+</html>

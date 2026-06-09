@@ -1,0 +1,146 @@
+/* ── Reset & base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --clr-bg:          #f7f5f2;
+  --clr-surface:     #ffffff;
+  --clr-accent:      #1a1a2e;
+  --clr-accent-hover:#16213e;
+  --clr-punch:       #c0392b;
+  --clr-muted:       #7f8c8d;
+  --clr-error:       #e74c3c;
+  --clr-btn-text:    #ffffff;
+
+  --radius:   10px;
+  --shadow:   0 4px 24px rgba(0,0,0,0.08);
+  --transition: 0.2s ease;
+
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body:    'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  background: var(--clr-bg);
+  font-family: var(--font-body);
+  color: var(--clr-accent);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 20px 40px;
+}
+
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+.container {
+  width: min(560px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.app-icon  { font-size: 2.6rem; line-height: 1; }
+
+.app-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: normal;
+  letter-spacing: 0.02em;
+  color: var(--clr-accent);
+}
+
+/* ── Button ───────────────────────────────────────────────────────────────── */
+.btn-primary {
+  padding: 13px 40px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--clr-btn-text);
+  background: var(--clr-accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background var(--transition), transform var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover:not(:disabled)  { background: var(--clr-accent-hover); }
+.btn-primary:active:not(:disabled) { transform: scale(0.97); }
+.btn-primary:disabled              { opacity: 0.55; cursor: not-allowed; }
+
+/* ── Joke box ─────────────────────────────────────────────────────────────── */
+.joke-box {
+  width: 100%;
+  background: var(--clr-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 40px;
+  text-align: center;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.joke-setup {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--clr-accent);
+}
+
+.joke-punchline {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--clr-punch);
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.45s ease 0.5s, transform 0.45s ease 0.5s;
+}
+
+.joke-punchline.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.joke-error {
+  font-size: 0.88rem;
+  color: var(--clr-error);
+}
+
+/* ── Spinner ──────────────────────────────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Reduced-motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .joke-punchline            { transition: none; }
+  .btn-primary               { transition: none; }
+  .spinner                   { animation: none; }
+}
