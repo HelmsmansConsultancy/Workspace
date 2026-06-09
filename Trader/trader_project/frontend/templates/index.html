@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Random Joke</title>
-  <link rel="stylesheet" href="../static/css/main.css" />
+  <!-- __CSS_URI__ is replaced at startup by main.py with an absolute file:// path -->
+  <link rel="stylesheet" href="__CSS_URI__" />
 </head>
 <body>
 
@@ -19,14 +20,15 @@
     </button>
 
     <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
-      <p id="setup"    class="joke-setup"></p>
+      <p id="setup"     class="joke-setup"></p>
       <p id="punchline" class="joke-punchline"></p>
-      <p id="error"    class="joke-error"   role="alert"></p>
+      <p id="error"     class="joke-error" role="alert"></p>
     </section>
   </main>
 
-  <script src="../static/js/api.js"></script>
-  <script src="../static/js/ui.js"></script>
+  <!-- __JS_API_URI__ and __JS_UI_URI__ replaced at startup by main.py -->
+  <script src="__JS_API_URI__"></script>
+  <script src="__JS_UI_URI__"></script>
 
 </body>
 </html>
