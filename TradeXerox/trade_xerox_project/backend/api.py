@@ -9,7 +9,7 @@ Methods must return JSON-serialisable values (dict, list, str, int, None).
 from .joke_service import fetch_joke, JokeServiceError
 
 
-class JokeApi:
+class Api:
     """Exposes backend functionality to the web front-end."""
 
     def get_joke(self) -> dict:
