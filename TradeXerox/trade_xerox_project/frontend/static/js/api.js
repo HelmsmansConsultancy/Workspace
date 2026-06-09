@@ -29,5 +29,15 @@ const backendApi = (() => {
         return api.get_joke();
     }
 
-    return { getJoke };
+    /**
+     * Send raw XML text to the Python backend for parsing.
+     * @param {string} xmlText
+     * @returns {Promise<{ok: boolean, entries?: Array<{key:string,value:string}>, error?: string}>}
+     */
+    async function parseXml(xmlText) {
+        const api = await _ready();
+        return api.parse_xml(xmlText);
+    }
+
+    return { getJoke, parseXml };
 })();
