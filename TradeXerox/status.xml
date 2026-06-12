@@ -1,0 +1,9 @@
+<status>
+	<account>
+		<account-id></account-id>
+		<balance></balance>
+		<last-access></last-access>
+		<last-order></last-order>
+		<last-position></last-position>
+	</account>
+</status>

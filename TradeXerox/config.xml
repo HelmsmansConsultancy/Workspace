@@ -1,15 +1,24 @@
-<config>
+<status>
 	<account>
+		<account-id></account-id>
+		<firm></firm>
+		<type></type>
 		<name></name>
 		<description></description>
-		<type></type>
 		<path-to-executable></path-to-executable>
 		<url-to-server></url-to-server>
-		<balance></balance>
-		<account-id></account-id>
+		<base-size></base-size>
 		<trade-value></trade-value>
-		<last-access></last-access>
-		<last-order></last-order>
-		<last-position></last-position>
 	</account>
-</config>
+	<account>
+		<account-id></account-id>
+		<firm></firm>
+		<type></type>
+		<name></name>
+		<description></description>
+		<path-to-executable></path-to-executable>
+		<url-to-server></url-to-server>
+		<base-size></base-size>
+		<trade-value></trade-value>
+	</account>
+</status>
