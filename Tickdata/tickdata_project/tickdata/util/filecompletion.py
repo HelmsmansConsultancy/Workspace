@@ -8,7 +8,7 @@ def _path_completer(text, state):
     matches = [m + '/' if os.path.isdir(m) else m for m in matches]
     return matches[state] if state < len(matches) else None
 
-def prompt_filename(message='Enter filename'):
+def prompt_filename(message='Enter filename '):
     """Prompt for a filename with tab-autocomplete."""
     readline.set_completer(_path_completer)
     readline.set_completer_delims(' \t\n;')
@@ -18,16 +18,20 @@ def prompt_filename(message='Enter filename'):
     finally:
         readline.set_completer(None)  # restore after
 
+def _path_completer(text, state):
+    matches = glob.glob(text + '*')
+    # Add trailing slash for directories
+    matches = [m + '/' if os.path.isdir(m) else m for m in matches]
+    return matches[state] if state < len(matches) else None
 
-    """
-    # return prompt(
-        f'{message}: ',
-        completer=FileCompleter(),
-        complete_while_typing=True,  # show completions as you type
-    )
-    """
-
-
+def prompt_with_completion(prompt_text):
+    readline.set_completer(_path_completer)
+    readline.set_completer_delims(' \t\n;')
+    readline.parse_and_bind('tab: complete')
+    try:
+        return input(prompt_text)
+    finally:
+        readline.set_completer(None)  # restore after
 
 def complete_filename(text, state):
     """Tab-completes filenames using os module."""

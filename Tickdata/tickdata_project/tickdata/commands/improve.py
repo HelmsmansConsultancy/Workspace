@@ -12,13 +12,14 @@ console = Console()
 
 @click.command()
 @click.argument("source", default=None, required=False, type=click.Path(exists=False))
-def describe(source):
+def improve(source):
     """Describe the contents of FILENAME."""
     if source is None:
         source = prompt_with_completion('Enter file to describe: ')
 
     click.echo(f"Describing: {source}")
     csvFile = load_tickdata(source)
+    csvFile.df.to_csv(csvFile.filename + "_Impoved", index=False)
     
     table = Table(
         title=f"[bold cyan]Tickdata Summary — {csvFile.filename}[/]",
@@ -37,23 +38,8 @@ def describe(source):
     table.add_row("Total rows", f"{csvFile.df['TimeStamp'].count()}")
     table.add_row("Columns",    "'" + "', '".join(csvFile.df.columns) + "'")
 
-    table2 = Table(
-        title=f"[bold cyan]Tickdata Summary — {csvFile.filename}[/]",
-        box=box.ROUNDED,
-        show_header=True,
-        header_style="bold magenta",
-        expand=False,
-    )
-    table2.add_column("Property",  style="bold", min_width=15)
-    table2.add_column("Min",     min_width=15)
-    table2.add_column("Median",     min_width=15)
-    table2.add_column("Max",     min_width=15)
-
-    table2.add_row("Ask", f"{csvFile.df['Ask'].min()}", f"{csvFile.df['Ask'].median()}", f"{csvFile.df['Ask'].max()}")
-    table2.add_row("Bid", f"{csvFile.df['Bid'].min()}", f"{csvFile.df['Bid'].median()}", f"{csvFile.df['Bid'].max()}")
-
     console.print()
     console.print(table)
-    console.print(table2)
+    console.print("Written Improved Version")
     console.print()
 

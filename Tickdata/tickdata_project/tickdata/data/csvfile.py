@@ -8,5 +8,7 @@ class CsvFile:
     filesize: int
     delimiter: str
     timestamp: str
+    ask: str
+    bid: str
     columns: list[str]
     df: pd.DataFrame

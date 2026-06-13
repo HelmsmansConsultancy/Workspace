@@ -26,7 +26,7 @@ def format_datetime(dt: datetime | pd.Timestamp | None) -> str:
     if dt is None:
         return "N/A"
     ts = pd.Timestamp(dt)
-    base = ts.strftime("%Y-%m-%d %H:%M:%S")
+    base = ts.strftime("%Y-%m-%d %H:%M:%S " + str(ts.microsecond)[:-3])
     if ts.tzinfo is not None:
         tz = str(ts.tzinfo)
         return f"{base}  [{tz}]"

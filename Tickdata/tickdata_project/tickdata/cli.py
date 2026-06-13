@@ -3,8 +3,9 @@ from rich.console import Console
 from tickdata.commands.describe import describe
 from tickdata.commands.append import append
 from tickdata.commands.compare import compare
+from tickdata.commands.improve import improve
 
-SUBCOMMANDS = ['describe', 'append', 'compare']
+SUBCOMMANDS = ['describe', 'append', 'compare', 'improve']
 
 console = Console()
 
@@ -29,3 +30,4 @@ def tickdata(ctx):
 tickdata.add_command(describe)
 tickdata.add_command(append)
 tickdata.add_command(compare)
+tickdata.add_command(improve)
