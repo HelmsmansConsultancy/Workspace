@@ -1,12 +1,8 @@
 from email.policy import default
-import os
-import csv
-from typing import Required
 import click
 from rich.console import Console
 from rich.table import Table
 from rich import box
-from prompt_toolkit import prompt
 from tickdata.data.csvfile import CsvFile
 from tickdata.util.csvutils import load_tickdata
 from tickdata.util.display import human_size, format_datetime
@@ -38,7 +34,7 @@ def describe(source):
     table.add_row("Timeframe",  "Tick Data")
     table.add_row("Start date", format_datetime(csvFile.df["DateTime"].min()))
     table.add_row("End date",   format_datetime(csvFile.df["DateTime"].max()))
-    table.add_row("Total rows", f"{csvFile.df["DateTime"].count()}")
+    table.add_row("Total rows", f"{csvFile.df['DateTime'].count()}")
     table.add_row("Columns",    ", ".join(csvFile.df.columns))
 
     console.print()

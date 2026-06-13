@@ -29,15 +29,15 @@ def _sniff_delimiter(filepath: str) -> str:
     except csv.Error:
         return ","
 
-def _find_ts_column(columns: list[str]) -> str | None:
+def _find_ts_column(columns: list[str]) -> str:
     """Return the name of the timestamp column, or None."""
     for col in columns:
         if col.strip().lower() in _TS_COLUMN_NAMES:
             console.print(f"Found timestamp column {col}")
             return col
-    return columns[0] if columns else None
+    return columns[0] if columns else ""
 
-def load_tickdata(filename: str | Path) -> CsvFile:
+def load_tickdata(filename: str ) -> CsvFile:
     """Load a CSV file and return a DataFrame with a DatetimeIndex.
 
     Parameters
@@ -66,7 +66,11 @@ def load_tickdata(filename: str | Path) -> CsvFile:
     csv.columns = list(csv.df.columns.str.strip())
     console.print(f"Found columns: {', '.join(csv.df.columns)}")
 
-    csv.timestamp = _find_ts_column(csv.columns)
+    ts_column = _find_ts_column(csv.columns)
+    if ts_column:
+        csv.timestamp = ts_column
+    else:
+        raise ValueError("Not found time stamp column")
 
     return csv
 
