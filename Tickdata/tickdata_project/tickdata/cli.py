@@ -4,8 +4,9 @@ from tickdata.commands.describe import describe
 from tickdata.commands.append import append
 from tickdata.commands.compare import compare
 from tickdata.commands.improve import improve
+from tickdata.commands.analyze import analyze
 
-SUBCOMMANDS = ['describe', 'append', 'compare', 'improve']
+SUBCOMMANDS = ['analyze','describe', 'append', 'compare', 'improve']
 
 console = Console()
 
@@ -27,6 +28,7 @@ def tickdata(ctx):
         choice = interactive_menu()
         ctx.invoke(ctx.command.commands[choice])
 
+tickdata.add_command(analyze)
 tickdata.add_command(describe)
 tickdata.add_command(append)
 tickdata.add_command(compare)
