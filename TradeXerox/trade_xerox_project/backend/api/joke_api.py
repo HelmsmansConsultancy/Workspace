@@ -6,7 +6,7 @@ Every public method on JokeApi is callable from the frontend via
 Methods must return JSON-serialisable values (dict, list, str, int, None).
 """
 
-from .joke_service import fetch_joke, JokeServiceError
+from ..service.joke_service import fetch_joke, JokeServiceError
 
 
 class JokeApi:

@@ -6,7 +6,7 @@ Every public method is callable from the frontend via
 All methods return JSON-serialisable dicts.
 """
 
-from .xml_service import parse_xml, XmlServiceError
+from ..service.xml_service import parse_xml, XmlServiceError
 
 
 class XmlApi:

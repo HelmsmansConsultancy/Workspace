@@ -12,7 +12,7 @@ main.py is the only place that knows about the assembly.
 """
 
 import webview
-from backend.api import Api
+from backend.api.api import Api
 from backend.config import (
     APP_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT,
     HTML_PATH, CSS_PATH, JS_API_PATH, JS_UI_PATH,

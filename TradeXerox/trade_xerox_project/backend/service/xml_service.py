@@ -12,7 +12,7 @@ to unit-test and swap out independently.
 import xml.etree.ElementTree as ET
 from typing import TypedDict
 
-from .config import MAX_DEPTH, MAX_FILE_SIZE_MB
+from ..config import MAX_DEPTH, MAX_FILE_SIZE_MB
 
 
 class KVEntry(TypedDict):

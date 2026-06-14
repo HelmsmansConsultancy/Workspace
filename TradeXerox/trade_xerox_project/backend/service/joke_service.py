@@ -10,7 +10,7 @@ import urllib.error
 import urllib.request
 from typing import TypedDict
 
-from .config import JOKE_API_URL, REQUEST_TIMEOUT
+from ..config import JOKE_API_URL, REQUEST_TIMEOUT
 
 
 class JokeResult(TypedDict):
