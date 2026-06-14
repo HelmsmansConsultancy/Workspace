@@ -1,24 +1,38 @@
 <status>
 	<account>
-		<account-id></account-id>
-		<firm></firm>
-		<type></type>
-		<name></name>
-		<description></description>
-		<path-to-executable></path-to-executable>
-		<url-to-server></url-to-server>
-		<base-size></base-size>
-		<trade-value></trade-value>
+		<account-id>511096832</account-id>
+		<firm>FTMO</firm>
+		<type>MT5</type>
+		<server>FTMO-Server</server>
+		<name>200K FTMO</name>
+		<description>200K FTMO Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.ftmo.com</url-to-server>
+		<base-size>200.000.00</base-size>
+		<trade-value>1000.00</trade-value>
 	</account>
 	<account>
-		<account-id></account-id>
-		<firm></firm>
-		<type></type>
-		<name></name>
-		<description></description>
-		<path-to-executable></path-to-executable>
-		<url-to-server></url-to-server>
-		<base-size></base-size>
-		<trade-value></trade-value>
+		<account-id>510290503</account-id>
+		<firm>FTMO</firm>
+		<type>MT5</type>
+		<server>FTMO-Server</server>
+		<name>100K FTMO</name>
+		<description>100K FTMO Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.ftmo.com</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>500.00</trade-value>
+	</account>
+	<account>
+		<account-id>530336170</account-id>
+		<firm>FTMO</firm>
+		<type>MT5</type>
+		<server>FTMO-Server3</server>
+		<name>100K FTMO</name>
+		<description>100K FTMO Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.ftmo.com</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>500.00</trade-value>
 	</account>
 </status>

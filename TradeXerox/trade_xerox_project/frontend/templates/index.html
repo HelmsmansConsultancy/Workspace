@@ -10,22 +10,6 @@
 <body>
 
     <main class="container">
-        <header class="app-header">
-            <span class="app-icon">🎭</span>
-            <h1 class="app-title">Joke Machine</h1>
-        </header>
-
-        <button id="btn" class="btn-primary" onclick="ui.fetchJoke()">
-            Tell me a joke
-        </button>
-
-        <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
-            <p id="setup" class="joke-setup"></p>
-            <p id="punchline" class="joke-punchline"></p>
-            <p id="error" class="joke-error" role="alert"></p>
-        </section>
-
-
         <!-- Upload zone -->
         <label class="upload-zone" id="upload-zone">
             <input type="file" id="file-input" accept=".xml,text/xml,application/xml" />
@@ -51,6 +35,21 @@
                     <tbody id="kv-body"></tbody>
                 </table>
             </div>
+        </section>
+
+        <header class="app-header">
+            <span class="app-icon">🎭</span>
+            <h1 class="app-title">Joke Machine</h1>
+        </header>
+
+        <button id="btn" class="btn-primary" onclick="ui.fetchJoke()">
+            Tell me a joke
+        </button>
+
+        <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
+            <p id="setup" class="joke-setup"></p>
+            <p id="punchline" class="joke-punchline"></p>
+            <p id="error" class="joke-error" role="alert"></p>
         </section>
     </main>
 
