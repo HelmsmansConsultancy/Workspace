@@ -6,8 +6,8 @@ from pathlib import Path
 
 # ── Window ───────────────────────────────────────────────────────────────────
 APP_TITLE     = "Random Joke"
-WINDOW_WIDTH  = 800
-WINDOW_HEIGHT = 800
+WINDOW_WIDTH  = 1000
+WINDOW_HEIGHT = 1000
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 BASE_DIR     = Path(__file__).resolve().parent.parent

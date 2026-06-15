@@ -8,6 +8,116 @@
 
 const ui = (() => {
     // ── Element refs ────────────────────────────────────────────────────────
+    const configButton = document.getElementById('config');
+    const filenameSpan = document.getElementById('filename');
+    const messageDiv = document.getElementById('message');
+    const treeContainer = document.getElementById('tree-container');
+
+    configButton.addEventListener('click', async () => {
+        showMessage('', '');
+        const response = await window.pywebview.api.select_and_parse_xml();
+
+        if (!response.success) {
+            showMessage(response.error, 'error');
+            return;
+        }
+
+        filenameSpan.textContent = response.filename;
+        showMessage('File loaded successfully.', 'info');
+        renderTree(response.tree);
+    });
+
+    function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = 'message' + (type ? ' ' + type : '');
+    }
+
+    function renderTree(rootNode) {
+        treeContainer.innerHTML = '';
+        const rootElement = buildNode(rootNode);
+        treeContainer.appendChild(rootElement);
+    }
+
+    function buildNode(node) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'tree-node';
+
+        const hasChildren = node.children && node.children.length > 0;
+
+        const content = document.createElement('div');
+        content.className = 'tree-node-content' + (hasChildren ? ' has-children' : '');
+
+        const toggle = document.createElement('span');
+        toggle.className = 'toggle' + (hasChildren ? '' : ' leaf');
+        toggle.textContent = hasChildren ? '▶' : '';
+        content.appendChild(toggle);
+
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'tag-name';
+        tagSpan.textContent = '<' + node.tag + '>';
+        content.appendChild(tagSpan);
+
+        if (node.attributes && Object.keys(node.attributes).length > 0) {
+            const attrSpan = document.createElement('span');
+            attrSpan.className = 'attributes';
+            attrSpan.appendChild(document.createTextNode('['));
+            Object.entries(node.attributes).forEach(([key, value], index) => {
+                if (index > 0) {
+                    attrSpan.appendChild(document.createTextNode(', '));
+                }
+                const attrName = document.createElement('span');
+                attrName.className = 'attr-name';
+                attrName.textContent = key;
+                attrSpan.appendChild(attrName);
+
+                attrSpan.appendChild(document.createTextNode('='));
+
+                const attrValue = document.createElement('span');
+                attrValue.className = 'attr-value';
+                attrValue.textContent = '"' + value + '"';
+                attrSpan.appendChild(attrValue);
+            });
+            attrSpan.appendChild(document.createTextNode(']'));
+            content.appendChild(attrSpan);
+        }
+
+        if (node.text) {
+            const textSpan = document.createElement('span');
+            textSpan.className = 'text-content';
+            textSpan.textContent = '"' + node.text + '"';
+            content.appendChild(textSpan);
+        }
+
+        if (hasChildren) {
+            const countSpan = document.createElement('span');
+            countSpan.className = 'child-count';
+            countSpan.textContent = '(' + node.children.length + ')';
+            content.appendChild(countSpan);
+        }
+
+        wrapper.appendChild(content);
+
+        if (hasChildren) {
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = 'children-container collapsed';
+
+            node.children.forEach(child => {
+                childrenContainer.appendChild(buildNode(child));
+            });
+
+            wrapper.appendChild(childrenContainer);
+
+            content.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const collapsed = childrenContainer.classList.toggle('collapsed');
+                toggle.textContent = collapsed ? '▶' : '▼';
+            });
+        }
+
+        return wrapper;
+    }
+
+    // ── Element refs ────────────────────────────────────────────────────────
     const btn = document.getElementById('btn');
     const setupEl = document.getElementById('setup');
     const punchEl = document.getElementById('punchline');

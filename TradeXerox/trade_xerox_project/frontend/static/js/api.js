@@ -39,5 +39,10 @@ const backendApi = (() => {
         return api.parse_xml(xmlText);
     }
 
-    return { getJoke, parseXml };
+    async function select_and_parse_xml() {
+        const api = await _ready();
+        return api.select_and_parse_xml();
+    }
+
+    return { getJoke, parseXml, select_and_parse_xml };
 })();

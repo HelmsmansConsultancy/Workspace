@@ -35,4 +35,64 @@
 		<base-size>100.000.00</base-size>
 		<trade-value>500.00</trade-value>
 	</account>
+	<account>
+		<account-id>14077621</account-id>
+		<firm>FundedNext</firm>
+		<type>MT5</type>
+		<server>FundedNext-Server2</server>
+		<name>100K FN</name>
+		<description>100K FN Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.fundednext.com</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>1000.00</trade-value>
+	</account>
+	<account>
+		<account-id>2700496</account-id>
+		<firm>AlphaCapital</firm>
+		<type>MT5</type>
+		<server>ACG Markets Limited</server>
+		<name>100K ACM</name>
+		<description>100K Alpha Capital Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.alphacapital.com</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>1000.00</trade-value>
+	</account>
+	<account>
+		<account-id>26408796</account-id>
+		<firm>5%er</firm>
+		<type>MT5</type>
+		<server>FivePercentOnline-Real</server>
+		<name>100K 5%er</name>
+		<description>100K Highstakes 5%er Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://the5ers.com/</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>1000.00</trade-value>
+	</account>
+	<account>
+		<account-id>314446546</account-id>
+		<firm>GoatFunded</firm>
+		<type>MT5</type>
+		<server>GoatFunded-Server</server>
+		<name>100K GoatFunded</name>
+		<description>100K GoatFunded Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.goatfundedtrader.com</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>1000.00</trade-value>
+	</account>
+	<account>
+		<account-id>314446547</account-id>
+		<firm>GoatFunded</firm>
+		<type>MT5</type>
+		<server>GoatFunded-Server</server>
+		<name>100K GoatFunded</name>
+		<description>100K GoatFunded Challenge</description>
+		<path-to-executable>C://....</path-to-executable>
+		<url-to-server>https://www.goatfundedtrader.com/</url-to-server>
+		<base-size>100.000.00</base-size>
+		<trade-value>1000.00</trade-value>
+	</account>
 </status>

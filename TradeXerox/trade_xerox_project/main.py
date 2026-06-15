@@ -35,7 +35,7 @@ def build_html() -> str:
 def main() -> None:
     api = Api()
 
-    webview.create_window(
+    window = webview.create_window(
         title=APP_TITLE,
         html=build_html(),
         js_api=api,
@@ -44,6 +44,7 @@ def main() -> None:
         resizable=True,
         min_size=(400, 360),
     )
+    api.window = window
 
     webview.start(debug=False)
 

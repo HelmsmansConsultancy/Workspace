@@ -68,7 +68,7 @@ def load_tickdata(filename: str ) -> CsvFile:
     ValueError
         If no valid timestamp column or OHLC columns can be found.
     """
-    csvFile = CsvFile("", 0, "", "", "", "", [], None)
+    csvFile = CsvFile()
     csvFile.filename = str(filename)
     csvFile.filesize = os.path.getsize(filename)
     csvFile.delimiter = _sniff_delimiter(filename)

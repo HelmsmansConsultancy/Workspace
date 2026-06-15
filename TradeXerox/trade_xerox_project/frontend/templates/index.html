@@ -8,49 +8,47 @@
   __INLINE_CSS__
 </head>
 <body>
-
+    <h1 class="app-title">Trade Xerox</h1>
     <main class="container">
-        <!-- Upload zone -->
-        <label class="upload-zone" id="upload-zone">
-            <input type="file" id="file-input" accept=".xml,text/xml,application/xml" />
-            <span class="upload-icon">📂</span>
-            <span class="upload-label" id="upload-label">Click to choose an XML file</span>
-            <span class="upload-hint">.xml files only · max 10 MB</span>
-        </label>
-
-        <!-- Status / error bar -->
-        <p class="status-bar" id="status-bar" role="status" aria-live="polite"></p>
-
-        <!-- Results table — hidden until data arrives -->
-        <section class="results" id="results" hidden>
-            <div class="results-header">
-                <span id="results-count" class="results-count"></span>
-                <button class="btn-clear" id="btn-clear" onclick="ui.clear()">✕ Clear</button>
-            </div>
-            <div class="table-wrap">
-                <table class="kv-table">
-                    <thead>
-                        <tr><th>Key</th><th>Value</th></tr>
-                    </thead>
-                    <tbody id="kv-body"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <header class="app-header">
-            <span class="app-icon">🎭</span>
-            <h1 class="app-title">Joke Machine</h1>
-        </header>
-
-        <button id="btn" class="btn-primary" onclick="ui.fetchJoke()">
-            Tell me a joke
-        </button>
-
-        <section id="joke-box" class="joke-box" aria-live="polite" aria-atomic="true">
-            <p id="setup" class="joke-setup"></p>
-            <p id="punchline" class="joke-punchline"></p>
-            <p id="error" class="joke-error" role="alert"></p>
-        </section>
+        <div class="column column-left">
+            <table>
+                <tr>
+                    <td>Asset</td><td></td>
+                </tr>
+                <tr>
+                    <td>Current price</td><td></td>
+                </tr>
+                <tr>
+                    <td>Entry price</td><td><input type="number" inputmode="decimal" step="0.0001" /></td>
+                </tr>
+                <tr>
+                    <td>SL price</td><td><input type="number" inputmode="decimal" step="0.0001"  /></td>
+                </tr>
+                <tr>
+                    <td>TP price</td><td><input type="number" inputmode="decimal" step="0.0001" /></td>
+                </tr>
+                <tr>
+                    <td>Amount</td><td><input type="number" inputmode="decimal" step="0.01" /></td>
+                </tr>
+                <tr>
+                    <td>R-unit</td><td><select>
+                        <option>0.1%</option>
+                        <option>0.5%</option>
+                        <option selected>1%</option>
+                        <option>2%</option>
+                    </select></td>
+                </tr>
+            </table>
+        </div>
+        <div class="column column-right">
+            <h2>Configuration Overview</h2>
+            <label for="config" class="config-label">config</label>
+            <button id="config" class="select-button">Select XML file...</button>
+            <span id="filename" class="filename"></span>
+            <h3>Accounts</h3>
+            <div id="tree-container" class="tree-container"></div>
+        </div>
+        <div id="message" class="message"></div>
     </main>
 
   <!-- main.py replaces these tokens with the contents of api.js and ui.js -->
