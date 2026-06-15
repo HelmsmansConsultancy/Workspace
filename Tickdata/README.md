@@ -25,4 +25,7 @@ drwx------   4 jaronschut  staff  128 Jun 13 17:00 ..
 -rwxr-xr-x   1 jaronschut  staff  202 Jun 13 17:02 tickdata
 
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+exoirt PATH="$HOME/opt/miniconda3/lib/python3.13/:$PATH"
+
+
 

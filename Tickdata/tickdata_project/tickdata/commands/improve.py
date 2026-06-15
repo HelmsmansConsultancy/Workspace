@@ -1,8 +1,4 @@
-from email.policy import default
 import click
-from rich.console import Console
-from rich.table import Table
-from rich import box
 from tickdata.data.csvfile import CsvFile
 from tickdata.util.csvutils import load_tickdata
 from tickdata.util.display import human_size, format_datetime
