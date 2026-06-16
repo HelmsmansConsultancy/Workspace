@@ -9,8 +9,12 @@
 </head>
 <body>
     <h1 class="app-title">Trade Xerox</h1>
+    <br />
     <main class="container">
         <div class="column column-left">
+            <br />
+            <h2>Trade to Place</h2>
+            <br />
             <table>
                 <tr>
                     <td>Asset</td><td></td>
@@ -39,13 +43,43 @@
                     </select></td>
                 </tr>
             </table>
+            <br /><br />
+            <h3>Last Trade</h3>
+            <br />
+            <table>
+                <tr>
+                    <td>Asset</td><td></td>
+                </tr>
+                <tr>
+                    <td>Current price</td><td></td>
+                </tr>
+                <tr>
+                    <td>Entry price</td><td></td>
+                </tr>
+                <tr>
+                    <td>SL price</td><td></td>
+                </tr>
+                <tr>
+                    <td>TP price</td><td></td>
+                </tr>
+                <tr>
+                    <td>Amount</td><td></td>
+                </tr>
+                <tr>
+                    <td>R-unit</td><td>1%</td>
+                </tr>
+            </table>
         </div>
         <div class="column column-right">
+            <br />
             <h2>Configuration Overview</h2>
+            <br />
             <label for="config" class="config-label">config</label>
             <button id="config" class="select-button">Select XML file...</button>
             <span id="filename" class="filename"></span>
+            <br /><br />
             <h3>Accounts</h3>
+            <br />
             <div id="tree-container" class="tree-container"></div>
         </div>
         <div id="message" class="message"></div>
