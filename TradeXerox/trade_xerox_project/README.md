@@ -51,11 +51,21 @@ joke_app/
 ## Getting started
 
 ```bash
+# 0. Create the virtual environment
+python -m venv venv
+source venv/bin/activate        # macOS/Linux
+venv\Scripts\activate           # Windows
+
 # 1. Install dependency
 pip install -r requirements.txt
 
 # 2. Run
 python main.py
+
+# 3. To find out more versions to install
+pip index versions library
+
+
 ```
 
 > **Platform note:** pywebview uses the OS's built-in web renderer

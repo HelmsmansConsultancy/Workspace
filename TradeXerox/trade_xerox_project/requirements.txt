@@ -1,1 +1,5 @@
 pywebview>=4.4
+# INSTALLED: 6.2.1
+rich>=15.0.0
+# INSTALLED: 15.0.0
+
