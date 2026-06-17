@@ -28,8 +28,14 @@ const ui = (() => {
     });
 
     function showMessage(text, type) {
-        messageDiv.textContent = text;
-        messageDiv.className = 'message' + (type ? ' ' + type : '');
+        const message = buildMessage(text, type);
+        messageDiv.appendChild(message);
+    }
+
+    function buildMessage(text, type) {
+        const message = document.createElement('div');
+        message.innerHTML = text;
+        return message;
     }
 
     function renderTree(rootNode) {
