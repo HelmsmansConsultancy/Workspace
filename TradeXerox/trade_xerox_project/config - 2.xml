@@ -1,14 +1,14 @@
 <status>
 	<account>
-		<account-id>530336170</account-id>
+		<account-id>510290503</account-id>
 		<firm>FTMO</firm>
 		<type>MT5</type>
-		<server>FTMO-Server3</server>
+		<server>FTMO-Server</server>
 		<name>100K FTMO</name>
 		<description>100K FTMO Challenge</description>
-		<path-to-executable>"D:\MetaTrader 5\terminal64.exe"</path-to-executable>
+		<path-to-executable>C://....</path-to-executable>
 		<url-to-server>https://www.ftmo.com</url-to-server>
 		<base-size>100.000.00</base-size>
-		<trade-value>1000.00</trade-value>
+		<trade-value>500.00</trade-value>
 	</account>
 </status>

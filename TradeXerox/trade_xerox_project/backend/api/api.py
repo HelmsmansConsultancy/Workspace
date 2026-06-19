@@ -69,6 +69,7 @@ class Api:
 
         result = self.window.create_file_dialog(
             webview.OPEN_DIALOG,
+            directory=os.getcwd(),
             allow_multiple=False,
             file_types=file_types
         )
