@@ -54,6 +54,13 @@ joke_app/
 # 0. Create the virtual environment
 python -m venv venv
 source venv/bin/activate        # macOS/Linux
+
+# Quickfix
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass \venv\Scripts\Activate.ps1
+#
+# Long term fix
+# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+#
 venv\Scripts\activate           # Windows
 
 # 1. Install dependency
