@@ -12,11 +12,15 @@ main.py is the only place that knows about the assembly.
 """
 
 import webview
+from backend.service.singleton_service import SingletonService
 from backend.api.api import Api
 from backend.config import (
     APP_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT,
     HTML_PATH, CSS_PATH, JS_API_PATH, JS_UI_PATH,
 )
+from rich.console import Console
+
+console = Console()
 
 
 def build_html() -> str:
@@ -34,6 +38,7 @@ def build_html() -> str:
 
 def main() -> None:
     api = Api()
+    console.print("Api()")
 
     window = webview.create_window(
         title=APP_TITLE,
@@ -44,8 +49,10 @@ def main() -> None:
         resizable=True,
         min_size=(400, 360),
     )
-    api.window = window
+    SingletonService().put("window", window)
+    console.print('SingletonService().put("window", window)')
 
+    console.print("webview.start()")
     webview.start(debug=False)
 
 

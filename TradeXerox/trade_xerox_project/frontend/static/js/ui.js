@@ -14,7 +14,7 @@ const ui = (() => {
     const treeContainer = document.getElementById('tree-container');
 
     configButton.addEventListener('click', async () => {
-        showMessage('', '');
+        showMessage('Opening file dialog...', 'info');
         const response = await window.pywebview.api.select_and_parse_xml();
 
         if (!response.success) {

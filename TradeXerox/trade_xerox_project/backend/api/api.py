@@ -9,7 +9,8 @@ import os
 import xml.etree.ElementTree as ET
 from .joke_api import JokeApi
 from .xml_api import XmlApi
-import webview
+from webview import FileDialog
+from backend.service.singleton_service import SingletonService
 from rich.console import Console
 
 console = Console()
@@ -53,7 +54,6 @@ class Api:
 
 
     def element_to_dict(self, element):
-        console.print("element_to_dict")
         """Recursively convert an XML Element into a JSON-serializable dict."""
         node = {
             "tag": element.tag,
@@ -70,9 +70,18 @@ class Api:
         and return its structure as a nested dict, or an error dict."""
         file_types = ('XML Files (*.xml)',)
 
-        result = self.window.create_file_dialog(
-            webview.OPEN_DIALOG,
-            directory=os.getcwd(),
+        currentDirectory = os.getcwd()
+        console.print(currentDirectory)
+        console.print('SingletonService().get("window")')
+
+        # Note: pywebview's file dialog API changed in version 3.0.0, so the old
+        # webview.open_file_dialog(...) is now:
+        # webview.OPEN_DIALOG → webview.FileDialog.OPEN
+        # webview.FOLDER_DIALOG → webview.FileDialog.FOLDER
+        # webview.SAVE_DIALOG → webview.FileDialog.SAVE
+        result = SingletonService().get("window").create_file_dialog(
+            FileDialog.OPEN,
+            directory=currentDirectory,
             allow_multiple=False,
             file_types=file_types
         )
