@@ -6,7 +6,7 @@ from pathlib import Path
 
 # ── Window ───────────────────────────────────────────────────────────────────
 APP_TITLE     = "Random Joke"
-WINDOW_WIDTH  = 1000
+WINDOW_WIDTH  = 1200
 WINDOW_HEIGHT = 1000
 
 # ── Paths ────────────────────────────────────────────────────────────────────
