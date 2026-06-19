@@ -20,10 +20,12 @@ xmlApi = XmlApi()    # noqa: N816
 class Api:
     """Exposes backend functionality to the web front-end."""
     def __init__(self):
+        console.print("__init__")
         self.window = None
 
 
     def get_joke(self) -> dict:
+        console.print("get_joke")
         """
         Fetch a random joke and return it as a plain dict.
 
@@ -35,9 +37,8 @@ class Api:
         """
         return jokeApi.get_joke()
 
-    
-
     def parse_xml(self, xml_text: str) -> dict:
+        console.print("parse_xml")
         """
         Parse raw XML text sent from the frontend.
 
@@ -52,6 +53,7 @@ class Api:
 
 
     def element_to_dict(self, element):
+        console.print("element_to_dict")
         """Recursively convert an XML Element into a JSON-serializable dict."""
         node = {
             "tag": element.tag,
@@ -63,6 +65,7 @@ class Api:
     
 
     def select_and_parse_xml(self):
+        console.print("select_and_parse_xml")
         """Open a file dialog restricted to XML files, parse the chosen file
         and return its structure as a nested dict, or an error dict."""
         file_types = ('XML Files (*.xml)',)
