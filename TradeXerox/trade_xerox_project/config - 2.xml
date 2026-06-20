@@ -6,7 +6,7 @@
 		<server>FTMO-Server</server>
 		<name>100K FTMO</name>
 		<description>100K FTMO Challenge</description>
-		<path-to-executable>C://....</path-to-executable>
+		<path-to-executable>D:\MetaTrader 5\terminal64</path-to-executable>
 		<url-to-server>https://www.ftmo.com</url-to-server>
 		<base-size>100.000.00</base-size>
 		<trade-value>500.00</trade-value>

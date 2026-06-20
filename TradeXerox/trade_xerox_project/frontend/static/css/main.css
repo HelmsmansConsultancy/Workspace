@@ -239,15 +239,15 @@ h3 {
 
 /* Tree styles */
 .tree-node {
-    margin: 2px 0;
+    margin: 1px 0;
 }
 
 .tree-node-content {
     display: flex;
     align-items: baseline;
     gap: 6px;
-    padding: 3px 4px;
-    border-radius: 4px;
+    padding: 1px 2px;
+    border-radius: 2px;
     cursor: default;
 }
 
@@ -261,9 +261,9 @@ h3 {
 
 .toggle {
     display: inline-block;
-    width: 16px;
+    width: 8px;
     text-align: center;
-    font-size: 12px;
+    font-size: 8px;
     color: #7f8c8d;
     user-select: none;
     flex-shrink: 0;
@@ -275,14 +275,14 @@ h3 {
 
 .tag-name {
     color: #2980b9;
-    font-weight: 600;
+    font-weight: 450;
     font-family: 'Consolas', 'Courier New', monospace;
 }
 
 .attributes {
     color: #8e44ad;
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 13px;
+    font-size: 8px;
 }
 
 .attr-name {
@@ -297,13 +297,13 @@ h3 {
     color: #555;
     font-style: italic;
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 13px;
+    font-size: 8px;
 }
 
 .children-container {
-    margin-left: 22px;
+    margin-left: 2px;
     border-left: 1px dashed #d0d7de;
-    padding-left: 10px;
+    padding-left: 2px;
 }
 
 .children-container.collapsed {
@@ -312,6 +312,6 @@ h3 {
 
 .child-count {
     color: #95a5a6;
-    font-size: 12px;
-    margin-left: 4px;
+    font-size: 8px;
+    margin-left: 2px;
 }
