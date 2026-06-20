@@ -2,4 +2,9 @@ pywebview>=4.4
 # INSTALLED: 6.2.1
 rich>=15.0.0
 # INSTALLED: 15.0.0
+MetaTrader5 >=5.0.34
+# INSTALLED: 5.0.34 
+numpy>=1.24.0
+# INSTALLED: 1.24.0
+
 

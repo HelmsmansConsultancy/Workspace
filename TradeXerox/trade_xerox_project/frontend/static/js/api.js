@@ -21,15 +21,6 @@ const backendApi = (() => {
     }
 
     /**
-     * Fetch one random joke from the Python backend.
-     * @returns {Promise<{ok: boolean, setup?: string, punchline?: string, error?: string}>}
-     */
-    async function getJoke() {
-        const api = await _ready();
-        return api.get_joke();
-    }
-
-    /**
      * Send raw XML text to the Python backend for parsing.
      * @param {string} xmlText
      * @returns {Promise<{ok: boolean, entries?: Array<{key:string,value:string}>, error?: string}>}
@@ -44,5 +35,5 @@ const backendApi = (() => {
         return api.select_and_parse_xml();
     }
 
-    return { getJoke, parseXml, select_and_parse_xml };
+    return { parseXml, select_and_parse_xml };
 })();
