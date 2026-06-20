@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tabular"
+version = "0.1.0"
+description = "Tabular MT5 management CLI"
+requires-python = ">=3.9"
+
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "rich>=13.0",       # pretty terminal output
+    "click>=8.0",       # CLI framework
+    "rich>=13.0",
+    "pytz>=2024.1",     # timezone handling
+]
+
+[project.scripts]
+tabular = "tabular.cli:tabular"

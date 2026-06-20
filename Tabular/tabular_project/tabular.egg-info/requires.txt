@@ -1,0 +1,6 @@
+pandas>=2.0
+numpy>=1.26
+rich>=13.0
+click>=8.0
+rich>=13.0
+pytz>=2024.1

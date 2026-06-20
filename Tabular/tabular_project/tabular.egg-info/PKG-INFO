@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: tabular
+Version: 0.1.0
+Summary: Tabular MT5 management CLI
+Requires-Python: >=3.9
+Requires-Dist: pandas>=2.0
+Requires-Dist: numpy>=1.26
+Requires-Dist: rich>=13.0
+Requires-Dist: click>=8.0
+Requires-Dist: rich>=13.0
+Requires-Dist: pytz>=2024.1

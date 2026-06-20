@@ -1,0 +1,22 @@
+
+from genericpath import exists
+
+import click
+from rich.console import Console
+
+from tabular.util.filecompletion import prompt_filename
+
+console = Console()
+
+@click.command()
+@click.argument("source", default=None, required=False, type=click.Path(exists=False))
+@click.argument("destination", default=None, required=False, type=click.Path(exists=False))
+def compare(source, destination):
+    """Compare tabular MT5 from SOURCE to DESTINATION."""
+    click.echo(f"Comparing {source} → {destination}")
+    # TODO: implement append logic
+    if source is None:
+        source = prompt_filename('Enter file source')
+
+    if destination is None:
+        destination = prompt_filename('Enter file destination')
