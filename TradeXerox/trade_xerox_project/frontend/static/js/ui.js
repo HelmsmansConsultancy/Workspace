@@ -40,9 +40,184 @@ const ui = (() => {
 
     function renderTree(rootNode) {
         treeContainer.innerHTML = '';
-        const rootElement = buildNode(rootNode);
+        const rootElement = buildRootNode(rootNode);
         treeContainer.appendChild(rootElement);
     }
+
+    function buildRootNode(node) {
+        showMessage('Building root of config tree...', 'info');
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'tree-node';
+
+        const hasChildren = node.children && node.children.length > 0;
+
+        const content = document.createElement('div');
+        content.className = 'tree-node-content' + (hasChildren ? ' has-children' : '');
+
+        const toggle = document.createElement('span');
+        toggle.className = 'toggle' + (hasChildren ? '' : ' leaf');
+        toggle.textContent = hasChildren ? '▶' : '';
+        content.appendChild(toggle);
+
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'tag-name';
+        tagSpan.textContent = '<' + node.tag + '>';
+        content.appendChild(tagSpan);
+
+        if (node.attributes && Object.keys(node.attributes).length > 0) {
+            const attrSpan = document.createElement('span');
+            attrSpan.className = 'attributes';
+            attrSpan.appendChild(document.createTextNode('['));
+            Object.entries(node.attributes).forEach(([key, value], index) => {
+                if (index > 0) {
+                    attrSpan.appendChild(document.createTextNode(', '));
+                }
+                const attrName = document.createElement('span');
+                attrName.className = 'attr-name';
+                attrName.textContent = key;
+                attrSpan.appendChild(attrName);
+
+                attrSpan.appendChild(document.createTextNode('='));
+
+                const attrValue = document.createElement('span');
+                attrValue.className = 'attr-value';
+                attrValue.textContent = '"' + value + '"';
+                attrSpan.appendChild(attrValue);
+            });
+            attrSpan.appendChild(document.createTextNode(']'));
+            content.appendChild(attrSpan);
+        }
+
+        if (node.text) {
+            const textSpan = document.createElement('span');
+            textSpan.className = 'text-content';
+            textSpan.textContent = '"' + node.text + '"';
+            content.appendChild(textSpan);
+        }
+
+        if (hasChildren) {
+            const countSpan = document.createElement('span');
+            countSpan.className = 'child-count';
+            countSpan.textContent = '(' + node.children.length + ')';
+            content.appendChild(countSpan);
+        }
+
+        wrapper.appendChild(content);
+
+        if (hasChildren) {
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = 'children-container collapsed';
+
+            node.children.forEach(child => {
+                childrenContainer.appendChild(buildAccountNode(child));
+            });
+
+            wrapper.appendChild(childrenContainer);
+
+            content.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const collapsed = childrenContainer.classList.toggle('collapsed');
+                toggle.textContent = collapsed ? '▶' : '▼';
+            });
+        }
+
+        return wrapper;
+    }
+    
+
+    function buildAccountNode(node) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'tree-node';
+
+        const hasChildren = node.children && node.children.length > 0;
+
+        const content = document.createElement('div');
+        content.className = 'tree-node-content' + (hasChildren ? ' has-children' : '');
+
+        const toggle = document.createElement('span');
+        toggle.className = 'toggle' + (hasChildren ? '' : ' leaf');
+        toggle.textContent = hasChildren ? '▶' : '';
+        content.appendChild(toggle);
+
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'tag-name';
+        tagSpan.textContent = '<' + node.tag + '>';
+        content.appendChild(tagSpan);
+
+        if (node.attributes && Object.keys(node.attributes).length > 0) {
+            const attrSpan = document.createElement('span');
+            attrSpan.className = 'attributes';
+            attrSpan.appendChild(document.createTextNode('['));
+            Object.entries(node.attributes).forEach(([key, value], index) => {
+                if (index > 0) {
+                    attrSpan.appendChild(document.createTextNode(', '));
+                }
+                const attrName = document.createElement('span');
+                attrName.className = 'attr-name';
+                attrName.textContent = key;
+                attrSpan.appendChild(attrName);
+
+                attrSpan.appendChild(document.createTextNode('='));
+
+                const attrValue = document.createElement('span');
+                attrValue.className = 'attr-value';
+                attrValue.textContent = '"' + value + '"';
+                attrSpan.appendChild(attrValue);
+            });
+            attrSpan.appendChild(document.createTextNode(']'));
+            content.appendChild(attrSpan);
+        }
+
+        if (node.text) {
+            const textSpan = document.createElement('span');
+            textSpan.className = 'text-content';
+            textSpan.textContent = '"' + node.text + '"';
+            content.appendChild(textSpan);
+        }
+
+        if (hasChildren) {
+            const countSpan = document.createElement('span');
+            countSpan.className = 'child-count';
+            countSpan.textContent = '(' + node.children.length + ')';
+            content.appendChild(countSpan);
+        }
+
+        wrapper.appendChild(content);
+
+        if (hasChildren) {
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = 'children-container collapsed collapsable';
+
+            node.children.forEach(child => {
+                childrenContainer.appendChild(buildNode(child));
+            });
+
+            wrapper.appendChild(childrenContainer);
+
+            // Make single collapsable element, close all others open
+            content.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const collapsed = childrenContainer.classList.toggle('collapsed');
+                toggle.textContent = collapsed ? '▶' : '▼';
+                if (!collapsed) {
+                    showMessage('Connecting to account...', 'info');
+                    const result = await backendApi.connectToMt5('Test the Method');
+                    document.querySelectorAll(".collapsable").forEach((el) => {
+                        if (el !== childrenContainer) {
+                            el.classList.add('collapsed');
+                            // const theOtherHasChildren = el.children && el.children.length > 0;
+                            el.querySelector('span').textContent = '▶'; //hasChildren ? '▶' : '';
+                        }
+                    });
+                }
+            });
+        }
+
+        return wrapper;
+    }
+
+
 
     function buildNode(node) {
         const wrapper = document.createElement('div');

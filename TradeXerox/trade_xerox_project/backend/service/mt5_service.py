@@ -10,6 +10,7 @@ class Mt5Service():
         pass
 
     def connect(self, path_to_executable):
+        console.print("Connect" + path_to_executable)
         if not mt5.initialize(path_to_executable):
             print("initialize() failed, error code =", mt5.last_error())
             mt5.shutdown()

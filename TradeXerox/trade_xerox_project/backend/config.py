@@ -5,7 +5,7 @@ Application-wide configuration.
 from pathlib import Path
 
 # ── Window ───────────────────────────────────────────────────────────────────
-APP_TITLE     = "Random Joke"
+APP_TITLE     = "Trade Xerox"
 WINDOW_WIDTH  = 1200
 WINDOW_HEIGHT = 1000
 
@@ -19,10 +19,6 @@ HTML_PATH   = TEMPLATE_DIR / "index.html"
 CSS_PATH    = STATIC_DIR   / "css"  / "main.css"
 JS_API_PATH = STATIC_DIR   / "js"   / "api.js"
 JS_UI_PATH  = STATIC_DIR   / "js"   / "ui.js"
-
-# ── Joke API ──────────────────────────────────────────────────────────────────
-JOKE_API_URL    = "https://official-joke-api.appspot.com/random_joke"
-REQUEST_TIMEOUT = 10  # seconds
 
 # ── XML parsing ───────────────────────────────────────────────────────────────
 MAX_FILE_SIZE_MB = 10

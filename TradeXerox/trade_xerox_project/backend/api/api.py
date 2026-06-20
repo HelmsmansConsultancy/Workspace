@@ -7,7 +7,8 @@ Methods must return JSON-serialisable values (dict, list, str, int, None).
 """
 import os
 import xml.etree.ElementTree as ET
-from .joke_api import JokeApi
+
+from backend.service.mt5_service import Mt5Service
 from .xml_api import XmlApi
 from webview import FileDialog
 from backend.service.singleton_service import SingletonService
@@ -15,8 +16,8 @@ from rich.console import Console
 
 console = Console()
 
-jokeApi = JokeApi()  # noqa: N816
 xmlApi = XmlApi()    # noqa: N816   
+mt5Service = Mt5Service()  # noqa: N816
 
 class Api:
     """Exposes backend functionality to the web front-end."""
@@ -25,18 +26,11 @@ class Api:
         self.window = None
 
 
-    def get_joke(self) -> dict:
-        console.print("get_joke")
-        """
-        Fetch a random joke and return it as a plain dict.
+    def connectToMt5(self, path_to_executable):
+        console.print("connect" + path_to_executable)
+        return mt5Service.connect(path_to_executable)
+    
 
-        Returns on success:
-            {"ok": true, "setup": "...", "punchline": "..."}
-
-        Returns on failure:
-            {"ok": false, "error": "<human-readable message>"}
-        """
-        return jokeApi.get_joke()
 
     def parse_xml(self, xml_text: str) -> dict:
         console.print("parse_xml")

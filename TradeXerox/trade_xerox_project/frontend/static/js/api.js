@@ -20,6 +20,11 @@ const backendApi = (() => {
         });
     }
 
+    async function connectToMt5(pathToExecutable) {
+        const api = await _ready();
+        return api.connect(pathToExecutable);
+    }
+
     /**
      * Send raw XML text to the Python backend for parsing.
      * @param {string} xmlText
@@ -35,5 +40,5 @@ const backendApi = (() => {
         return api.select_and_parse_xml();
     }
 
-    return { parseXml, select_and_parse_xml };
+    return { parseXml, select_and_parse_xml, connectToMt5 };
 })();
