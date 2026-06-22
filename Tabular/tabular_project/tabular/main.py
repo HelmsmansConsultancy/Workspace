@@ -30,8 +30,11 @@ def pick_file(start_dir):
             full_path = os.path.join(current_dir, entry)
             if os.path.isdir(full_path):
                 choices.append(f"📁 {entry}")
-            else:
+            elif entry.endswith(".xml"):
                 choices.append(f"📄 {entry}")
+            else:
+                # Visible but greyed out and not selectable
+                choices.append(questionary.Choice(f"📄 {entry}", disabled="not an XML file"))
 
         # Show current directory and prompt
         selection = questionary.select(
@@ -62,10 +65,13 @@ def pick_file(start_dir):
 #@click.group(invoke_without_command=True)
 #@click.pass_context
 @click.command()
-@click.option("--config", "config", default=None, help="Path to the file to process")
+@click.option("--config", "config", default=None, help="Path to the XML file to process")
 def main(config):
     """Tabular MT5 data management tool."""
     click.echo("Tabular starting...")
+    if config is not None and not config.endswith(".xml"):
+        click.echo("❌ Error: file must be an .xml file.")
+        config = None
     if config is None:
         click.echo(f"No config file provided. You can specify one with 'tabular [CONFIG]'.")
         config = pick_file(start_dir=os.getcwd())
