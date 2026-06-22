@@ -1,2 +1,2 @@
 [console_scripts]
-tabular = tabular.cli:tabular
+tabular = tabular.main:tabular

@@ -9,13 +9,15 @@ description = "Tabular MT5 management CLI"
 requires-python = ">=3.9"
 
 dependencies = [
-    "pandas>=2.0",
-    "numpy>=1.26",
-    "rich>=13.0",       # pretty terminal output
-    "click>=8.0",       # CLI framework
-    "rich>=13.0",
-    "pytz>=2024.1",     # timezone handling
+    "click>=8.0",            # CLI framework
+    "questionary>=2.1",    # CLI interaction
+##    "pandas>=2.0",
+##    "readline>=6.2.4",
+##    "numpy>=1.26",
+##    "rich>=13.0",       # pretty terminal output
+##    "rich>=13.0",
+##    "pytz>=2024.1",     # timezone handling
 ]
 
 [project.scripts]
-tabular = "tabular.cli:tabular"
+tabular = "tabular.main:tabular"

@@ -1,4 +1,13 @@
 
+
+python -m venv venv
+venv\Scripts\activate
+pip install -e ./tabular_project
+
+
+pip index versions readline
+
+
 With pip:
 
 pip install -e ./tabular_project
@@ -25,7 +34,8 @@ drwx------   4 jaronschut  staff  128 Jun 13 17:00 ..
 -rwxr-xr-x   1 jaronschut  staff  202 Jun 13 17:02 tickdata
 
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
-exoirt PATH="$HOME/opt/miniconda3/lib/python3.13/:$PATH"
+export PATH="$HOME/opt/miniconda3/lib/python3.13/:$PATH"
 
-
+Add to windows path:
+C:\Users\Helms\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages
 

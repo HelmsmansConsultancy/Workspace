@@ -1,6 +1,6 @@
 pyproject.toml
 tabular/__init__.py
-tabular/cli.py
+tabular/main.py
 tabular.egg-info/PKG-INFO
 tabular.egg-info/SOURCES.txt
 tabular.egg-info/dependency_links.txt
@@ -8,11 +8,7 @@ tabular.egg-info/entry_points.txt
 tabular.egg-info/requires.txt
 tabular.egg-info/top_level.txt
 tabular/commands/__init__.py
-tabular/commands/analyze.py
-tabular/commands/append.py
-tabular/commands/compare.py
-tabular/commands/describe.py
-tabular/commands/improve.py
+tabular/commands/connect.py
 tabular/data/__init__.py
 tabular/data/csvfile.py
 tabular/util/__init__.py

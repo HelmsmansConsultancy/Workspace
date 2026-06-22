@@ -1,8 +1,7 @@
 # Joke Machine — pywebview demo
 
 A minimal but properly structured desktop application built with Python and
-[pywebview](https://pywebview.flowrl.com/). Fetches random jokes from the
-[Official Joke API](https://official-joke-api.appspot.com/) and displays them
+[pywebview](https://pywebview.flowrl.com/)
 in a native desktop window.
 
 ---
@@ -10,7 +9,7 @@ in a native desktop window.
 ## Project structure
 
 ```
-joke_app/
+Trade_Xerox_app/
 │
 ├── main.py                        # Entry point — creates the webview window
 │
