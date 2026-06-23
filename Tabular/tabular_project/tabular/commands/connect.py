@@ -344,8 +344,13 @@ def connect():
     #query_version()
     #query_account_info()
     #query_symbols()
-    query_orders()
-    query_positions()
+    #query_orders()
+    #query_positions()
+    #query_history_orders()
+    #query_history_deals()
+    #query_rates()
+    #query_ticks_range()
+
 
 
 
