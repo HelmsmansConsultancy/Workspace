@@ -2,7 +2,7 @@
 	<account id="510290503" name="100K FTMO">
 		<description>100K FTMO Challenge</description>
 		<type>MT5</type>
-		<path>D:\MetaTrader 5\terminal64</path>
+		<path>D:\MetaTrader 5\terminal64.exe</path>
 		<backend>
 			<firm>FTMO</firm>
 			<server>FTMO-Server</server>

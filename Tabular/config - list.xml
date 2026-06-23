@@ -2,7 +2,7 @@
 	<account id="511096832" name="100K FTMO">
 		<description>200K FTMO Challenge</description>
 		<type>MT5</type>
-		<path>D:\MetaTrader 5\terminal64</path>
+		<path>D:\MetaTrader 5\terminal64.exe</path>
 		<backend>
 			<firm>FTMO</firm>
 			<server>FTMO-Server</server>
@@ -32,7 +32,7 @@
 	<account id="14077621" name="100K FN">
 		<description>100K FundedNext Challenge Swap Free</description>
 		<type>MT5</type>
-		<path>D:\MetaTrader 5\terminal64</path>
+		<path>D:\MetaTrader 5\terminal64.exe</path>
 		<backend>
 			<firm>FN</firm>
 			<server>FundedNext-Server2</server>
@@ -47,7 +47,7 @@
 	<account id="2700496" name="100K ACM">
 		<description>100K Alpha Capital Challenge</description>
 		<type>MT5</type>
-		<path>D:\MetaTrader 5\terminal64</path>
+		<path>D:\MetaTrader 5\terminal64.exe</path>
 		<backend>
 			<firm>ACM</firm>
 			<server>ACG Markets Limited</server>

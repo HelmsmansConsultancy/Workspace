@@ -9,6 +9,7 @@ tabular.egg-info/requires.txt
 tabular.egg-info/top_level.txt
 tabular/commands/__init__.py
 tabular/commands/connect.py
+tabular/commands/exit.py
 tabular/commands/list.py
 tabular/data/__init__.py
 tabular/data/account_config.py
@@ -18,6 +19,5 @@ tabular/data/money.py
 tabular/service/__init__.py
 tabular/service/singleton_service.py
 tabular/util/__init__.py
-tabular/util/display.py
-tabular/util/filecompletion.py
+tabular/util/fileutils.py
 tabular/util/xmlutils.py

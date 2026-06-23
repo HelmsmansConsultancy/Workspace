@@ -1,7 +1,7 @@
 <status>
 	<account id="510290503" name="100K FTMO">
 		<description>100K FTMO Challenge</description>
-		<path-to-executable>D:\MetaTrader 5\terminal64</path-to-executable>
+		<path-to-executable>D:\MetaTrader 5\terminal64.exe</path-to-executable>
 		<type>MT5</type>
 		<backend>
 			<firm>FTMO</firm>
