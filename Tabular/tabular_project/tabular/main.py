@@ -3,6 +3,7 @@ import questionary
 import os
 from rich.console import Console
 from tabular.commands.connect import connect
+from tabular.util.xmlutils import load_xml_config
 
 SUBCOMMANDS = ['connect'] 
 
@@ -77,6 +78,8 @@ def main(config):
         config = pick_file(start_dir=os.getcwd())
     click.echo(f"Selected config file: {config}")
 
+    accounts = load_xml_config(config)
+    console.print(accounts)
 
         #source = prompt_with_completion('Enter file to analyze: ')
 #    if ctx.invoked_subcommand is None:
