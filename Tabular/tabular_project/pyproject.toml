@@ -10,7 +10,7 @@ requires-python = ">=3.9"
 
 dependencies = [
     "click>=8.0",            # CLI framework
-    "questionary>=2.1",    # CLI interaction
+    "questionary>=2.1",      # CLI interaction
 ##    "pandas>=2.0",
 ##    "readline>=6.2.4",
 ##    "numpy>=1.26",

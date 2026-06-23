@@ -3,9 +3,12 @@ import questionary
 import os
 from rich.console import Console
 from tabular.commands.connect import connect
+from tabular.commands.list import list 
+from tabular.commands.exit import exit
 from tabular.util.xmlutils import load_xml_config
+from tabular.service.singleton_service import SingletonService
 
-SUBCOMMANDS = ['connect'] 
+SUBCOMMANDS = ['connect', 'list', 'exit'] 
 
 console = Console()
 
@@ -63,11 +66,11 @@ def pick_file(start_dir):
             # File selected
             return full_path
 
-#@click.group(invoke_without_command=True)
-#@click.pass_context
-@click.command()
+@click.group(invoke_without_command=True)
+@click.pass_context
+#@click.command()
 @click.option("--config", "config", default=None, help="Path to the XML file to process")
-def main(config):
+def main(ctx, config):
     """Tabular MT5 data management tool."""
     click.echo("Tabular starting...")
     if config is not None and not config.endswith(".xml"):
@@ -76,17 +79,18 @@ def main(config):
     if config is None:
         click.echo(f"No config file provided. You can specify one with 'tabular [CONFIG]'.")
         config = pick_file(start_dir=os.getcwd())
+
     click.echo(f"Selected config file: {config}")
-
     accounts = load_xml_config(config)
-    console.print(accounts)
+    SingletonService().put("accounts", accounts)
 
-        #source = prompt_with_completion('Enter file to analyze: ')
-#    if ctx.invoked_subcommand is None:
-#        choice = interactive_menu()
-#        ctx.invoke(ctx.command.commands[choice])
+    if ctx.invoked_subcommand is None:
+        choice = interactive_menu()
+        ctx.invoke(ctx.command.commands[choice])
 
-#main.add_command(connect)
+main.add_command(connect)
+main.add_command(list)
+main.add_command(exit)
 
 if __name__ == "__main__":
     main()

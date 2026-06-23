@@ -1,0 +1,62 @@
+<accounts>
+	<account id="511096832" name="100K FTMO">
+		<description>200K FTMO Challenge</description>
+		<type>MT5</type>
+		<path>D:\MetaTrader 5\terminal64</path>
+		<backend>
+			<firm>FTMO</firm>
+			<server>FTMO-Server</server>
+			<url>https://www.ftmo.com</url>
+		</backend>
+		<money>
+			<base>200.000.00</base>
+			<currency>USD</currency>
+			<risk>1000.00</risk>
+		</money>
+	</account>
+	<account id="510290503" name="100K FTMO">
+		<description>100K FTMO Challenge</description>
+		<type>MT5</type>
+		<path>D:\MetaTrader 5\terminal64</path>
+		<backend>
+			<firm>FTMO</firm>
+			<server>FTMO-Server</server>
+			<url>https://www.ftmo.com</url>
+		</backend>
+		<money>
+			<base>100.000.00</base>
+			<currency>USD</currency>
+			<risk>500.00</risk>
+		</money>
+	</account>
+	<account id="14077621" name="100K FN">
+		<description>100K FundedNext Challenge Swap Free</description>
+		<type>MT5</type>
+		<path>D:\MetaTrader 5\terminal64</path>
+		<backend>
+			<firm>FN</firm>
+			<server>FundedNext-Server2</server>
+			<url>https://www.fn.com</url>
+		</backend>
+		<money>
+			<base>100.000.00</base>
+			<currency>USD</currency>
+			<risk>500.00</risk>
+		</money>
+	</account>
+	<account id="2700496" name="100K ACM">
+		<description>100K Alpha Capital Challenge</description>
+		<type>MT5</type>
+		<path>D:\MetaTrader 5\terminal64</path>
+		<backend>
+			<firm>ACM</firm>
+			<server>ACG Markets Limited</server>
+			<url>https://www.acm.com</url>
+		</backend>
+		<money>
+			<base>100.000.00</base>
+			<currency>USD</currency>
+			<risk>500.00</risk>
+		</money>
+	</account>
+</accounts>
