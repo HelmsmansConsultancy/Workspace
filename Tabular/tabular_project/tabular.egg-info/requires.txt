@@ -1,3 +1,4 @@
 click>=8.0
 questionary>=2.1
 MetaTrader5>=5.0.5735
+psutil>=7

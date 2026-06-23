@@ -1,5 +1,7 @@
 import click
 import MetaTrader5 as mt5
+import psutil
+import subprocess
 from rich.console import Console
 from ..service.singleton_service import SingletonService
 from ..data.account_config import AccountConfig
@@ -16,6 +18,23 @@ def disconnect():
             print(f"[WARN] mt5.shutdown() failed: {mt5.last_error()}")
     except Exception as e:
         print(f"[Error] During shutdown: {e}")
+    
+    mt5_pid = SingletonService().get("mt5_pid")
+    if mt5_pid is not None:
+        try:
+            proc = psutil.Process(mt5_pid)
+            proc.terminate()          # sends SIGTERM (graceful)
+            proc.wait(timeout=5)      # wait up to 5 s for clean exit
+            print(f"MT5 (PID {mt5_pid}) terminated gracefully")
+        except psutil.TimeoutExpired:
+            proc.kill()               # force-kill if it didn't exit in time
+            print(f"MT5 (PID {mt5_pid}) force-killed")
+        except psutil.NoSuchProcess:
+            print("MT5 process already gone")
+        except psutil.AccessDenied as e:
+            print(f"Access denied killing PID {mt5_pid}: {e}")
+        finally:        
+           SingletonService().put("mt5_pid", None) # Clear the stored PID
 
 def query_terminal_info():
     """Query terminal (platform) metadata."""
@@ -259,12 +278,15 @@ def query_ticks_range(symbol: str, from_date: datetime, to_date: datetime):
 
 def initialize_connection(path: str) -> bool:
     """Initialize and return True if the MT5 terminal connects successfully."""
+    # Snapshot PIDs before initialization
+    before = {p.pid for p in psutil.process_iter(["pid", "name"])
+              if p.info["name"] == "terminal64.exe"}
+
     try:
         if not mt5.initialize(path=path):
             error = mt5.last_error()
             print(f"[ERROR] mt5.initialize() failed: {error}")
             return False
-        return True
     except ConnectionError as e:
         print(f"[ConnectionError] {e}")
         return False
@@ -280,7 +302,18 @@ def initialize_connection(path: str) -> bool:
     except Exception as e:
         print(f"[UnexpectedError] During initialization: {e}")
         return False
+    
+    # Snapshot PIDs before initialization
+    after = {p.pid for p in psutil.process_iter(["pid", "name"])
+              if p.info["name"] == "terminal64.exe"}
 
+    new_pids = after - before
+    if new_pids:
+        mt5_pid = new_pids.pop()
+        print(f"MT5 started with PID {mt5_pid}")
+        SingletonService().put("mt5_pid", mt5_pid)
+    else:
+        print("MT5 was already running; PID not tracked")
 
 def interactive_menu(accounts: list[AccountConfig]) -> AccountConfig:
     click.echo("Choose which account...")

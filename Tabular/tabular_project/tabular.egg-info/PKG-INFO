@@ -6,3 +6,4 @@ Requires-Python: >=3.9
 Requires-Dist: click>=8.0
 Requires-Dist: questionary>=2.1
 Requires-Dist: MetaTrader5>=5.0.5735
+Requires-Dist: psutil>=7
