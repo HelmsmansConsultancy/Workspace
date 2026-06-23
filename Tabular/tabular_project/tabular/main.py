@@ -84,9 +84,10 @@ def main(ctx, config):
     accounts = load_xml_config(config)
     SingletonService().put("accounts", accounts)
 
-    if ctx.invoked_subcommand is None:
-        choice = interactive_menu()
-        ctx.invoke(ctx.command.commands[choice])
+    while True:
+        if ctx.invoked_subcommand is None:
+            choice = interactive_menu()
+            ctx.invoke(ctx.command.commands[choice])
 
 main.add_command(connect)
 main.add_command(list)
