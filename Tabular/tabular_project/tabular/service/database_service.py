@@ -1,3 +1,4 @@
+import sqlite3
 from rich.console import Console
 
 
