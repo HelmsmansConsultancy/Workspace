@@ -1,30 +1,9 @@
 import click
-import questionary
-import os
 from rich.console import Console
-from tabular.commands.exit import exit
-from tabular.commands.connect import connect
-from tabular.commands.config import load
-from tabular.commands.list import list 
-from tabular.util.xmlutils import load_xml_config
 from tabular.service.singleton_service import SingletonService
-from tabular.service.database_service import DatabaseService
 
-SUBCOMMANDS = ['connect', 'list', 'load', 'exit'] 
 
 console = Console()
-
-databaseService = DatabaseService(os.getcwd())
-
-def interactive_menu():
-    click.echo("What do you want to do?")
-    for i, name in enumerate(SUBCOMMANDS, 1):
-        click.echo(f"  {i}. {name}")
-    idx = click.prompt(
-        "Enter number",
-        type=click.IntRange(1, len(SUBCOMMANDS))
-    )
-    return SUBCOMMANDS[idx - 1]
 
 def pick_file(start_dir):
     current_dir = os.path.abspath(start_dir)
@@ -70,34 +49,18 @@ def pick_file(start_dir):
             # File selected
             return full_path
 
-@click.group(invoke_without_command=True)
-@click.pass_context
-#@click.command()
-@click.option("--config", "config", default=None, help="Path to the XML file to process")
-def main(ctx, config):
-    """Tabular MT5 data management tool."""
-    click.echo("Tabular starting...")
 
+@click.command()
+def load():
+    """ Load the configuration from the XML file.  """
+    config = SingletonService().get("config")
     if config is not None and not config.endswith(".xml"):
         click.echo("❌ Error: file must be an .xml file.")
         config = None
     if config is None:
         click.echo(f"No config file provided. You can specify one with 'tabular [CONFIG]'.")
         config = pick_file(start_dir=os.getcwd())
-        SingletonService().put("config", config)
 
-    accounts = databaseService.accounts()
+    click.echo(f"Selected config file: {config}")
+    accounts = load_xml_config(config)
     SingletonService().put("accounts", accounts)
-
-    while True:
-        if ctx.invoked_subcommand is None:
-            choice = interactive_menu()
-            ctx.invoke(ctx.command.commands[choice])
-
-main.add_command(connect)
-main.add_command(list)
-main.add_command(load)
-main.add_command(exit)
-
-if __name__ == "__main__":
-    main()
