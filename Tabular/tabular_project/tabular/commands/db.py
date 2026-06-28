@@ -2,7 +2,12 @@ import click
 from rich.console import Console
 from tabular.util.menuutils import interactive_menu
 
-SUB_SUB_COMMANDS: list[tuple[str, str | None]] = [['make', 'make'], ['delete', 'delete'], ['list', 'list'], ['exit', None]]
+SUB_SUB_COMMANDS: list[tuple[str, str | None]] = [
+    ['Create / select', 'create'], 
+    ['delete', 'delete'], 
+    ['list', 'list'], 
+    ['Return to previous menu', None]
+]
 
 console = Console()
 
@@ -23,4 +28,3 @@ def db(ctx):
                 break
     
 
-    

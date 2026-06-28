@@ -12,7 +12,14 @@ from tabular.util.menuutils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 
-SUB_COMMANDS: list[tuple[str, str | None]] = [['config', 'config'], ['connect', 'connect'], ['db', 'db'], ['list', 'list'], ['load', 'load'], ['exit', 'exit']]
+SUB_COMMANDS: list[tuple[str, str | None]] = [
+    ['Config', 'config'], 
+    ['Connect', 'connect'], 
+    ['DB', 'db'], 
+    ['List', 'list'], 
+    ['Load', 'load'], 
+    ['Exit nicely', 'exit']
+]
 
 console = Console()
 
