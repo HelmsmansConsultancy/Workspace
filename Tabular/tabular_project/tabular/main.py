@@ -5,25 +5,18 @@ from rich.console import Console
 from tabular.commands.exit import exit
 from tabular.commands.config import config
 from tabular.commands.connect import connect
+from tabular.commands.db import db
 from tabular.commands.list import list 
 from tabular.util.xmlutils import load_xml_config
+from tabular.util.menuutils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
-SUBCOMMANDS = ['config', 'connect', 'list', 'load', 'exit'] 
+
+SUB_COMMANDS: list[tuple[str, str | None]] = [['config', 'config'], ['connect', 'connect'], ['db', 'db'], ['list', 'list'], ['load', 'load'], ['exit', 'exit']]
 
 console = Console()
 
 databaseService = DatabaseService(os.getcwd())
-
-def interactive_menu():
-    click.echo("What do you want to do?")
-    for i, name in enumerate(SUBCOMMANDS, 1):
-        click.echo(f"  {i}. {name}")
-    idx = click.prompt(
-        "Enter number",
-        type=click.IntRange(1, len(SUBCOMMANDS))
-    )
-    return SUBCOMMANDS[idx - 1]
 
 def pick_file(start_dir):
     current_dir = os.path.abspath(start_dir)
@@ -94,11 +87,12 @@ def main(ctx, config):
     while True:
         click.echo(f"Managing {len(accounts)} account(s)")
         if ctx.invoked_subcommand is None:
-            choice = interactive_menu()
+            choice = interactive_menu(SUB_COMMANDS)
             ctx.invoke(ctx.command.commands[choice])
 
 main.add_command(config)
 main.add_command(connect)
+main.add_command(db)
 main.add_command(list)
 main.add_command(exit)
 
