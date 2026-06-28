@@ -1,6 +1,7 @@
 import click
 from rich.console import Console
 from tabular.service.singleton_service import SingletonService
+from tabular.util.xmlutils import load_xml_config
 
 
 console = Console()
@@ -51,7 +52,7 @@ def pick_file(start_dir):
 
 
 @click.command()
-def load():
+def config():
     """ Load the configuration from the XML file.  """
     config = SingletonService().get("config")
     if config is not None and not config.endswith(".xml"):

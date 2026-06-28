@@ -1,9 +1,11 @@
 
 
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate / .\tabular_project\venv\Scripts\activate
 pip install -e ./tabular_project
 
+Start the application:
+python3 .\tabular_project\tabular\main.py
 
 pip index versions readline
 

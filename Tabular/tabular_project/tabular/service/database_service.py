@@ -8,6 +8,5 @@ class DatabaseService():
 
     def accounts(self):
         """List all accounts."""
-        self.console.print("Listing all accounts...")
         return None
     
