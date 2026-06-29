@@ -1,3 +1,6 @@
+<applicatioConfig>
+	<dbFile>D:\Workspace\Tabular\Static.db</dbFile>
+</applicatioConfig>
 <accounts>
 	<account id="510290503" name="100K FTMO">
 		<description>100K FTMO Challenge</description>
