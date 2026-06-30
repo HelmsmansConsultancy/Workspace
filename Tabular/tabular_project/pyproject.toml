@@ -10,6 +10,7 @@ requires-python = ">=3.9"
 
 dependencies = [
     "click>=8.0",            # CLI framework
+    "rich>=14.3.4",          # Logging
     "questionary>=2.1",      # CLI interaction
     "MetaTrader5>=5.0.5735", # MetaTrader5 library
     "psutil>=7",             # Program control

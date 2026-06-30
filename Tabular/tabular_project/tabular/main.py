@@ -11,6 +11,7 @@ from tabular.util.menuutils import interactive_menu
 from tabular.util.fileutils import pick_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
+from tabular.data.application_config import ApplicationConfig
 
 SUB_COMMANDS: list[tuple[str, str | None]] = [
     ['Config', 'config'], 
@@ -22,31 +23,31 @@ SUB_COMMANDS: list[tuple[str, str | None]] = [
 ]
 
 console = Console()
-databaseService = DatabaseService(os.getcwd())
 
 @click.group(invoke_without_command=True)
+@click.option(
+    "--db_file",
+    "db_file",
+    type=click.Path(),
+    default=None,  # resolved lazily below so it reflects sys.argv[0] correctly
+    help="Path to the SQLite database file. Defaults to <script_name>.db",
+)
 @click.pass_context
-@click.option("--config", "config", default=None, help="Path to the XML file to process")
-def main(ctx, config):
+def main(ctx: click.Context, db_file: str):
     """Tabular MT5 data management tool."""
+    applicationConfig    = ApplicationConfig()
+
+    if bool(db_file) and db_file.endswith(".db"):
+        applicationConfig.db_file = db_file
+    SingletonService().put("ApplicationConfig", applicationConfig)
+    databaseService = DatabaseService()
+
     click.echo("Tabular starting...")
     start_dir=os.getcwd()
     SingletonService().put("start_dir", start_dir)
 
     accounts = databaseService.accounts()
     SingletonService().put("accounts", accounts)
-
-    if accounts is None or len(accounts) == 0:
-        click.echo("❌ Error: No accounts found in the database.")
-        if config is not None and not config.endswith(".xml"):
-            click.echo("❌ Error: file must be an .xml file.")
-            config = None
-        if config is None:
-            click.echo(f"No config file provided. You can specify one with 'tabular [CONFIG]'.")
-            config = pick_file(start_dir)
-            SingletonService().put("config", config)
-            accounts = load_xml_config(config)
-            SingletonService().put("accounts", accounts)
 
     while True:
         click.echo(f"Managing {len(accounts)} account(s)")

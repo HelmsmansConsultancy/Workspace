@@ -15,6 +15,7 @@ tabular/commands/exit.py
 tabular/commands/list.py
 tabular/data/__init__.py
 tabular/data/account_config.py
+tabular/data/application_config.py
 tabular/data/backend.py
 tabular/data/csvfile.py
 tabular/data/money.py
@@ -23,4 +24,5 @@ tabular/service/database_service.py
 tabular/service/singleton_service.py
 tabular/util/__init__.py
 tabular/util/fileutils.py
+tabular/util/menuutils.py
 tabular/util/xmlutils.py
