@@ -18,6 +18,7 @@ tabular/data/account_config.py
 tabular/data/application_config.py
 tabular/data/backend.py
 tabular/data/csvfile.py
+tabular/data/metatrader_config.py
 tabular/data/money.py
 tabular/service/__init__.py
 tabular/service/database_service.py

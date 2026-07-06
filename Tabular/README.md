@@ -1,7 +1,8 @@
 
 
 python -m venv venv
-venv\Scripts\activate / .\tabular_project\venv\Scripts\activate
+# venv\Scripts\activate / .\tabular_project\venv\Scripts\activate
+venv\Scripts\activate / .\tabular_project\venv
 pip install -e ./tabular_project
 
 Start the application:
@@ -41,3 +42,6 @@ export PATH="$HOME/opt/miniconda3/lib/python3.13/:$PATH"
 Add to windows path:
 C:\Users\Helms\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages
 
+Check available versions
+
+pip index versions requests
