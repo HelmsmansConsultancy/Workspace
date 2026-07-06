@@ -28,7 +28,7 @@ def explain_empty():
     
 
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[], None]]] = [
-    ['Database', 'db', explain_DB], 
+    ['Database', 'database', explain_DB], 
     ['MetaTrader 5', 'metatrader5', explain_empty], 
     ['Connect', 'connect', explain_empty], 
     ['List', 'list', explain_empty], 
