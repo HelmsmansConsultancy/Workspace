@@ -23,17 +23,25 @@ def explain_DB():
         return f"<{databaseService.db_file}>"
     return "<No database available.>"
 
+def explain_MT5():
+    if databaseService is not None:
+        mt5_installations = databaseService.countMetatraders()
+        if mt5_installations > 0:
+            return f"<{len(mt5_installations)} MT5 installation(s) found.>"
+        else:
+            return "<No MT5 installations found.>"
+    return "<No database available.>"
+
 def explain_empty():
     return empty_string
     
 
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[], None]]] = [
-    ['Database', 'database', explain_DB], 
-    ['MetaTrader 5', 'metatrader5', explain_empty], 
-    ['Connect', 'connect', explain_empty], 
-    ['List', 'list', explain_empty], 
-    ['Load', 'load', explain_empty], 
-    ['Exit nicely', 'exit', explain_empty]
+    ['Database', database.callback.__name__, explain_DB], 
+    ['MetaTrader 5', metatrader5.callback.__name__, explain_MT5], 
+    ['Connect', connect.callback.__name__, explain_empty], 
+    ['List', list.callback.__name__, explain_empty], 
+    ['Exit nicely', exit.callback.__name__, explain_empty]
 ]
 
 @click.group(invoke_without_command=True)

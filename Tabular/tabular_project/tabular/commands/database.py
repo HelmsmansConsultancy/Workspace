@@ -1,5 +1,4 @@
 import os
-
 import click
 import sqlite3
 from typing import Callable 

@@ -35,6 +35,15 @@ class DatabaseService():
         tables =  [row[0] for row in cursor.fetchall()]
         return tables
     
+    def listMetatraders(self) -> list[MetatraderConfig]:
+        cursor = self.connection.execute("SELECT id, path FROM METATRADER_CONFIG;")
+        metatraders = [MetatraderConfig(id=row[0], path=row[1]) for row in cursor.fetchall()]
+        return metatraders
+
+    def countMetatraders(self) -> int:
+        cursor = self.connection.execute("SELECT COUNT(*) FROM METATRADER_CONFIG;")
+        count = cursor.fetchone()[0]
+        return count
 
     def addMetatrader(self, metatraderConfig: MetatraderConfig) -> int:
         
