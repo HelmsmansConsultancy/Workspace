@@ -1,11 +1,16 @@
-from dataclasses import dataclass
+from sqlalchemy import Column, Integer, String
+from tabular.data.base import Base
 
 
-@dataclass
-class MetatraderConfig:
-    id: int = None
-    path: str = None
+class MetatraderConfig(Base):
+    __tablename__ = "metatrader_config"
 
+    id: int             = Column(Integer,   primary_key=True, nullable=False, autoincrement=True)
+    path: str           = Column(String,    nullable=False)
+    terminal_version: str = Column(String,  nullable=True)
+    build: str          = Column(String,    nullable=True)
+    release_date: str   = Column(String,    nullable=True)
+    
     def __init__(self, id: int = None, path: str = None):
         self.id = id
         self.path = path
