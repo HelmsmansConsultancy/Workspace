@@ -78,8 +78,9 @@ def metatrader5(ctx):
     mt5_installations = databaseService.listMetatraders()
     click.echo(empty_string)
     click.echo("MT5 Installations:")
-    for mt5 in mt5_installations:
-        click.echo(f"- {mt5}")
+    if bool(mt5_installations) and len(mt5_installations) > 0:
+        for mt5 in mt5_installations:
+            click.echo(f"- {mt5}")
     else:
         click.echo("No MT5 installations found.")
     click.echo(empty_string)

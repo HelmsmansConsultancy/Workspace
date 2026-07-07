@@ -44,7 +44,7 @@ def list_tables():
     click.echo(empty_string)
 
 
-DB_SUB_COMMANDS: list_tables[tuple[str, str | None, Callable[[], str]]] = [
+DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
 #    ['Create / select', 'create', explain_empty], 
 #    ['delete', 'delete', explain_empty], 
     ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty], 

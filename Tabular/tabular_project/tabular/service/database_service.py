@@ -36,6 +36,16 @@ class DatabaseService():
         tables =  [row[0] for row in cursor.fetchall()]
         return tables
     
+    def list_account_configs(self) -> list[AccountConfig]:
+        cursor = self.connection.execute("SELECT id, account_id, metatrader_id FROM ACCOUNT_CONFIG;")
+        account_configs = [AccountConfig(id=row[0], account_id=row[1], metatrader_id=row[2]) for row in cursor.fetchall()]
+        return account_configs
+    
+    def countAccounts(self) -> int:
+        cursor = self.connection.execute("SELECT COUNT(*) FROM ACCOUNT_CONFIG;")
+        count = cursor.fetchone()[0]
+        return count
+
     def listMetatraders(self) -> list[MetatraderConfig]:
         cursor = self.connection.execute("SELECT id, path FROM METATRADER_CONFIG;")
         metatraders = [MetatraderConfig(id=row[0], path=row[1]) for row in cursor.fetchall()]

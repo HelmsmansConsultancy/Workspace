@@ -13,6 +13,7 @@ from tabular.util.fileutils import pick_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.application_config import ApplicationConfig
+from tabular.commands.accounts import accounts
 
 console = Console()
 applicationConfig: ApplicationConfig = None
@@ -20,17 +21,26 @@ databaseService: DatabaseService = None
 
 def explain_DB():
     if databaseService is not None:
-        return f"<{databaseService.db_file}>"
-    return "<No database available.>"
+        return f"\t\t\t<{databaseService.db_file}>"
+    return "\t\t\t<No database available.>"
 
 def explain_MT5():
     if databaseService is not None:
         mt5_installations = databaseService.countMetatraders()
         if mt5_installations > 0:
-            return f"<{mt5_installations} MT5 installation(s) found.>"
+            return f"\t\t<{mt5_installations} MT5 installation(s) found.>"
         else:
             return "<No MT5 installations found.>"
-    return "<No database available.>"
+    return "\t\t<No database available.>"
+
+def explain_accounts():
+    if databaseService is not None:
+        accounts = databaseService.countAccounts()
+        if accounts > 0:
+            return f"\t\t\t<{accounts} account(s) found.>"
+        else:
+            return "\t\t\t<No accounts found.>"
+    return "\t\t\t<No database available.>"
 
 def explain_empty():
     return empty_string
@@ -39,6 +49,7 @@ def explain_empty():
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[], None]]] = [
     ['Database', database.callback.__name__, explain_DB], 
     ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5], 
+    ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts],
     ['Connect', connect.callback.__name__.replace("_", "-"), explain_empty], 
     ['List', list.callback.__name__.replace("_", "-"), explain_empty], 
     ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty]
@@ -81,6 +92,7 @@ def main(ctx: click.Context, db_file: str):
 
 main.add_command(database)
 main.add_command(metatrader5)
+main.add_command(accounts)
 main.add_command(connect)
 main.add_command(list)
 main.add_command(exit)
