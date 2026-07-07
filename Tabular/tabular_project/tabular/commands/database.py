@@ -15,13 +15,6 @@ def explain_empty():
     return empty_string
     
 
-DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
-#    ['Create / select', 'create', explain_empty], 
-#    ['delete', 'delete', explain_empty], 
-    ['List tables', 'list', explain_empty], 
-    ['Return to previous menu', None, explain_empty]
-]
-
 @click.command()
 def create():
     """Create a new database."""
@@ -40,10 +33,10 @@ def create():
 
 
 @click.command()
-def list():
+def list_tables():
     """List all databases."""
     global databaseService
-    tables: list[str] = databaseService.listTables()
+    tables: list_tables[str] = databaseService.listTables()
     click.echo(empty_string)
     click.echo("Tables in the database:")
     for table in tables:
@@ -51,6 +44,12 @@ def list():
     click.echo(empty_string)
 
 
+DB_SUB_COMMANDS: list_tables[tuple[str, str | None, Callable[[], str]]] = [
+#    ['Create / select', 'create', explain_empty], 
+#    ['delete', 'delete', explain_empty], 
+    ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty], 
+    ['Return to previous menu', None, explain_empty]
+]
 
 @click.group()
 @click.pass_context
@@ -62,6 +61,7 @@ def database(ctx: click.Context):
     size_bytes = os.path.getsize(databaseService.db_file) if databaseService is not None else 0
     click.echo(empty_string)
     click.echo(f"Database file: <{databaseService.db_file}> - Size: {size_bytes:,} bytes")
+    click.echo(list(ctx.command.commands))
 
     while True:
         if ctx.invoked_subcommand is None:
@@ -71,5 +71,5 @@ def database(ctx: click.Context):
             else:
                 break
 
-database.add_command(create)
-database.add_command(list)
+#database.add_command(create)
+database.add_command(list_tables)

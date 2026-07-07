@@ -27,7 +27,7 @@ def explain_MT5():
     if databaseService is not None:
         mt5_installations = databaseService.countMetatraders()
         if mt5_installations > 0:
-            return f"<{len(mt5_installations)} MT5 installation(s) found.>"
+            return f"<{mt5_installations} MT5 installation(s) found.>"
         else:
             return "<No MT5 installations found.>"
     return "<No database available.>"
@@ -38,10 +38,10 @@ def explain_empty():
 
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[], None]]] = [
     ['Database', database.callback.__name__, explain_DB], 
-    ['MetaTrader 5', metatrader5.callback.__name__, explain_MT5], 
-    ['Connect', connect.callback.__name__, explain_empty], 
-    ['List', list.callback.__name__, explain_empty], 
-    ['Exit nicely', exit.callback.__name__, explain_empty]
+    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5], 
+    ['Connect', connect.callback.__name__.replace("_", "-"), explain_empty], 
+    ['List', list.callback.__name__.replace("_", "-"), explain_empty], 
+    ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty]
 ]
 
 @click.group(invoke_without_command=True)
@@ -74,13 +74,14 @@ def main(ctx: click.Context, db_file: str):
     while True:
         click.echo(empty_string)
         click.echo(f"Managing {len(accounts)} account(s)")
+#        click.echo(list(ctx.command.commands))
         if ctx.invoked_subcommand is None:
             choice = interactive_menu(SUB_COMMANDS)
             ctx.invoke(ctx.command.commands[choice])
 
+main.add_command(database)
 main.add_command(metatrader5)
 main.add_command(connect)
-main.add_command(database)
 main.add_command(list)
 main.add_command(exit)
 

@@ -6,6 +6,7 @@ from tabular.util.fileutils import pick_file
 from tabular.util.menuutils import interactive_menu, empty_string
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
+from tabular.data.metatrader_config import MetatraderConfig
 from tabular.util.xmlutils import load_xml_config
 
 console = Console()
@@ -15,25 +16,35 @@ databaseService: DatabaseService = None
 def explain_empty():
     return empty_string
     
+@click.command()
+def append_mt5():
+    """ Select a MetaTrader 5 installation"""
+    metatraderPath = pick_file(start_dir=os.getcwd(), file_extension=".exe")
+    click.echo(f"Selected MT5 path: {metatraderPath}")
+    if bool(metatraderPath) and metatraderPath.endswith(".exe") and len(databaseService.getMetatradersByPath(metatraderPath)) == 0:
+        metatraderId = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath))
+        click.echo(f"MT5 installation added with ID: {metatraderId} and path: {metatraderPath}")
+
+@click.command()
+def list_mt5():
+    """ List all MetaTrader 5 installations"""
+    mt5_installations = databaseService.listMetatraders()
+    click.echo(empty_string)
+    if len(mt5_installations) > 0:
+        click.echo("MT5 Installations:")
+        for mt5 in mt5_installations:
+            click.echo(f"- {mt5}")
+    else:
+        click.echo("No MT5 installations found.")
+    click.echo(empty_string)
+
 
 MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
-    ['Append a MT5', 'appendMT5', explain_empty], 
+    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty], 
+    ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty], 
     ['Delete MT5', 'delete', explain_empty], 
-    ['List ', 'listMT5', explain_empty], 
     ['Return to previous menu', None, explain_empty]
 ]
-
-@click.command()
-def appendMT5():
-    """ Select a MetaTrader 5 installation"""
-    metatraderPath = pick_file(start_dir=os.getcwd())
-    if bool(metatraderPath) and metatraderPath.endswith(".exe") and len(databaseService.getMetatradersByPath(metatraderPath)) == 0:
-        metatraderId = databaseService.addMetatrader(metatraderPath)
-
-
-@click.command()
-def listMT5():
-    """List all MT5 installations."""
 
 @click.group()
 @click.pass_context
@@ -50,6 +61,7 @@ def metatrader5(ctx):
     else:
         click.echo("No MT5 installations found.")
     click.echo(empty_string)
+    click.echo(list(ctx.command.commands))
 
     while True:
         if ctx.invoked_subcommand is None:
@@ -59,4 +71,5 @@ def metatrader5(ctx):
             else:
                 break
 
-metatrader5.add_command(appendMT5)
+metatrader5.add_command(append_mt5)
+metatrader5.add_command(list_mt5)

@@ -6,6 +6,7 @@ from tabular.data.account_config import AccountConfig
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
 
+console = Console()
 
 class DatabaseService():
     db_file: str
@@ -46,18 +47,20 @@ class DatabaseService():
         return count
 
     def addMetatrader(self, metatraderConfig: MetatraderConfig) -> int:
-        
-        cursor = self.connection
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS METATRADER_CONFIG (id INTEGER PRIMARY KEY, 
-                           path TEXT NOT NULL)
-        """)
+        cursor = self.connection.execute("""
+            INSERT INTO METATRADER_CONFIG (path) VALUES (?);
+        """, (metatraderConfig.path,))
+        last_row_id = cursor.lastrowid
+        self.connection.commit()
+        return last_row_id
 
     def getMetatradersByPath(self, metatraderPath: str) -> list[MetatraderConfig]:
-        self.connection.execute("""
-            CREATE TABLE IF NOT EXISTS METATRADER_CONFIG (id INTEGER PRIMARY KEY, 
-                           path TEXT NOT NULL)
-        """)
+        cursor =self.connection.execute("""
+            SELECT id, path FROM METATRADER_CONFIG WHERE path = ?;
+        """, (metatraderPath,))
+        rows = cursor.fetchall()
+        console.print(f"Found {len(rows)} metatrader(s) with path: {metatraderPath}")
+        return [MetatraderConfig(id=row[0], path=row[1]) for row in rows]
 
     def accounts(self) -> list[AccountConfig]:
         """List all accounts."""

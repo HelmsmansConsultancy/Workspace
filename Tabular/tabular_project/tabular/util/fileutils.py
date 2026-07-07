@@ -72,7 +72,7 @@ def determine_new_file(current_path: str) -> str | None:
         _, selected_path = options[idx]
         current_path = selected_path
 
-def pick_file(start_dir):
+def pick_file(start_dir, file_extension=".xml") -> str | None:
     current_dir = os.path.abspath(start_dir)
 
     while True:
@@ -84,7 +84,7 @@ def pick_file(start_dir):
             full_path = os.path.join(current_dir, entry)
             if os.path.isdir(full_path):
                 choices.append(f"📁 {entry}")
-            elif entry.endswith(".xml"):
+            elif entry.endswith(file_extension):
                 choices.append(f"📄 {entry}")
             else:
                 # Visible but greyed out and not selectable
