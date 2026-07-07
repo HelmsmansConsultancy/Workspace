@@ -61,7 +61,7 @@ def database(ctx: click.Context):
     size_bytes = os.path.getsize(databaseService.db_file) if databaseService is not None else 0
     click.echo(empty_string)
     click.echo(f"Database file: <{databaseService.db_file}> - Size: {size_bytes:,} bytes")
-    click.echo(list(ctx.command.commands))
+#    click.echo(list(ctx.command.commands))
 
     while True:
         if ctx.invoked_subcommand is None:

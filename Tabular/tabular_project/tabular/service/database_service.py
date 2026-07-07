@@ -55,12 +55,19 @@ class DatabaseService():
         return last_row_id
 
     def getMetatradersByPath(self, metatraderPath: str) -> list[MetatraderConfig]:
-        cursor =self.connection.execute("""
+        cursor = self.connection.execute("""
             SELECT id, path FROM METATRADER_CONFIG WHERE path = ?;
         """, (metatraderPath,))
         rows = cursor.fetchall()
         console.print(f"Found {len(rows)} metatrader(s) with path: {metatraderPath}")
         return [MetatraderConfig(id=row[0], path=row[1]) for row in rows]
+    
+    def deleteMetatrader(self, metatraderId: int) -> None:
+        self.connection.execute("""
+            DELETE FROM METATRADER_CONFIG WHERE id = ?;
+        """, (metatraderId,))
+        self.connection.commit()
+        console.print(f"Deleted metatrader with ID: {metatraderId}")
 
     def accounts(self) -> list[AccountConfig]:
         """List all accounts."""

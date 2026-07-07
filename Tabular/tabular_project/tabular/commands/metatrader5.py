@@ -16,6 +16,28 @@ databaseService: DatabaseService = None
 def explain_empty():
     return empty_string
     
+
+@click.command()
+def delete_mt5():
+    """ Delete a MetaTrader 5 installation"""
+    mt5_installations = databaseService.listMetatraders()
+    if len(mt5_installations) == 0:
+        click.echo("No MT5 installations found.")
+        return
+
+    click.echo("Select a MT5 installation to delete:")
+    for index, mt5 in enumerate(mt5_installations, start=1):
+        click.echo(f"{index}. {mt5}")
+
+    choice = click.prompt("Enter the number of the MT5 installation to delete", type=int)
+    if 1 <= choice <= len(mt5_installations):
+        mt5_to_delete = mt5_installations[choice - 1]
+        databaseService.deleteMetatrader(mt5_to_delete.id)
+        click.echo(f"Deleted MT5 installation: {mt5_to_delete}")
+    else:
+        click.echo("Invalid choice. No MT5 installation deleted.")
+
+
 @click.command()
 def append_mt5():
     """ Select a MetaTrader 5 installation"""
@@ -42,7 +64,7 @@ def list_mt5():
 MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
     ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty], 
     ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty], 
-    ['Delete MT5', 'delete', explain_empty], 
+    ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty],
     ['Return to previous menu', None, explain_empty]
 ]
 
@@ -61,7 +83,7 @@ def metatrader5(ctx):
     else:
         click.echo("No MT5 installations found.")
     click.echo(empty_string)
-    click.echo(list(ctx.command.commands))
+    #    click.echo(list(ctx.command.commands))
 
     while True:
         if ctx.invoked_subcommand is None:
@@ -73,3 +95,4 @@ def metatrader5(ctx):
 
 metatrader5.add_command(append_mt5)
 metatrader5.add_command(list_mt5)
+metatrader5.add_command(delete_mt5)
