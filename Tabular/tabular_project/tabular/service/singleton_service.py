@@ -1,3 +1,5 @@
+from tabular.service.s import S
+
 class SingletonMeta(type):
     """
     Metaclass for creating Singleton classes.
@@ -22,13 +24,3 @@ class SingletonService(metaclass=SingletonMeta):
 
     def get(self, key):
         return self.dict.get(key, None)  
-
-
-# Example usage
-#if __name__ == "__main__":
-#    obj1 = SingletonService("First")
-#    obj2 = SingletonService("Second")
-#
-#    print(obj1.value)  # Output: First
-#    print(obj2.value)  # Output: First (same instance as obj1)
-#    print(obj1 is obj2)  # Output: True

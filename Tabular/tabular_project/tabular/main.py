@@ -2,6 +2,7 @@ import click
 import os
 from typing import Callable 
 from rich.console import Console
+from tabular.service.s import S
 from tabular.commands.exit import exit
 from tabular.commands.metatrader5 import metatrader5
 from tabular.commands.connect import connect
@@ -72,14 +73,14 @@ def main(ctx: click.Context, db_file: str):
 
     if bool(db_file) and db_file.endswith(".db"):
         applicationConfig.db_file = db_file
-    SingletonService().put("ApplicationConfig", applicationConfig)
+    SingletonService().put(S.APPLICATION_CONFIG, applicationConfig)
     databaseService = DatabaseService()
-    SingletonService().put("DatabaseService", databaseService)
+    SingletonService().put(S.DATABASE_SERVICE, databaseService)
 
     start_dir=os.getcwd()
-    SingletonService().put("start_dir", start_dir)
+    SingletonService().put(S.START_DIR, start_dir)
     accounts = databaseService.accounts()
-    SingletonService().put("accounts", accounts)
+    SingletonService().put(S.ACCOUNTS, accounts)
 
     choice = None
     while True:

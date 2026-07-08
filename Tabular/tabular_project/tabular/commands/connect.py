@@ -3,6 +3,7 @@ import MetaTrader5 as mt5
 import psutil
 import subprocess
 from rich.console import Console
+from tabular.service.s import S
 from ..service.singleton_service import SingletonService
 from ..data.account_config import AccountConfig
 from ..util.fileutils import list_files
@@ -19,7 +20,7 @@ def disconnect():
     except Exception as e:
         print(f"[Error] During shutdown: {e}")
     
-    mt5_pid = SingletonService().get("mt5_pid")
+    mt5_pid = SingletonService().get(S.MT5_PID)
     if mt5_pid is not None:
         try:
             proc = psutil.Process(mt5_pid)
@@ -34,7 +35,7 @@ def disconnect():
         except psutil.AccessDenied as e:
             print(f"Access denied killing PID {mt5_pid}: {e}")
         finally:        
-           SingletonService().put("mt5_pid", None) # Clear the stored PID
+           SingletonService().put(S.MT5_PID, None) # Clear the stored PID
 
 def query_terminal_info():
     """Query terminal (platform) metadata."""
@@ -311,7 +312,7 @@ def initialize_connection(path: str) -> bool:
     if new_pids:
         mt5_pid = new_pids.pop()
         print(f"MT5 started with PID {mt5_pid}")
-        SingletonService().put("mt5_pid", mt5_pid)
+        SingletonService().put(S.MT5_PID, mt5_pid)
     else:
         print("MT5 was already running; PID not tracked")
 
@@ -327,7 +328,7 @@ def interactive_menu(accounts: list[AccountConfig]) -> AccountConfig:
 
 @click.command()
 def connect():
-    accounts: list[AccountConfig] = SingletonService().get("accounts")
+    accounts: list[AccountConfig] = SingletonService().get(S.ACCOUNTS)
     idx = 0
     """Connect to a data source."""        
     if len(accounts) == 0:

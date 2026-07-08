@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import Session
 from typing import cast
 from rich.console import Console
+from tabular.service.s import S
 from tabular.data.account_config import AccountConfig
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
@@ -18,7 +19,7 @@ class DatabaseService():
 
     def __init__(self):
         self.console = Console()
-        self.db_file = cast(AccountConfig, SingletonService().get("ApplicationConfig")).db_file
+        self.db_file = cast(AccountConfig, SingletonService().get(S.APPLICATION_CONFIG)).db_file
         self.db_url = f"sqlite:///{self.db_file}"
         self.console.print(f"Starting database at: {self.db_file}")
         self.engine = create_engine(self.db_url, echo=False, future=True)

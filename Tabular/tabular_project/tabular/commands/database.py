@@ -3,6 +3,7 @@ import click
 import sqlite3
 from typing import Callable 
 from rich.console import Console
+from tabular.service.s import S
 from tabular.util.menuutils import interactive_menu, empty_string
 from tabular.util.fileutils import determine_new_file
 from tabular.service.singleton_service import SingletonService
@@ -19,7 +20,7 @@ def explain_empty():
 def create():
     """Create a new database."""
     click.echo("Creating a new database...")
-    start_dir = SingletonService().get("start_dir")
+    start_dir = SingletonService().get(S.START_DIR)
     db_file = determine_new_file(start_dir)
     # Ensure .db extension
     if not db_file.endswith(".db"):
