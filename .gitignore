@@ -3,5 +3,5 @@ tickdata.egg-info
 .spyproject
 .vs
 .DS_Store
-.db
+*.db
 
