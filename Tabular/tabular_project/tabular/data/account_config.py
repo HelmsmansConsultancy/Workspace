@@ -1,24 +1,28 @@
 from .backend import Backend
 from .money import Money
-from sqlalchemy import Column, Integer, Numeric, String
+from sqlalchemy import Boolean, Column, Integer, Numeric, String
 from tabular.data.base import Base
 
 class AccountConfig(Base):
     __tablename__ = "ACCOUNT_CONFIG"
 
-    id: int = Column(Integer, primary_key=True)
-    login: int = Column(Integer, nullable=False)
-    name: str = Column(String, nullable=False)
-    server: str = Column(String, nullable=False)
-    currency: str = Column(String, nullable=False)
-    company: str = Column(String, nullable=False)
+    id: int = Column("id", Integer, primary_key=True)
+    company: str = Column("company", String, nullable=False)
+    currency: str = Column("currency", String, nullable=False)
+    leverage: int = Column("leverage", Integer, nullable=True)
+    login: int = Column("login", Integer, nullable=False)
+    name: str = Column("name", String, nullable=False)
+    server: str = Column("server", String, nullable=False)
+    trade_mode: int = Column("trade_mode", Integer, nullable=True)
 
-    def __init__(self, login: int, name: str, server: str, currency: str, company: str):
+    def __init__(self, company: str, currency: str, leverage: int, login: int, name: str, server: str, trade_mode: int):
+        self.company = company
+        self.currency = currency
+        self.leverage = leverage
         self.login = login
         self.name = name
         self.server = server
-        self.currency = currency
-        self.company = company
+        self.trade_mode = trade_mode
 
     def __repr__(self):
         return f"<AccountConfig(id={self.id}, login={self.login}, name='{self.name}', server='{self.server}', currency='{self.currency}', company='{self.company}')>"

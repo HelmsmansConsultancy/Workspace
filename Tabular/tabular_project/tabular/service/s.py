@@ -1,8 +1,10 @@
 from typing import Final
+from decimal import Decimal
 
 class S:
     ACCOUNTS: Final = "accounts"
     APPLICATION_CONFIG: Final = "ApplicationConfig"
+    CENT: Final = Decimal("0.01")
     CONNECTED_MT5: Final = "connected_mt5" 
     DATABASE_SERVICE: Final = "DatabaseService"
     MT5_PID: Final = "mt5_pid"

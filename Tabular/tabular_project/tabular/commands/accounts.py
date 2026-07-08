@@ -1,4 +1,5 @@
 import click
+from decimal import Decimal, ROUND_HALF_UP
 import MetaTrader5 as meta_trader_5
 from MetaTrader5 import AccountInfo 
 from typing import Callable 
@@ -9,6 +10,7 @@ from tabular.util.fileutils import determine_new_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
+from tabular.data.account_status import AccountStatus
 from tabular.data.metatrader_config import MetatraderConfig
 
 console = Console()
@@ -33,13 +35,24 @@ def create_account_mt5():
         return
     else:
         new_account_config = AccountConfig(
-            login=account_info.login,
+            currency=account_info.currency,
             company=account_info.company,
+            leverage=account_info.leverage,
+            login=account_info.login,
             name=account_info.name,
             server=account_info.server,
-            currency=account_info.currency,
+            trade_mode=account_info.trade_mode
         )
         databaseService.addAccount(new_account_config)
+        new_account_status = AccountStatus(
+            account_id=new_account_config.id,
+            balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP),
+            equity=Decimal(account_info.equity).quantize(S.CENT, rounding=ROUND_HALF_UP),
+            profit=Decimal(account_info.profit).quantize(S.CENT, rounding=ROUND_HALF_UP)    ,
+            trade_allowed=account_info.trade_allowed,
+            trade_expert=account_info.trade_expert,
+        )
+        databaseService.addAccountStatus(new_account_status)
         click.echo(f"New account with login {account_info.login} and company {account_info.company} added to the database.")
 
 @click.command()
@@ -71,12 +84,18 @@ def accounts(ctx: click.Context):
 
     choice = None
     while True:
-        account_configs = databaseService.list_account_configs()
+        account_configs: list[AccountConfig] = databaseService.list_account_configs()
+        account_states: list[AccountStatus] = databaseService.list_account_states()
         click.echo(empty_string)
         click.echo("Accounts:")
         if bool(account_configs) and len(account_configs) > 0:
             for account_config in account_configs:
-                click.echo(f"- {account_config}")
+                click.echo(f"- {account_config!r}")
+            if bool(account_states) and len(account_states) > 0:
+                click.echo(empty_string)
+                click.echo("Account States:")
+                for account_state in account_states:
+                    click.echo(f"- {account_state!r}")
         else:
             click.echo("No Account Configs found.")
         click.echo(empty_string)

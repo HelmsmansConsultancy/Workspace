@@ -4,6 +4,7 @@ from typing import cast
 from rich.console import Console
 from tabular.service.s import S
 from tabular.data.account_config import AccountConfig
+from tabular.data.account_status import AccountStatus
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.data.base import Base
@@ -35,6 +36,11 @@ class DatabaseService():
             account_configs = session.query(AccountConfig).all()
             return account_configs
     
+    def list_account_states(self) -> list[AccountStatus]:
+        with Session(self.engine) as session:
+            account_states = session.query(AccountStatus).all()
+            return account_states
+    
     def countAccounts(self) -> int:
         with Session(self.engine) as session:
             count = session.query(AccountConfig).count()
@@ -50,6 +56,12 @@ class DatabaseService():
             session.add(accountConfig)
             session.commit()
             return accountConfig.id
+        
+    def addAccountStatus(self, accountStatus: AccountStatus) -> int:
+        with Session(self.engine) as session:
+            session.add(accountStatus)
+            session.commit()
+            return accountStatus.account_id
 
     def listMetatraders(self) -> list[MetatraderConfig]:
         with Session(self.engine) as session:
