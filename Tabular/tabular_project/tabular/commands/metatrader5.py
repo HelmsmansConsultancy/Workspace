@@ -55,7 +55,7 @@ def list_mt5():
     if len(mt5_installations) > 0:
         click.echo("MT5 Installations:")
         for mt5 in mt5_installations:
-            click.echo(f"- {mt5}")
+            click.echo(f"- {mt5!r}")
     else:
         click.echo("No MT5 installations found.")
     click.echo(empty_string)
@@ -83,15 +83,68 @@ def connect_mt5():
         if term_info is None or not term_info.connected:
             click.echo(f"Terminal not connected to broker: {meta_trader_5.last_error()}")
         else:
-            click.echo(f"Connected to MT5 installation: {term_info}")
+            click.echo(f"Connected to MT5 installation: {mt5_to_connect.path}")
             if term_info.connected:
                 SingletonService().put("MT5TerminalInfo", term_info)
+
+                if mt5_to_connect.trade_allowed is None or mt5_to_connect.tradeapi_disabled is None or mt5_to_connect.notifications_enabled is None or mt5_to_connect.mqid is None:
+                    mt5_to_connect.trade_allowed = term_info.trade_allowed
+                    mt5_to_connect.tradeapi_disabled = term_info.tradeapi_disabled
+                    mt5_to_connect.notifications_enabled = term_info.notifications_enabled
+                    mt5_to_connect.mqid = term_info.mqid
+                    databaseService.updateMetatrader(mt5_to_connect)
+                    click.echo(f"Updated MT5 permissions info")
+
                 if mt5_to_connect.terminal_version is None or mt5_to_connect.build is None or mt5_to_connect.release_date is None:
                     version_info: Optional[tuple[int, int, str]] = meta_trader_5.version()
                     mt5_to_connect.terminal_version = f"{version_info[0]}.{version_info[1]} {version_info[2]}"
                     mt5_to_connect.build = version_info[1]
                     mt5_to_connect.release_date = version_info[2]
                     databaseService.updateMetatrader(mt5_to_connect)
+                    click.echo(f"Updated MT5 version info")
+    else:
+        click.echo("Invalid choice. No MT5 installation connected.")
+
+@click.command()
+def update_mt5():
+    """ Update MetaTrader 5 installation info"""
+    click.echo(empty_string)
+    mt5_installations: list[MetatraderConfig] = databaseService.listMetatraders()
+    if len(mt5_installations) == 0:
+        click.echo("No MT5 installations found.")
+        return
+
+    click.echo("Select a MT5 installation to connect to:")
+    for index, mt5 in enumerate(mt5_installations, start=1):
+        click.echo(f"{index}. {mt5}")
+
+    choice = click.prompt("Enter the number of the MT5 installation to connect to", type=int)
+    if 1 <= choice <= len(mt5_installations):
+        mt5_to_connect: MetatraderConfig = mt5_installations[choice - 1]
+        # Perform connection logic here
+        meta_trader_5.initialize(path=mt5_to_connect.path)
+
+        term_info: TerminalInfo | None = meta_trader_5.terminal_info()
+        if term_info is None or not term_info.connected:
+            click.echo(f"Terminal not connected to broker: {meta_trader_5.last_error()}")
+        else:
+            click.echo(f"Connected to MT5 installation: {mt5_to_connect.path}")
+            if term_info.connected:
+                SingletonService().put("MT5TerminalInfo", term_info)
+
+                mt5_to_connect.trade_allowed = term_info.trade_allowed
+                mt5_to_connect.tradeapi_disabled = term_info.tradeapi_disabled
+                mt5_to_connect.notifications_enabled = term_info.notifications_enabled
+                mt5_to_connect.mqid = term_info.mqid
+                databaseService.updateMetatrader(mt5_to_connect)
+                click.echo(f"Updated MT5 permissions info")
+
+                version_info: Optional[tuple[int, int, str]] = meta_trader_5.version()
+                mt5_to_connect.terminal_version = f"{version_info[0]}.{version_info[1]} {version_info[2]}"
+                mt5_to_connect.build = version_info[1]
+                mt5_to_connect.release_date = version_info[2]
+                databaseService.updateMetatrader(mt5_to_connect)
+                click.echo(f"Updated MT5 version info")
     else:
         click.echo("Invalid choice. No MT5 installation connected.")
 
@@ -99,6 +152,7 @@ MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
     ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty], 
     ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty], 
     ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty],
+    ['Update a MT5', update_mt5.callback.__name__.replace("_", "-"), explain_empty],
     ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty],
     ['Return to previous menu', None, explain_empty]
 ]
@@ -132,4 +186,5 @@ def metatrader5(ctx):
 metatrader5.add_command(append_mt5)
 metatrader5.add_command(list_mt5)
 metatrader5.add_command(connect_mt5)
+metatrader5.add_command(update_mt5)
 metatrader5.add_command(delete_mt5)
