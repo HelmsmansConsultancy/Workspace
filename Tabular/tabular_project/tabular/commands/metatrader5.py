@@ -63,6 +63,7 @@ def list_mt5():
 @click.command()
 def connect_mt5():
     """ Connect to a MetaTrader 5 installation"""
+    click.echo(empty_string)
     mt5_installations: list[MetatraderConfig] = databaseService.listMetatraders()
     if len(mt5_installations) == 0:
         click.echo("No MT5 installations found.")
