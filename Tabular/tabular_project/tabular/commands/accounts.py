@@ -43,6 +43,7 @@ def accounts(ctx: click.Context):
             choice = interactive_menu(ACCOUNT_SUB_COMMANDS)
         if bool(choice):
             ctx.invoke(ctx.command.commands[choice])
+            choice = None  # Reset choice to None after invoking the command
         else:
             click.echo("accounts.py: Back to the previous menu")
             break

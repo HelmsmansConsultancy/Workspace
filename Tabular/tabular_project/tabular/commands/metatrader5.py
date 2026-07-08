@@ -180,6 +180,7 @@ def metatrader5(ctx):
             choice = interactive_menu(MT5_SUB_COMMANDS)
         if bool(choice):
             ctx.invoke(ctx.command.commands[choice])
+            choice = None  # Reset choice to None after invoking the command
         else:
             click.echo("metatrader5.py: Back to the previous menu")
             break
