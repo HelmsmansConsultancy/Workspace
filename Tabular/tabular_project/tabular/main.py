@@ -30,7 +30,7 @@ def explain_MT5():
         if mt5_installations > 0:
             return f"\t\t<{mt5_installations} MT5 installation(s) found.>"
         else:
-            return "<No MT5 installations found.>"
+            return "\t\t<No MT5 installations found.>"
     return "\t\t<No database available.>"
 
 def explain_accounts():

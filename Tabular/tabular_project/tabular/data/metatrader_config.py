@@ -14,3 +14,6 @@ class MetatraderConfig(Base):
     def __init__(self, id: int = None, path: str = None):
         self.id = id
         self.path = path
+
+    def __repr__(self):
+        return f"<MetatraderConfig(id={self.id}, path='{self.path}', terminal_version='{self.terminal_version}', build='{self.build}', release_date='{self.release_date}')>"

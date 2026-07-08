@@ -15,13 +15,15 @@ console = Console()
 
 class DatabaseService():
     db_file: str
-    connection: Connection
+    db_url: str
+    engine: create_engine
 
     def __init__(self):
         self.console = Console()
         self.db_file = cast(AccountConfig, SingletonService().get("ApplicationConfig")).db_file
+        self.db_url = f"sqlite:///{self.db_file}"
         self.console.print(f"Starting database at: {self.db_file}")
-        self.engine =  create_engine(self.db_fil, echo=True)
+        self.engine = create_engine(self.db_url, echo=False, future=True)
         Base.metadata.create_all(self.engine)
         #self.connection = sqlite3.connect(self.db_file)
 
@@ -83,12 +85,16 @@ class DatabaseService():
             session.add(metatraderConfig)
             session.commit()
             return metatraderConfig.id
-        #cursor = self.connection.execute("""
-        #    INSERT INTO METATRADER_CONFIG (path) VALUES (?);
-        #""", (metatraderConfig.path,))
-        #last_row_id = cursor.lastrowid
-        #self.connection.commit()
-        #return last_row_id
+        
+    def updateMetatrader(self, metatraderConfig: MetatraderConfig) -> None:
+        with Session(self.engine) as session:
+            existing_metatrader = session.query(MetatraderConfig).filter(MetatraderConfig.id == metatraderConfig.id).first()
+            if existing_metatrader:
+                existing_metatrader.path = metatraderConfig.path
+                existing_metatrader.terminal_version = metatraderConfig.terminal_version
+                existing_metatrader.build = metatraderConfig.build
+                existing_metatrader.release_date = metatraderConfig.release_date
+                session.commit()
 
     def getMetatradersByPath(self, metatraderPath: str) -> list[MetatraderConfig]:
         with Session(self.engine) as session:
