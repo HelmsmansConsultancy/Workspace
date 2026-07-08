@@ -7,7 +7,7 @@ console = Console()
 
 empty_string = ""
 
-def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str]]]):
+def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str]]]) -> tuple[str, str | None, Callable[[], str]]:
     click.echo(empty_string)
     click.echo("What do you want to do?")
     for i, tuple in enumerate(subCommands, 1):
@@ -16,5 +16,5 @@ def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str]]
         "Enter number",
         type=click.IntRange(1, len(subCommands))
     )
-    return subCommands[idx - 1][1]
+    return subCommands[idx - 1]
 

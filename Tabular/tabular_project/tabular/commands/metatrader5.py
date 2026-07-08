@@ -1,5 +1,6 @@
 import click
 import os
+from pathlib import Path
 import MetaTrader5 as meta_trader_5
 from MetaTrader5 import TerminalInfo
 from typing import Callable, Optional 
@@ -46,7 +47,7 @@ def append_mt5():
     metatraderPath = pick_file(start_dir=os.getcwd(), file_extension=".exe")
     click.echo(f"Selected MT5 path: {metatraderPath}")
     if bool(metatraderPath) and metatraderPath.endswith(".exe") and len(databaseService.getMetatradersByPath(metatraderPath)) == 0:
-        metatraderId = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath))
+        metatraderId = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath, name=Path(metatraderPath).parent.name))
         click.echo(f"MT5 installation added with ID: {metatraderId} and path: {metatraderPath}")
 
 @click.command()
@@ -203,14 +204,14 @@ def disconnect_mt5():
     else:
         click.echo("No MT5 installation is currently connected.")
 
-MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
-    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty], 
-    ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty], 
-    ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty],
-    ['Update a MT5', update_mt5.callback.__name__.replace("_", "-"), explain_empty],
-    ['Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), explain_empty],
-    ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty],
-    ['Return to previous menu', None, explain_empty]
+MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str], str | None]] = [
+    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
+    ['Update a MT5', update_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
+    ['Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
+    ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
+    ['Return to previous menu', None, explain_empty, None]
 ]
 
 @click.group()
@@ -222,7 +223,7 @@ def metatrader5(ctx):
 
     choice = None
     while True:
-        mt5_installations = databaseService.listMetatraders()
+        mt5_installations: list[MetatraderConfig] = databaseService.listMetatraders()
         click.echo(empty_string)
         click.echo("MT5 Installations:")
         if bool(mt5_installations) and len(mt5_installations) > 0:
@@ -238,15 +239,18 @@ def metatrader5(ctx):
         else:
             click.echo("Not connected to any MT5 installation.")
 
-
+        result = None
         if choice is None:
             choice = interactive_menu(MT5_SUB_COMMANDS)
-        if bool(choice):
-            ctx.invoke(ctx.command.commands[choice])
+        
+        if bool(choice)and bool(choice[1]):
+            click.echo(f"Invoking command: {choice}")
+            ctx.invoke(ctx.command.commands[choice[1]])
+            result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:
             click.echo("metatrader5.py: Back to the previous menu")
-            break
+            return result
 
 metatrader5.add_command(append_mt5)
 metatrader5.add_command(list_mt5)

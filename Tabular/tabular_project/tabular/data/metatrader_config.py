@@ -6,6 +6,7 @@ class MetatraderConfig(Base):
     __tablename__ = "METATRADER_CONFIG"
 
     id: int             = Column(Integer,   primary_key=True, nullable=False, autoincrement=True)
+    name: str           = Column(String,    nullable=False)
     path: str           = Column(String,    nullable=False)
 
     trade_allowed: bool         = Column(Boolean,   nullable=True)
@@ -17,14 +18,15 @@ class MetatraderConfig(Base):
     build: str          = Column(String,    nullable=True)
     release_date: str   = Column(String,    nullable=True)
     
-    def __init__(self, id: int = None, path: str = None):
+    def __init__(self, id: int = None, path: str = None, name: str = None):
         self.id = id
         self.path = path
+        self.name = name
 
     def __repr__(self):
-        return f"<MetatraderConfig(id={self.id}, path='{self.path}', trade_allowed={self.trade_allowed}, tradeapi_disabled={self.tradeapi_disabled}, notifications_enabled={self.notifications_enabled}, mqid={self.mqid}, terminal_version='{self.terminal_version}', build='{self.build}', release_date='{self.release_date}')>"
+        return f"<MetatraderConfig(id={self.id}, name='{self.name}', path='{self.path}', trade_allowed={self.trade_allowed}, tradeapi_disabled={self.tradeapi_disabled}, notifications_enabled={self.notifications_enabled}, mqid={self.mqid}, terminal_version='{self.terminal_version}', build='{self.build}', release_date='{self.release_date}')>"
     
 
     def __str__(self):
-        return f"<MetatraderConfig(id={self.id}, path='{self.path}')>"
+        return f"<MetatraderConfig(id={self.id}, name='{self.name}')>"
     

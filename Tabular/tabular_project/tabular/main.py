@@ -15,6 +15,7 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.application_config import ApplicationConfig
 from tabular.commands.accounts import accounts
+from tabular.data.metatrader_config import MetatraderConfig
 
 console = Console()
 applicationConfig: ApplicationConfig = None
@@ -26,33 +27,42 @@ def explain_DB():
     return "\t\t\t<No database available.>"
 
 def explain_MT5():
+    message = ""
     if databaseService is not None:
         mt5_installations = databaseService.countMetatraders()
         if mt5_installations > 0:
-            return f"\t\t<{mt5_installations} MT5 installation(s) found.>"
+            message = f"\t\t<{mt5_installations} MT5 installation(s)>"
         else:
-            return "\t\t<No MT5 installations found.>"
-    return "\t\t<No database available.>"
+            message = "\t\t<No MT5 installations found.>"
+    else:
+        message = "\t\t<No database available.>"
+
+    connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
+    if bool(connected_mt5):
+        message += f" <Connected to: {connected_mt5.name}>"
+    else:
+        message += " <Not connected.>"
+    return message
 
 def explain_accounts():
     if databaseService is not None:
         accounts = databaseService.countAccounts()
         if accounts > 0:
-            return f"\t\t\t<{accounts} account(s) found.>"
+            return f"\t\t\t<{accounts} account(s)>"
         else:
-            return "\t\t\t<No accounts found.>"
+            return "\t\t\t<No accounts>"
     return "\t\t\t<No database available.>"
 
 def explain_empty():
     return empty_string
     
-SUB_COMMANDS: list[tuple[str, str | None, Callable[[], None]]] = [
-    ['Database', database.callback.__name__, explain_DB], 
-    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5], 
-    ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts],
-    ['Connect', connect.callback.__name__.replace("_", "-"), explain_empty], 
-    ['List', list.callback.__name__.replace("_", "-"), explain_empty], 
-    ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty]
+SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
+    ['Database', database.callback.__name__, explain_DB, None], 
+    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, None], 
+    ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, None],
+    ['Connect', connect.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['List', list.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty, None]
 ]
 
 @click.group(invoke_without_command=True)
@@ -90,12 +100,16 @@ def main(ctx: click.Context, db_file: str):
             choice = interactive_menu(SUB_COMMANDS)
         else:
             break
-        if bool(choice):
-            ctx.invoke(ctx.command.commands[choice])
+        
+        result = None
+        if bool(choice) and bool(choice[1]):
+            click.echo(f"Invoking command: {choice}")
+            ctx.invoke(ctx.command.commands[choice[1]])
+            result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:
             click.echo("main.py: Back to main menu")
-            break
+            return result
 
 main.add_command(database)
 main.add_command(metatrader5)

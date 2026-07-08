@@ -45,11 +45,11 @@ def list_tables():
     click.echo(empty_string)
 
 
-DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str]]] = [
-#    ['Create / select', 'create', explain_empty], 
-#    ['delete', 'delete', explain_empty], 
-    ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty], 
-    ['Return to previous menu', None, explain_empty]
+DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str, str | None]]] = [
+#    ['Create / select', 'create', explain_empty, None], 
+#    ['delete', 'delete', explain_empty, None], 
+    ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Return to previous menu', None, explain_empty, None]
 ]
 
 @click.group()
@@ -67,12 +67,16 @@ def database(ctx: click.Context):
     while True:
         if choice is None:
             choice = interactive_menu(DB_SUB_COMMANDS)
-        if bool(choice):
-            ctx.invoke(ctx.command.commands[choice])
+
+        result = None
+        if bool(choice) and bool(choice[1]):
+            click.echo(f"Invoking command: {choice}")
+            ctx.invoke(ctx.command.commands[choice[1]])
+            result = choice[3] 
             choice = None  # Reset choice to None after invoking the command
         else:
             click.echo("database.py: Back to the previous menu")
-            break
+            return result
         
 
 #database.add_command(create)
