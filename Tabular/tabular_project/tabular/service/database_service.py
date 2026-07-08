@@ -40,6 +40,17 @@ class DatabaseService():
             count = session.query(AccountConfig).count()
             return count
 
+    def find_account_by_login_and_company(self, login: int, company: str) -> AccountConfig | None:
+        with Session(self.engine) as session:
+            account_config = session.query(AccountConfig).filter_by(login=login, company=company).first()
+            return account_config
+
+    def addAccount(self, accountConfig: AccountConfig) -> int:
+        with Session(self.engine) as session:
+            session.add(accountConfig)
+            session.commit()
+            return accountConfig.id
+
     def listMetatraders(self) -> list[MetatraderConfig]:
         with Session(self.engine) as session:
             metatraders = session.query(MetatraderConfig).all()

@@ -235,7 +235,7 @@ def metatrader5(ctx):
 
         connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
         if bool(connected_mt5):
-            click.echo(f"Currently connected to MT5 installation: {connected_mt5.path}")
+            click.echo(f"Currently connected to MT5 installation: {connected_mt5.name}")
         else:
             click.echo("Not connected to any MT5 installation.")
 
@@ -244,7 +244,6 @@ def metatrader5(ctx):
             choice = interactive_menu(MT5_SUB_COMMANDS)
         
         if bool(choice)and bool(choice[1]):
-            click.echo(f"Invoking command: {choice}")
             ctx.invoke(ctx.command.commands[choice[1]])
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command

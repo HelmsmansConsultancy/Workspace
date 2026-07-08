@@ -103,7 +103,6 @@ def main(ctx: click.Context, db_file: str):
         
         result = None
         if bool(choice) and bool(choice[1]):
-            click.echo(f"Invoking command: {choice}")
             ctx.invoke(ctx.command.commands[choice[1]])
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command
