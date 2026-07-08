@@ -1,9 +1,9 @@
 import click
 import os
+import sys
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.commands.exit import exit
 from tabular.commands.metatrader5 import metatrader5
 from tabular.commands.connect import connect
 from tabular.commands.database import database
@@ -57,6 +57,19 @@ def explain_accounts():
 
 def explain_empty():
     return empty_string
+
+
+@click.command()
+def exit():
+    """Exiting the application."""
+    global metatrader5Service
+
+    metatrader5Service.disconnect_mt5()
+    click.echo(f"Exiting the application...")
+    sys.exit(0)
+
+
+
     
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
     ['Database', database.callback.__name__, explain_DB, None], 
