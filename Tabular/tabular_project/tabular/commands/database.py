@@ -74,7 +74,6 @@ def database(ctx: click.Context):
             result = choice[3] 
             choice = None  # Reset choice to None after invoking the command
         else:
-            click.echo("database.py: Back to the previous menu")
             return result
         
 

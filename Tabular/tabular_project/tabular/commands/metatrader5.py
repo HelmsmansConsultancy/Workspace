@@ -248,7 +248,6 @@ def metatrader5(ctx):
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:
-            click.echo("metatrader5.py: Back to the previous menu")
             return result
 
 metatrader5.add_command(append_mt5)

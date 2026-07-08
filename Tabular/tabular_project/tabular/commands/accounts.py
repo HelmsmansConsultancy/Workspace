@@ -90,7 +90,6 @@ def accounts(ctx: click.Context):
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:
-            click.echo("accounts.py: Back to the previous menu")
             return result
 
 accounts.add_command(create_account_mt5)
