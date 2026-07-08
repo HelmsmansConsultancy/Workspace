@@ -45,7 +45,6 @@ def explain_accounts():
 def explain_empty():
     return empty_string
     
-
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[], None]]] = [
     ['Database', database.callback.__name__, explain_DB], 
     ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5], 
@@ -82,13 +81,20 @@ def main(ctx: click.Context, db_file: str):
     accounts = databaseService.accounts()
     SingletonService().put("accounts", accounts)
 
+    choice = None
     while True:
         click.echo(empty_string)
         click.echo(f"Managing {len(accounts)} account(s)")
-#        click.echo(list(ctx.command.commands))
-        if ctx.invoked_subcommand is None:
+        if choice is None:
             choice = interactive_menu(SUB_COMMANDS)
+        else:
+            break
+        if bool(choice):
             ctx.invoke(ctx.command.commands[choice])
+            choice = None  # Reset choice to None after invoking the command
+        else:
+            click.echo("main.py: Back to main menu")
+            break
 
 main.add_command(database)
 main.add_command(metatrader5)

@@ -3,7 +3,7 @@ from tabular.data.base import Base
 
 
 class MetatraderConfig(Base):
-    __tablename__ = "metatrader_config"
+    __tablename__ = "METATRADER_CONFIG"
 
     id: int             = Column(Integer,   primary_key=True, nullable=False, autoincrement=True)
     path: str           = Column(String,    nullable=False)

@@ -36,12 +36,13 @@ def accounts(ctx: click.Context):
     else:
         click.echo("No Account Configs found.")
     click.echo(empty_string)
-    #    click.echo(list(ctx.command.commands))
 
+    choice = None
     while True:
-        if ctx.invoked_subcommand is None:
+        if choice is None:
             choice = interactive_menu(ACCOUNT_SUB_COMMANDS)
-            if choice:
-                ctx.invoke(ctx.command.commands[choice])
-            else:
-                break
+        if bool(choice):
+            ctx.invoke(ctx.command.commands[choice])
+        else:
+            click.echo("accounts.py: Back to the previous menu")
+            break

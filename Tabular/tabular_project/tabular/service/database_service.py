@@ -1,6 +1,4 @@
-import sqlite3
-from sqlite3 import Connection
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import Session
 from typing import cast
 from rich.console import Console
@@ -27,9 +25,9 @@ class DatabaseService():
         Base.metadata.create_all(self.engine)
 
     def listTables(self) -> list[str]:
-        with Session(self.engine) as session:
-            tables = session.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
-            return [row[0] for row in tables]
+        inspector = inspect(self.engine)
+        tables = inspector.get_table_names()
+        return tables
 
     def list_account_configs(self) -> list[AccountConfig]:
         with Session(self.engine) as session:

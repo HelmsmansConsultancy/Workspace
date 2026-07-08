@@ -173,15 +173,16 @@ def metatrader5(ctx):
     else:
         click.echo("No MT5 installations found.")
     click.echo(empty_string)
-    #    click.echo(list(ctx.command.commands))
 
+    choice = None
     while True:
-        if ctx.invoked_subcommand is None:
+        if choice is None:
             choice = interactive_menu(MT5_SUB_COMMANDS)
-            if choice:
-                ctx.invoke(ctx.command.commands[choice])
-            else:
-                break
+        if bool(choice):
+            ctx.invoke(ctx.command.commands[choice])
+        else:
+            click.echo("metatrader5.py: Back to the previous menu")
+            break
 
 metatrader5.add_command(append_mt5)
 metatrader5.add_command(list_mt5)

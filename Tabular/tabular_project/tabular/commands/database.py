@@ -61,15 +61,18 @@ def database(ctx: click.Context):
     size_bytes = os.path.getsize(databaseService.db_file) if databaseService is not None else 0
     click.echo(empty_string)
     click.echo(f"Database file: <{databaseService.db_file}> - Size: {size_bytes:,} bytes")
-#    click.echo(list(ctx.command.commands))
 
+    choice = None
     while True:
-        if ctx.invoked_subcommand is None:
+        if choice is None:
             choice = interactive_menu(DB_SUB_COMMANDS)
-            if choice:
-                ctx.invoke(ctx.command.commands[choice])
-            else:
-                break
+        if bool(choice):
+            ctx.invoke(ctx.command.commands[choice])
+            choice = None  # Reset choice to None after invoking the command
+        else:
+            click.echo("database.py: Back to the previous menu")
+            break
+        
 
 #database.add_command(create)
 database.add_command(list_tables)
