@@ -13,6 +13,7 @@ from tabular.util.menuutils import interactive_menu, empty_string
 from tabular.util.fileutils import pick_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
+from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.application_config import ApplicationConfig
 from tabular.commands.accounts import accounts
 from tabular.data.metatrader_config import MetatraderConfig
@@ -20,6 +21,7 @@ from tabular.data.metatrader_config import MetatraderConfig
 console = Console()
 applicationConfig: ApplicationConfig = None
 databaseService: DatabaseService = None
+metatrader5Service: Metatrader5Service = None
 
 def explain_DB():
     if databaseService is not None:
@@ -77,6 +79,7 @@ SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
 def main(ctx: click.Context, db_file: str):
     """Tabular MT5 data management tool."""
     global databaseService
+    global metatrader5Service
     global applicationConfig
     click.echo("Tabular starting...")
     applicationConfig    = ApplicationConfig()
@@ -86,6 +89,8 @@ def main(ctx: click.Context, db_file: str):
     SingletonService().put(S.APPLICATION_CONFIG, applicationConfig)
     databaseService = DatabaseService()
     SingletonService().put(S.DATABASE_SERVICE, databaseService)
+    metatrader5Service = Metatrader5Service()
+    SingletonService().put(S.METATRADER5_SERVICE, metatrader5Service)
 
     start_dir=os.getcwd()
     SingletonService().put(S.START_DIR, start_dir)

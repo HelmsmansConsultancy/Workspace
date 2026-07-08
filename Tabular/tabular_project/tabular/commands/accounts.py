@@ -12,9 +12,11 @@ from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
 from tabular.data.account_status import AccountStatus
 from tabular.data.metatrader_config import MetatraderConfig
+from tabular.service.metatrader_5_service import Metatrader5Service
 
 console = Console()
 databaseService: DatabaseService = None
+metatrader5Service: Metatrader5Service = None
 
 def explain_empty():
     return empty_string
@@ -80,7 +82,9 @@ ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
 def accounts(ctx: click.Context):
     """Status of db."""
     global databaseService
+    global metatrader5Service
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
+    metatrader5Service = SingletonService().get(S.METATRADER5_SERVICE)
 
     choice = None
     while True:
