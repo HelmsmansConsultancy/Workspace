@@ -81,6 +81,7 @@ def connect_mt5():
         mt5_to_connect: MetatraderConfig = mt5_installations[choice - 1]
         updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
         databaseService.updateMetatrader(updated_mt5_config)
+        SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
     else:
         click.echo("Invalid choice. No MT5 installation connected.")
 
@@ -92,6 +93,7 @@ def disconnect_mt5():
     connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
     if connected_mt5 is not None:
         metatrader5Service.disconnect_mt5()
+        SingletonService().put(S.CONNECTED_MT5, None)
         click.echo(f"Disconnected from MT5 installation: {connected_mt5.path}") 
     else:
         click.echo("No MT5 installation is currently connected.")

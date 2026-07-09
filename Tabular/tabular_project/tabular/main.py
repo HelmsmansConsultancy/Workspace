@@ -43,17 +43,26 @@ def explain_MT5():
     if bool(connected_mt5):
         message += f" <Connected to: {connected_mt5.name}>"
     else:
-        message += " <Not connected.>"
+        message += " <Not connected>"
     return message
 
 def explain_accounts():
+    message = ""
     if databaseService is not None:
         accounts = databaseService.countAccounts()
         if accounts > 0:
-            return f"\t\t\t<{accounts} account(s)>"
+            message = f"\t\t\t<{accounts} account(s)>"
         else:
-            return "\t\t\t<No accounts>"
-    return "\t\t\t<No database available.>"
+            message = "\t\t\t<No accounts>"
+    else:
+        message = "\t\t\t<No database available.>"
+
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    if bool(connected_account):
+        message += f" <Connected with: {connected_account.name}>"
+    else:
+        message += " <Not connected>"
+    return message
 
 def explain_empty():
     return empty_string

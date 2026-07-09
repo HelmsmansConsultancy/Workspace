@@ -5,6 +5,7 @@ from rich.console import Console
 from tabular.service.s import S
 from tabular.data.account_config import AccountConfig
 from tabular.data.account_status import AccountStatus
+from tabular.data.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.data.base import Base
@@ -68,6 +69,11 @@ class DatabaseService():
             session.add(accountStatus)
             session.commit()
             return accountStatus.account_id
+        
+    def addAccountMetatraderConnection(self, accountMetatraderConnection: AccountMetatraderConnection):
+        with Session(self.engine) as session:
+            session.add(accountMetatraderConnection)
+            session.commit()
 
     def listMetatraders(self) -> list[MetatraderConfig]:
         with Session(self.engine) as session:

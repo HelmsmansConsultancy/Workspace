@@ -11,6 +11,7 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
 from tabular.data.account_status import AccountStatus
+from tabular.data.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.metatrader_5_service import Metatrader5Service
 
@@ -55,7 +56,13 @@ def create_account_mt5():
             trade_expert=account_info.trade_expert,
         )
         databaseService.addAccountStatus(new_account_status)
-        click.echo(f"New account with login {account_info.login} and company {account_info.company} added to the database.")
+        new_account_metatrader_connection = AccountMetatraderConnection(
+            new_account_config.id,
+            connected_mt5.id
+        )
+        databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
+        SingletonService().put(S.CONNECTED_ACCOUNT, new_account_config)
+        click.echo(f"New account with login {new_account_config.login} and company {new_account_config.company} added to the database.")
 
 @click.command()
 def list_accounts():
@@ -71,9 +78,33 @@ def list_accounts():
         click.echo("No Account Configs found.")
     click.echo(empty_string)
 
-ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
+@click.command()
+def connect_account():
+    """Connect account."""
+    
+    account_configs: list[AccountConfig] = databaseService.list_account_configs()
+    if len(account_configs) == 0:
+        click.echo("No Account Configs found.")
+        return
+
+    click.echo("Select an Account to connect to:")
+    for index, mt5 in enumerate(account_configs, start=1):
+        click.echo(f"{index}. {mt5}")
+
+    choice = click.prompt("Enter the number of the Account to connect to", type=int)
+    if 1 <= choice <= len(account_configs):
+        account_to_connect: AccountConfig = account_configs[choice - 1]
+        #updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
+        #databaseService.updateMetatrader(account_to_connect)
+        SingletonService().put(S.CONNECTED_ACCOUNT, account_to_connect)
+    else:
+        click.echo("Invalid choice. No MT5 installation connected.")
+
+
+ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[]], str | None]] = [
     ['Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
     ['List accounts', list_accounts.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Connect account', connect_account.callback.__name__.replace("_", "-"), explain_empty, None], 
     ['Return to previous menu', None, explain_empty, None]
 ]
 
@@ -117,3 +148,4 @@ def accounts(ctx: click.Context):
 
 accounts.add_command(create_account_mt5)
 accounts.add_command(list_accounts)
+accounts.add_command(connect_account)

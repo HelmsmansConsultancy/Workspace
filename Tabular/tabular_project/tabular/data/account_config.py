@@ -11,6 +11,7 @@ class AccountConfig(Base):
     leverage: int = Column("leverage", Integer, nullable=True)
     login: int = Column("login", Integer, nullable=False)
     name: str = Column("name", String, nullable=False)
+    password: str = Column("password", String, nullable=True)
     server: str = Column("server", String, nullable=False)
     trade_mode: int = Column("trade_mode", Integer, nullable=True)
 
@@ -24,7 +25,7 @@ class AccountConfig(Base):
         self.trade_mode = trade_mode
 
     def __repr__(self):
-        return f"<AccountConfig(id={self.id}, login={self.login}, name='{self.name}', server='{self.server}', currency='{self.currency}', company='{self.company}')>"
+        return f"<AccountConfig(id={self.id}, login={self.login}, name='{self.name}', password='{bool(self.password)}', server='{self.server}', currency='{self.currency}', company='{self.company}')>"
     
     def __str__(self):
         return f"<AccountConfig(id={self.id}, login={self.login}, name='{self.name}')>"

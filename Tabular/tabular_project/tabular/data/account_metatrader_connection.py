@@ -1,0 +1,12 @@
+from sqlalchemy import Boolean, Column, Integer, ForeignKey, String
+from tabular.data.base import Base
+
+class AccountMetatraderConnection(Base):
+    __tablename__ = "ACCOUNT_METATRADER_CONNECTION"
+
+    account_id: int = Column("acount_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), primary_key=True)
+    metatrader_id: int = Column("metatrader_id", Integer, ForeignKey("METATRADER_CONFIG.id"), primary_key=True)
+
+    def __init__(self, account_id: int, metatrader_id: int):
+        self.account_id = account_id
+        self.metatrader_id = metatrader_id
