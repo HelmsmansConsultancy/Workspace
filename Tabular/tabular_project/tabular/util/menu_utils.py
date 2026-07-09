@@ -75,12 +75,12 @@ def explain_MT5(enabled:bool = True):
         message += " (Disabled)"
     return message
 
-def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str], Callable[[], bool]]]) -> str:
+def interactive_menu(subCommands: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]]) -> str:
     click.echo(empty_string)
     click.echo("What do you want to do?")
     for i, tuple in enumerate(subCommands, 1):
-        enabled = tuple[3]()
-        line = f"  {i}. {tuple[0]} {tuple[2](enabled) if tuple[2] is not None else ''}"
+        enabled = tuple[0]()
+        line = f"  {i}. {tuple[2]} {tuple[1](enabled) if tuple[1] is not None else ''}"
         if enabled:
             click.echo(line)
         else:
@@ -89,5 +89,5 @@ def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str],
         "Enter number",
         type=click.IntRange(1, len(subCommands))
     )
-    return subCommands[idx - 1][1]
+    return subCommands[idx - 1][3]
 

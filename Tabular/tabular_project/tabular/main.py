@@ -31,13 +31,13 @@ def exit():
     click.echo(f"Exiting the application...")
     sys.exit(0)
 
-SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
-    ['Database', database.callback.__name__, explain_DB, allow_allways], 
-    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, allow_allways], 
-    ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, allow_allways],
-    ['Pending Orders', pending_orders.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['Symbols', symbols.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty, allow_allways]
+SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [ allow_allways, explain_DB,'Database', database.callback.__name__, ], 
+    [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_empty, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty, 'Symbols', symbols.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
 ]
 
 @click.group(invoke_without_command=True)

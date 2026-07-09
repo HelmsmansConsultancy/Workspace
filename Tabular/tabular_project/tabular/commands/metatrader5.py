@@ -98,13 +98,13 @@ def disconnect_mt5():
     else:
         click.echo("No MT5 installation is currently connected.")
 
-MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
-    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways],
-    ['Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways],
-    ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways],
-    ['Return to previous menu', None, explain_empty, allow_allways]
+MT5_SUB_COMMANDS:  list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [allow_allways, explain_empty,  'Append a MT5', append_mt5.callback.__name__.replace("_", "-"),], 
+    [allow_allways, explain_empty,  'List all MT5', list_mt5.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty, 'Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_empty,  'Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_empty, 'Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_empty,  'Return to previous menu', None, ]
 ]
 
 @click.group()

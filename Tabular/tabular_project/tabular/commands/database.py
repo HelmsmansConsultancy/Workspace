@@ -41,11 +41,9 @@ def list_tables():
     click.echo(empty_string)
 
 
-DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
-#    ['Create / select', 'create', explain_empty, allow_allways], 
-#    ['delete', 'delete', explain_empty, allow_allways], 
-    ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['Return to previous menu', None, explain_empty, allow_allways]
+DB_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [allow_allways, explain_empty,  'List tables', list_tables.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
 
 @click.group()

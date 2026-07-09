@@ -99,11 +99,11 @@ def connect_account():
     return pending_orders.callback.__name__.replace("_", "-")
 
 
-ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
-    ['Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['List accounts', list_accounts.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['Connect account', connect_account.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['Return to previous menu', None, explain_empty, allow_allways]
+ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty, 'Connect account', connect_account.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty,  'Return to previous menu', None, ]
 ]
 
 @click.group()

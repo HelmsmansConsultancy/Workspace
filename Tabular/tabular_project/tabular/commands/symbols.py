@@ -11,8 +11,8 @@ console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
-SYMBOLS_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
-    ['Return to previous menu', None, explain_empty, allow_allways]
+SYMBOLS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
 
 @click.group()
