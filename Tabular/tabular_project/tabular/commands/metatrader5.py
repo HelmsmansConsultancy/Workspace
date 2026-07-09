@@ -1,10 +1,7 @@
 import click
 import os
 from pathlib import Path
-import MetaTrader5 as meta_trader_5
-from MetaTrader5 import TerminalInfo
-from typing import Callable, Optional 
-import psutil
+from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
 from tabular.util.fileutils import pick_file
@@ -13,7 +10,6 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.metatrader_config import MetatraderConfig
-from tabular.util.xmlutils import load_xml_config
 
 console = Console()
 databaseService: DatabaseService = None

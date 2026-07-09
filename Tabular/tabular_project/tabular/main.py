@@ -5,10 +5,10 @@ from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
 from tabular.commands.metatrader5 import metatrader5
-from tabular.commands.connect import connect
 from tabular.commands.database import database
+from tabular.commands.symbols import symbols
+from tabular.commands.pending_orders import pending_orders
 from tabular.commands.list import list 
-from tabular.util.xmlutils import load_xml_config
 from tabular.util.menuutils import interactive_menu, empty_string
 from tabular.util.fileutils import pick_file
 from tabular.service.singleton_service import SingletonService
@@ -75,7 +75,8 @@ SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
     ['Database', database.callback.__name__, explain_DB, None], 
     ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, None], 
     ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, None],
-    ['Connect', connect.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Symbols', symbols.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Pending Orders', pending_orders.callback.__name__.replace("_", "-"), explain_empty, None], 
     ['List', list.callback.__name__.replace("_", "-"), explain_empty, None], 
     ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty, None]
 ]
@@ -91,17 +92,19 @@ SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
 @click.pass_context
 def main(ctx: click.Context, db_file: str):
     """Tabular MT5 data management tool."""
+    click.echo("Tabular starting...")
     global databaseService
     global metatrader5Service
     global applicationConfig
-    click.echo("Tabular starting...")
-    applicationConfig    = ApplicationConfig()
 
+    applicationConfig    = ApplicationConfig()
     if bool(db_file) and db_file.endswith(".db"):
         applicationConfig.db_file = db_file
     SingletonService().put(S.APPLICATION_CONFIG, applicationConfig)
+
     databaseService = DatabaseService()
     SingletonService().put(S.DATABASE_SERVICE, databaseService)
+
     metatrader5Service = Metatrader5Service()
     SingletonService().put(S.METATRADER5_SERVICE, metatrader5Service)
 
@@ -131,7 +134,8 @@ def main(ctx: click.Context, db_file: str):
 main.add_command(database)
 main.add_command(metatrader5)
 main.add_command(accounts)
-main.add_command(connect)
+main.add_command(symbols)
+main.add_command(pending_orders)
 main.add_command(list)
 main.add_command(exit)
 

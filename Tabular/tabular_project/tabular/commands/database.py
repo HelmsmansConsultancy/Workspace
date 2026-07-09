@@ -45,7 +45,7 @@ def list_tables():
     click.echo(empty_string)
 
 
-DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str, str | None]]] = [
+DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str], str | None]] = [
 #    ['Create / select', 'create', explain_empty, None], 
 #    ['delete', 'delete', explain_empty, None], 
     ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty, None], 
@@ -55,7 +55,7 @@ DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str, str | None]]] = [
 @click.group()
 @click.pass_context
 def database(ctx: click.Context):
-    """Status of db."""
+    """Status of database."""
     global databaseService
 
     databaseService = SingletonService().get("DatabaseService")

@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 from sqlalchemy import Boolean, Column, Integer, Numeric, ForeignKey
 from tabular.data.base import Base

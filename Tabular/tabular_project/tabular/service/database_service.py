@@ -1,6 +1,6 @@
+import os
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import Session
-from typing import cast
 from rich.console import Console
 from tabular.service.s import S
 from tabular.data.account_config import AccountConfig
@@ -11,7 +11,7 @@ from tabular.data.base import Base
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.data.application_config import ApplicationConfig
 
-console = Console()
+applicationConfig: ApplicationConfig = None
 
 class DatabaseService():
     db_file: str
@@ -19,8 +19,14 @@ class DatabaseService():
     engine: create_engine
 
     def __init__(self):
+        global applicationConfig
         self.console = Console()
-        self.db_file = cast(AccountConfig, SingletonService().get(S.APPLICATION_CONFIG)).db_file
+        applicationConfig = SingletonService().get(S.APPLICATION_CONFIG)
+        if bool(applicationConfig):
+            self.db_file = applicationConfig.db_file
+        else:
+            self.db_file = os.getcwd()  + ".db"
+            self.console.print("No ApplicationConfig !!!")
         self.db_url = f"sqlite:///{self.db_file}"
         self.console.print(f"Starting database at: {self.db_file}")
         self.engine = create_engine(self.db_url, echo=False, future=True)

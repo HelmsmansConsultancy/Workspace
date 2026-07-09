@@ -1,5 +1,4 @@
 from .backend import Backend
-from .money import Money
 from sqlalchemy import Boolean, Column, Integer, Numeric, String
 from tabular.data.base import Base
 
