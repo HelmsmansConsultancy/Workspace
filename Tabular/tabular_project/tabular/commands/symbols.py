@@ -5,15 +5,11 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
-
-def explain_empty():
-    return empty_string
-    
 
 SYMBOLS_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str], str | None]] = [
     ['Return to previous menu', None, explain_empty, None]
