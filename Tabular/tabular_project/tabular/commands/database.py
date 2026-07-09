@@ -4,8 +4,8 @@ import sqlite3
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menuutils import interactive_menu, empty_string
-from tabular.util.fileutils import determine_new_file
+from tabular.util.menu_utils import interactive_menu, empty_string
+from tabular.util.file_utils import determine_new_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 

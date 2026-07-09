@@ -8,6 +8,7 @@ class S:
     CONNECTED_ACCOUNT: Final = "connected_account" 
     CONNECTED_MT5: Final = "connected_mt5" 
     DATABASE_SERVICE: Final = "DatabaseService"
+    MENU_SERVICE: Final = "MenuService"
     METATRADER5_SERVICE: Final = "Metatrader5Service"
     MT5_PID: Final = "mt5_pid"
     START_DIR: Final = "start_dir"

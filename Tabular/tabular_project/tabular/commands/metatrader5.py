@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.fileutils import pick_file
-from tabular.util.menuutils import interactive_menu, empty_string
+from tabular.util.file_utils import pick_file
+from tabular.util.menu_utils import interactive_menu, empty_string
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service

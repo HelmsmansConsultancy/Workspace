@@ -9,64 +9,18 @@ from tabular.commands.database import database
 from tabular.commands.symbols import symbols
 from tabular.commands.pending_orders import pending_orders
 from tabular.commands.list import list 
-from tabular.util.menuutils import interactive_menu, empty_string
-from tabular.util.fileutils import pick_file
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_empty, explain_MT5
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.application_config import ApplicationConfig
 from tabular.commands.accounts import accounts
-from tabular.data.metatrader_config import MetatraderConfig
+
 
 console = Console()
 applicationConfig: ApplicationConfig = None
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
-
-def explain_DB():
-    if databaseService is not None:
-        return f"\t\t\t<{databaseService.db_file}>"
-    return "\t\t\t<No database available.>"
-
-def explain_MT5():
-    message = ""
-    if databaseService is not None:
-        mt5_installations = databaseService.countMetatraders()
-        if mt5_installations > 0:
-            message = f"\t\t<{mt5_installations} MT5 installation(s)>"
-        else:
-            message = "\t\t<No MT5 installations found.>"
-    else:
-        message = "\t\t<No database available.>"
-
-    connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
-    if bool(connected_mt5):
-        message += f" <Connected to: {connected_mt5.name}>"
-    else:
-        message += " <Not connected>"
-    return message
-
-def explain_accounts():
-    message = ""
-    if databaseService is not None:
-        accounts = databaseService.countAccounts()
-        if accounts > 0:
-            message = f"\t\t\t<{accounts} account(s)>"
-        else:
-            message = "\t\t\t<No accounts>"
-    else:
-        message = "\t\t\t<No database available.>"
-
-    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    if bool(connected_account):
-        message += f" <Connected with: {connected_account.name}>"
-    else:
-        message += " <Not connected>"
-    return message
-
-def explain_empty():
-    return empty_string
-
 
 @click.command()
 def exit():
@@ -77,10 +31,7 @@ def exit():
     click.echo(f"Exiting the application...")
     sys.exit(0)
 
-
-
-    
-SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str | None]]] = [
+SUB_COMMANDS: list[tuple[str, str | None, Callable[[]], str | None]] = [
     ['Database', database.callback.__name__, explain_DB, None], 
     ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, None], 
     ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, None],
@@ -105,6 +56,7 @@ def main(ctx: click.Context, db_file: str):
     global databaseService
     global metatrader5Service
     global applicationConfig
+    global menuService
 
     applicationConfig    = ApplicationConfig()
     if bool(db_file) and db_file.endswith(".db"):
