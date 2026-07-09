@@ -4,7 +4,7 @@ import sqlite3
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways
 from tabular.util.file_utils import determine_new_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
@@ -41,11 +41,11 @@ def list_tables():
     click.echo(empty_string)
 
 
-DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str], str | None]] = [
-#    ['Create / select', 'create', explain_empty, None], 
-#    ['delete', 'delete', explain_empty, None], 
-    ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['Return to previous menu', None, explain_empty, None]
+DB_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
+#    ['Create / select', 'create', explain_empty, allow_allways], 
+#    ['delete', 'delete', explain_empty, allow_allways], 
+    ['List tables', list_tables.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['Return to previous menu', None, explain_empty, allow_allways]
 ]
 
 @click.group()

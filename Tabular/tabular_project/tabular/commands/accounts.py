@@ -5,7 +5,7 @@ from MetaTrader5 import AccountInfo
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
@@ -99,11 +99,11 @@ def connect_account():
     return pending_orders.callback.__name__.replace("_", "-")
 
 
-ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[]], str | None]] = [
-    ['Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['List accounts', list_accounts.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['Connect account', connect_account.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['Return to previous menu', None, explain_empty, None]
+ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
+    ['Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['List accounts', list_accounts.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['Connect account', connect_account.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['Return to previous menu', None, explain_empty, allow_allways]
 ]
 
 @click.group()

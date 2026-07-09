@@ -33,11 +33,10 @@ def exit():
 
 SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
     ['Database', database.callback.__name__, explain_DB, allow_allways], 
-    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, allow_never], 
+    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, allow_allways], 
     ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, allow_allways],
-    ['Pending Orders', pending_orders.callback.__name__.replace("_", "-"), explain_empty, allow_never], 
+    ['Pending Orders', pending_orders.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
     ['Symbols', symbols.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
-    ['List', list.callback.__name__.replace("_", "-"), explain_empty, allow_never], 
     ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty, allow_allways]
 ]
 
@@ -100,7 +99,6 @@ main.add_command(metatrader5)
 main.add_command(accounts)
 main.add_command(symbols)
 main.add_command(pending_orders)
-main.add_command(list)
 main.add_command(exit)
 
 if __name__ == "__main__":

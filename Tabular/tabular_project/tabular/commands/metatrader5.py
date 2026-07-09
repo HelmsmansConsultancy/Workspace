@@ -5,7 +5,7 @@ from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
 from tabular.util.file_utils import pick_file
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
@@ -98,13 +98,13 @@ def disconnect_mt5():
     else:
         click.echo("No MT5 installation is currently connected.")
 
-MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str], str | None]] = [
-    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty, accounts.callback.__name__.replace("_", "-")], 
-    ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
-    ['Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
-    ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
-    ['Return to previous menu', None, explain_empty, None]
+MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
+    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways],
+    ['Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways],
+    ['Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), explain_empty, allow_allways],
+    ['Return to previous menu', None, explain_empty, allow_allways]
 ]
 
 @click.group()
