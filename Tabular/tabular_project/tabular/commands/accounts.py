@@ -5,7 +5,7 @@ from MetaTrader5 import AccountInfo
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
@@ -13,13 +13,11 @@ from tabular.data.account_status import AccountStatus
 from tabular.data.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.metatrader_5_service import Metatrader5Service
+from tabular.commands.pending_orders import pending_orders
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
-
-def explain_empty():
-    return empty_string
 
 @click.command()
 def create_account_mt5():
@@ -98,6 +96,7 @@ def connect_account():
         SingletonService().put(S.CONNECTED_ACCOUNT, account_to_connect)
     else:
         click.echo("Invalid choice. No MT5 installation connected.")
+    return pending_orders.callback.__name__.replace("_", "-")
 
 
 ACCOUNT_SUB_COMMANDS: list[tuple[str, str | None, Callable[[]], str | None]] = [
@@ -139,7 +138,10 @@ def accounts(ctx: click.Context):
 
         result = None
         if bool(choice) and bool(choice[1]):
-            ctx.invoke(ctx.command.commands[choice[1]])
+            next_menu = ctx.invoke(ctx.command.commands[choice[1]])
+            if bool(next_menu):
+                click.echo(f"Next menu: {next_menu}")
+                return next_menu
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:

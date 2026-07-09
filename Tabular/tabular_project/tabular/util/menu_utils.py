@@ -12,13 +12,17 @@ console = Console()
 empty_string = ""
 
 
-def explain_DB():
+def explain_DB(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    message: None
     if databaseService is not None:
-        return f"\t\t\t<{databaseService.db_file}>"
-    return "\t\t\t<No database available.>"
+        message = f"\t\t\t<{databaseService.db_file}>"
+    message = "\t\t\t<No database available.>"
+    if not enabled:
+        message += " (Disabled)"
+    return message
 
-def explain_accounts():
+def explain_accounts(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     message = ""
     if databaseService is not None:
@@ -35,12 +39,21 @@ def explain_accounts():
         message += f" <Connected with: {connected_account.name}>"
     else:
         message += " <Not connected>"
+    
+    if not enabled:
+        message += " (Disabled)"
     return message
 
-def explain_empty():
+def allow_allways():
+    return True
+
+def allow_never():
+    return False
+
+def explain_empty(enabled:bool = True):
     return empty_string
 
-def explain_MT5():
+def explain_MT5(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     message = ""
     if databaseService is not None:
@@ -57,16 +70,24 @@ def explain_MT5():
         message += f" <Connected to: {connected_mt5.name}>"
     else:
         message += " <Not connected>"
+    
+    if not enabled:
+        message += " (Disabled)"
     return message
 
-def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str]]]) -> tuple[str, str | None, Callable[[], str]]:
+def interactive_menu(subCommands: list[tuple[str, str | None, Callable[[], str], Callable[[], bool]]]) -> str:
     click.echo(empty_string)
     click.echo("What do you want to do?")
     for i, tuple in enumerate(subCommands, 1):
-        click.echo(f"  {i}. {tuple[0]} {tuple[2]() if tuple[2] is not None else ''}")
+        enabled = tuple[3]()
+        line = f"  {i}. {tuple[0]} {tuple[2](enabled) if tuple[2] is not None else ''}"
+        if enabled:
+            click.echo(line)
+        else:
+            click.echo(click.style(line + " (disabled)", dim=True, fg="bright_black"))
     idx = click.prompt(
         "Enter number",
         type=click.IntRange(1, len(subCommands))
     )
-    return subCommands[idx - 1]
+    return subCommands[idx - 1][1]
 

@@ -10,6 +10,7 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.metatrader_config import MetatraderConfig
+from tabular.commands.accounts import accounts
 
 console = Console()
 databaseService: DatabaseService = None
@@ -81,6 +82,8 @@ def connect_mt5():
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
     else:
         click.echo("Invalid choice. No MT5 installation connected.")
+    return accounts.callback.__name__.replace("_", "-")
+
 
 @click.command()
 def disconnect_mt5():
@@ -96,7 +99,7 @@ def disconnect_mt5():
         click.echo("No MT5 installation is currently connected.")
 
 MT5_SUB_COMMANDS: list[tuple[str, str | None, Callable[[], str], str | None]] = [
-    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
+    ['Append a MT5', append_mt5.callback.__name__.replace("_", "-"), explain_empty, accounts.callback.__name__.replace("_", "-")], 
     ['List all MT5', list_mt5.callback.__name__.replace("_", "-"), explain_empty, None], 
     ['Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
     ['Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), explain_empty, None],
@@ -136,7 +139,10 @@ def metatrader5(ctx):
             choice = interactive_menu(MT5_SUB_COMMANDS)
         
         if bool(choice)and bool(choice[1]):
-            ctx.invoke(ctx.command.commands[choice[1]])
+            next_menu = ctx.invoke(ctx.command.commands[choice[1]])
+            if bool(next_menu):
+                click.echo(f"Next menu: {next_menu}")
+                return next_menu
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:

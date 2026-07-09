@@ -9,7 +9,7 @@ from tabular.commands.database import database
 from tabular.commands.symbols import symbols
 from tabular.commands.pending_orders import pending_orders
 from tabular.commands.list import list 
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_empty, explain_MT5
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_empty, explain_MT5, allow_allways, allow_never
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
@@ -31,14 +31,14 @@ def exit():
     click.echo(f"Exiting the application...")
     sys.exit(0)
 
-SUB_COMMANDS: list[tuple[str, str | None, Callable[[]], str | None]] = [
-    ['Database', database.callback.__name__, explain_DB, None], 
-    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, None], 
-    ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, None],
-    ['Symbols', symbols.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['Pending Orders', pending_orders.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['List', list.callback.__name__.replace("_", "-"), explain_empty, None], 
-    ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty, None]
+SUB_COMMANDS: list[tuple[str, str | None, Callable[[bool], str], Callable[[], bool]]] = [
+    ['Database', database.callback.__name__, explain_DB, allow_allways], 
+    ['MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), explain_MT5, allow_never], 
+    ['Accounts', accounts.callback.__name__.replace("_", "-"), explain_accounts, allow_allways],
+    ['Pending Orders', pending_orders.callback.__name__.replace("_", "-"), explain_empty, allow_never], 
+    ['Symbols', symbols.callback.__name__.replace("_", "-"), explain_empty, allow_allways], 
+    ['List', list.callback.__name__.replace("_", "-"), explain_empty, allow_never], 
+    ['Exit nicely', exit.callback.__name__.replace("_", "-"), explain_empty, allow_allways]
 ]
 
 @click.group(invoke_without_command=True)
@@ -84,8 +84,11 @@ def main(ctx: click.Context, db_file: str):
             break
         
         result = None
-        if bool(choice) and bool(choice[1]):
-            ctx.invoke(ctx.command.commands[choice[1]])
+        if bool(choice):
+            next_menu = ctx.invoke(ctx.command.commands[choice])
+            if bool(next_menu):
+                click.echo(f"Next menu: {next_menu}")
+                ctx.invoke(ctx.command.commands[next_menu])
             result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:
