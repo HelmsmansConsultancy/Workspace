@@ -80,9 +80,12 @@ def connect_mt5():
         updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
         databaseService.updateMetatrader(updated_mt5_config)
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
+        click.echo(empty_string)
+        return accounts.callback.__name__.replace("_", "-")
     else:
         click.echo("Invalid choice. No MT5 installation connected.")
-    return accounts.callback.__name__.replace("_", "-")
+        click.echo(empty_string)
+        return
 
 
 @click.command()
@@ -134,20 +137,17 @@ def metatrader5(ctx):
         else:
             click.echo("Not connected to any MT5 installation.")
 
-        result = None
-        if choice is None:
+        if not bool(choice):
             choice = interactive_menu(MT5_SUB_COMMANDS)
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
-                click.echo(f"Next menu: {next_menu}")
+                click.echo(f"{__file__} next menu: {next_menu}")
                 return next_menu
-            result = choice[3]
-            choice = None  # Reset choice to None after invoking the command
-        else:
-            return result
-
+            else: 
+                choice = None  # Reset choice to None after invoking the command
+                
 metatrader5.add_command(append_mt5)
 metatrader5.add_command(list_mt5)
 metatrader5.add_command(connect_mt5)

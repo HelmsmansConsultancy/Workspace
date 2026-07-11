@@ -12,17 +12,34 @@ console = Console()
 
 empty_string = ""
 
+def allow_allways():
+    return True
 
-def explain_DB(enabled:bool = True):
-    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
-    message: None
-    if databaseService is not None:
-        message = f"\t\t\t<{databaseService.db_file}>"
+def no_metatraders():
+    metatraders: MetatraderConfig | None = SingletonService().get(S.METATRADERS)
+    if bool(metatraders) and len(metatraders) > 0:
+        return True
     else:
-        message = "\t\t\t<No database available.>"
-    if not enabled:
-        message += " (Disabled)"
-    return message
+        return False
+    
+def no_accounts():
+    databaseService: DatabaseService =  SingletonService().get(S.DATABASE_SERVICE)
+    accounts = databaseService.countAccounts()
+    if accounts > 0:
+        return True
+    else:
+        return False
+
+def no_active_account():
+    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    if bool(connected_account):
+        return True
+    else:
+        return False 
+
+def allow_never():
+    return False
+
 
 def explain_accounts(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -46,35 +63,32 @@ def explain_accounts(enabled:bool = True):
         message += " (Disabled)"
     return message
 
-def allow_allways():
-    return True
-
-def no_metatraders():
-    metatraders: MetatraderConfig | None = SingletonService().get(S.METATRADERS)
-    if bool(metatraders) and len(metatraders) > 0:
-        return True
+def explain_DB(enabled:bool = True):
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    message: None
+    if databaseService is not None:
+        message = f"\t\t\t<{databaseService.db_file}>"
     else:
-        return False
-    
-def no_accounts():
-    accounts: AccountConfig | None = SingletonService().get(S.ACCOUNTS)
-    if bool(accounts) and len(accounts) > 0:
-        return True
-    else:
-        return False
-
-def no_active_account():
-    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    if bool(connected_account):
-        return True
-    else:
-        return False 
-
-def allow_never():
-    return False
+        message = "\t\t\t<No database available.>"
+    if not enabled:
+        message += " (Disabled)"
+    return message
 
 def explain_empty(enabled:bool = True):
     return empty_string
+
+def explain_pending_orders(enabled:bool = True):
+    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    if bool(connected_account):
+        pending_orders = databaseService.countPendingOrders(connected_account.id)
+        if pending_orders > 0:
+            message = f"\t\t\t<{pending_orders} pending order(s)>"
+        else:
+            message = "\t\t\t<No pending orders>"
+    else:
+        message = "\t\t\t<No database available.>"
+    return message
 
 def explain_MT5(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -96,6 +110,19 @@ def explain_MT5(enabled:bool = True):
     
     if not enabled:
         message += " (Disabled)"
+    return message
+
+def explain_open_positions(enabled:bool = True):
+    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    if bool(connected_account):
+        openPositions = databaseService.countOpenPositions(connected_account.id)
+        if openPositions > 0:
+            message = f"\t\t\t<{openPositions} open position(s)>"
+        else:
+            message = "\t\t\t<No open positions>"
+    else:
+        message = "\t\t\t<No database available.>"
     return message
 
 def interactive_menu(subCommands: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]]) -> str:

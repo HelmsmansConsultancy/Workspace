@@ -11,6 +11,8 @@ from tabular.service.singleton_service import SingletonService
 from tabular.data.base import Base
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.data.application_config import ApplicationConfig
+from tabular.data.pending_order import PendingOrder
+from tabular.data.open_position import OpenPosition
 
 applicationConfig: ApplicationConfig = None
 
@@ -120,5 +122,68 @@ class DatabaseService():
             accounts = session.query(AccountConfig).all()
             return accounts
     
+    def countPendingOrders(self, accountId) -> int:
+        with Session(self.engine) as session:
+            count = session.query(PendingOrder).filter(PendingOrder.account_id == accountId).count()
+            return count
+        
+    def getPendingOrders(self, accountId) -> list[PendingOrder]:
+        with Session(self.engine) as session:  
+            pendingOrders = session.query(PendingOrder).filter(PendingOrder.account_id == accountId).all()
+            return pendingOrders
+
+    def updatePendingOrders(self, pendingOrders: list[PendingOrder] ) -> None:
+        with Session(self.engine) as session:
+            for order in pendingOrders:
+                self.console.print(f"updating: {order}")
+                session.merge(order)
+            session.commit()
+    
+    def addPendingOrders(self, pendingOrders: list[PendingOrder]) -> None:
+        with Session(self.engine) as session:
+            for order in pendingOrders:
+                self.console.print(f"adding: {order!r}")
+                session.add(order)
+            session.commit()
+
+    def removePendingOrders(self, pendingOrders: list[PendingOrder]) -> None:
+        with Session(self.engine) as session:
+            for order in pendingOrders:
+                self.console.print(f"deleting: {order}")
+                session.delete(order)
+            session.commit()
+            
+    def countOpenPositions(self, accountId) -> int:
+        with Session(self.engine) as session:
+            count = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).count()
+            return count
+          
+    def getOpenPositions(self, accountId) -> list[OpenPosition]:
+        with Session(self.engine) as session:  
+            openPositions = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).all()
+            return openPositions
+
+    def updateOpenPositions(self, openPositions: list[OpenPosition] ) -> None:
+        with Session(self.engine) as session:
+            for position in openPositions:
+                self.console.print(f"updating: {position}")
+                session.merge(position)
+            session.commit()
+    
+    def addOpenPositions(self, openPositions: list[OpenPosition]) -> None:
+        with Session(self.engine) as session:
+            for position in openPositions:
+                self.console.print(f"adding: {position!r}")
+                session.add(position)
+            session.commit()
+
+    def removeOpenPositions(self, openPositions: list[OpenPosition]) -> None:
+        with Session(self.engine) as session:
+            for position in openPositions:
+                self.console.print(f"deleting: {position}")
+                session.delete(position)
+            session.commit()
+
+
 
     

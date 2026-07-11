@@ -60,6 +60,7 @@ def create_account_mt5():
         databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
         SingletonService().put(S.CONNECTED_ACCOUNT, new_account_config)
         click.echo(f"New account with login {new_account_config.login} and company {new_account_config.company} added to the database.")
+        return pending_orders.callback.__name__.replace("_", "-")
 
 @click.command()
 def list_accounts():
@@ -139,17 +140,19 @@ def accounts(ctx: click.Context):
             click.echo("No Account Configs found.")
         click.echo(empty_string)
 
-        if choice is None:
-            choice = interactive_menu(ACCOUNT_SUB_COMMANDS)
-
         result = None
+        if not bool(choice):
+            choice = interactive_menu(ACCOUNT_SUB_COMMANDS)
+        
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
-                click.echo(f"Next menu: {next_menu}")
+                click.echo(f"{__file__} next menu: {next_menu}")
                 return next_menu
-            choice = None  # Reset choice to None after invoking the command
+            else: 
+                choice = None  # Reset choice to None after invoking the command
         else:
+            click.echo(f"{__file__} next menu: {result}")
             return result
 
 accounts.add_command(create_account_mt5)

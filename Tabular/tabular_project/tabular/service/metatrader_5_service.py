@@ -1,10 +1,11 @@
 import psutil
 import MetaTrader5 as meta_trader_5
 from tabular.data.metatrader_config import MetatraderConfig
+from tabular.data.account_config import AccountConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console
-from MetaTrader5 import TerminalInfo
+from MetaTrader5 import TerminalInfo, TradeOrder, TradePosition 
 
 console = Console()
 
@@ -14,8 +15,31 @@ class Metatrader5Service():
     def __init__(self):
         self.console = Console()
 
-    def connect_mt5(self, mt5_to_connect: MetatraderConfig) -> MetatraderConfig:
+    def getPendingOrders(self, accountId: int) -> list[TradeOrder]:
+        # get the limig or stop orders
+        tradeOrders: list[TradeOrder] = meta_trader_5.orders_get()
+        connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
+        if accountId != connected_account.id:
+            raise ValueError(" accountId != connected_account.id")
         
+        if bool(tradeOrders):
+            for tradeOrder in tradeOrders:
+                self.console.print(tradeOrder)
+        return tradeOrders
+
+    def getOpenPositions(self, accountId: int) -> list[TradePosition ]:
+        # get the limig or stop orders
+        tradePositions: list[TradePosition] = meta_trader_5.positions_get()
+        connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
+        if accountId != connected_account.id:
+            raise ValueError(" accountId != connected_account.id")
+        
+        if bool(tradePositions):
+            for tradePosition in tradePositions:
+                self.console.print(tradePosition)
+        return tradePositions
+
+    def connect_mt5(self, mt5_to_connect: MetatraderConfig) -> MetatraderConfig:
         # Snapshot PIDs before initialization
         before = {p.pid for p in psutil.process_iter(["pid", "name"])
                 if p.info["name"] == "terminal64.exe"}

@@ -11,7 +11,7 @@ from tabular.commands.pending_orders import pending_orders
 from tabular.commands.open_positions import open_positions
 from tabular.commands.closed_trades import closed_trades
 from tabular.commands.list import list 
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_empty, explain_MT5, allow_allways, no_active_account
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_pending_orders, explain_empty, explain_MT5, explain_open_positions, allow_allways, no_active_account
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
@@ -37,8 +37,8 @@ SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | 
     [ allow_allways, explain_DB,'Database', database.callback.__name__, ], 
     [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_open_positions, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Closed Trades', closed_trades.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Symbols', symbols.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
@@ -81,22 +81,16 @@ def main(ctx: click.Context, db_file: str):
     while True:
         click.echo(empty_string)
         click.echo(f"Managing {len(accounts)} account(s)")
-        if choice is None:
+        if not bool(choice):
             choice = interactive_menu(SUB_COMMANDS)
-        else:
-            break
         
-        result = None
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
-                click.echo(f"Next menu: {next_menu}")
-                ctx.invoke(ctx.command.commands[next_menu])
-            result = choice[3]
-            choice = None  # Reset choice to None after invoking the command
-        else:
-            click.echo("main.py: Back to main menu")
-            return result
+                click.echo(f"{__file__} next menu: {next_menu}")
+                choice = next_menu
+            else:
+                choice = None  # Reset choice to None after invoking the command
 
 main.add_command(database)
 main.add_command(metatrader5)
