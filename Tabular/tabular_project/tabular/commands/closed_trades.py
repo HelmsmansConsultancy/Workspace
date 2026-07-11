@@ -11,20 +11,21 @@ console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
-SYMBOLS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+
+CLOSED_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
 
 @click.group()
 @click.pass_context
-def symbols(ctx: click.Context):
-    """Status of symbols."""
+def closed_trades(ctx: click.Context):
+    """Status of closed trades."""
 
     
     choice = None
     while True:
         if choice is None:
-            choice = interactive_menu(SYMBOLS_SUB_COMMANDS)
+            choice = interactive_menu(CLOSED_SUB_COMMANDS)
 
         result = None
         if bool(choice):

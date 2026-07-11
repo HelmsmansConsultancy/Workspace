@@ -11,20 +11,21 @@ console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
-SYMBOLS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+
+OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
 
 @click.group()
 @click.pass_context
-def symbols(ctx: click.Context):
-    """Status of symbols."""
+def open_positions(ctx: click.Context):
+    """Status of pending orders."""
 
     
     choice = None
     while True:
         if choice is None:
-            choice = interactive_menu(SYMBOLS_SUB_COMMANDS)
+            choice = interactive_menu(OPEN_SUB_COMMANDS)
 
         result = None
         if bool(choice):

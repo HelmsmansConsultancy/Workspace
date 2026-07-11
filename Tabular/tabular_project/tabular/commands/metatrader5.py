@@ -138,8 +138,8 @@ def metatrader5(ctx):
         if choice is None:
             choice = interactive_menu(MT5_SUB_COMMANDS)
         
-        if bool(choice)and bool(choice[1]):
-            next_menu = ctx.invoke(ctx.command.commands[choice[1]])
+        if bool(choice):
+            next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
                 click.echo(f"Next menu: {next_menu}")
                 return next_menu

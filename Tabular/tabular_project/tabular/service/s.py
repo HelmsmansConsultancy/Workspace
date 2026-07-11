@@ -10,6 +10,7 @@ class S:
     DATABASE_SERVICE: Final = "DatabaseService"
     MENU_SERVICE: Final = "MenuService"
     METATRADER5_SERVICE: Final = "Metatrader5Service"
+    METATRADERS: Final = "Metatraders"
     MT5_PID: Final = "mt5_pid"
     START_DIR: Final = "start_dir"
 

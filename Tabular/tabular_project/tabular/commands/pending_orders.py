@@ -28,9 +28,8 @@ def pending_orders(ctx: click.Context):
             choice = interactive_menu(PENDING_SUB_COMMANDS)
 
         result = None
-        if bool(choice) and bool(choice[1]):
-            ctx.invoke(ctx.command.commands[choice[1]])
-            result = choice[3] 
+        if bool(choice):
+            ctx.invoke(ctx.command.commands[choice])
             choice = None  # Reset choice to None after invoking the command
         else:
             return result

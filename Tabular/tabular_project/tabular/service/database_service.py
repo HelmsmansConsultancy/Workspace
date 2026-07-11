@@ -75,6 +75,11 @@ class DatabaseService():
             session.add(accountMetatraderConnection)
             session.commit()
 
+    def list_account_metatrader_connections(self, accountId: int) -> list[AccountMetatraderConnection]:
+        with Session(self.engine) as session:
+            accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter_by(account_id= accountId).all()
+            return accountMetatraderConnections
+
     def listMetatraders(self) -> list[MetatraderConfig]:
         with Session(self.engine) as session:
             metatraders = session.query(MetatraderConfig).all()

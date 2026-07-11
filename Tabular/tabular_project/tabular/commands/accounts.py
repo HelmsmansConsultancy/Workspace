@@ -5,7 +5,7 @@ from MetaTrader5 import AccountInfo
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways, no_accounts
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
@@ -66,6 +66,12 @@ def list_accounts():
     """List all accounts."""
     global databaseService
     account_configs: list[AccountConfig] = databaseService.list_account_configs()
+    
+    accountMetatraderConnections: AccountMetatraderConnection = []
+    connected_Metatrader: MetatraderConfig = SingletonService().get(S.CONNECTED_MT5)
+    if bool(connected_Metatrader):
+        accountMetatraderConnections = databaseService.list_account_metatrader_connections(connected_Metatrader.id)
+
     click.echo(empty_string)
     click.echo("Accounts in the database:")
     if bool(account_configs) and len(account_configs) > 0:
@@ -101,8 +107,8 @@ def connect_account():
 
 ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ], 
-    [allow_allways, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
-    [allow_allways, explain_empty, 'Connect account', connect_account.callback.__name__.replace("_", "-"), ], 
+    [no_accounts, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
+    [no_accounts, explain_empty, 'Connect account', connect_account.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty,  'Return to previous menu', None, ]
 ]
 
@@ -137,12 +143,11 @@ def accounts(ctx: click.Context):
             choice = interactive_menu(ACCOUNT_SUB_COMMANDS)
 
         result = None
-        if bool(choice) and bool(choice[1]):
-            next_menu = ctx.invoke(ctx.command.commands[choice[1]])
+        if bool(choice):
+            next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
                 click.echo(f"Next menu: {next_menu}")
                 return next_menu
-            result = choice[3]
             choice = None  # Reset choice to None after invoking the command
         else:
             return result

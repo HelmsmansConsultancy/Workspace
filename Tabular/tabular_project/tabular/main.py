@@ -8,8 +8,10 @@ from tabular.commands.metatrader5 import metatrader5
 from tabular.commands.database import database
 from tabular.commands.symbols import symbols
 from tabular.commands.pending_orders import pending_orders
+from tabular.commands.open_positions import open_positions
+from tabular.commands.closed_trades import closed_trades
 from tabular.commands.list import list 
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_empty, explain_MT5, allow_allways, allow_never
+from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_empty, explain_MT5, allow_allways, no_active_account
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
@@ -35,8 +37,10 @@ SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | 
     [ allow_allways, explain_DB,'Database', database.callback.__name__, ], 
     [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
-    [allow_allways, explain_empty, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ], 
-    [allow_allways, explain_empty, 'Symbols', symbols.callback.__name__.replace("_", "-"), ], 
+    [no_active_account, explain_empty, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Closed Trades', closed_trades.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Symbols', symbols.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
 ]
 
@@ -99,6 +103,8 @@ main.add_command(metatrader5)
 main.add_command(accounts)
 main.add_command(symbols)
 main.add_command(pending_orders)
+main.add_command(open_positions)
+main.add_command(closed_trades)
 main.add_command(exit)
 
 if __name__ == "__main__":
