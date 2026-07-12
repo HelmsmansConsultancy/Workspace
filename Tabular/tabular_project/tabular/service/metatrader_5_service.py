@@ -5,7 +5,7 @@ from tabular.data.account_config import AccountConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console
-from MetaTrader5 import TerminalInfo, TradeOrder, TradePosition 
+from MetaTrader5 import TerminalInfo, TradeOrder, TradePosition, SymbolInfo
 
 console = Console()
 
@@ -15,24 +15,34 @@ class Metatrader5Service():
     def __init__(self):
         self.console = Console()
 
+
+    def getSymbolInfo(self, accountId: int) -> list[SymbolInfo]:
+        # get the SymbolInfo
+        connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
+        if accountId != connected_account.id:
+            raise ValueError(f"AccountId({accountId}) != connected_account.id({connected_account.id})")
+        symbolInfo: list[SymbolInfo] = meta_trader_5.symbols_get()
+        self.console.print(symbolInfo)
+        return symbolInfo
+
     def getPendingOrders(self, accountId: int) -> list[TradeOrder]:
         # get the limig or stop orders
-        tradeOrders: list[TradeOrder] = meta_trader_5.orders_get()
         connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
         if accountId != connected_account.id:
             raise ValueError(" accountId != connected_account.id")
+        tradeOrders: list[TradeOrder] = meta_trader_5.orders_get()
         
         if bool(tradeOrders):
             for tradeOrder in tradeOrders:
                 self.console.print(tradeOrder)
         return tradeOrders
 
-    def getOpenPositions(self, accountId: int) -> list[TradePosition ]:
+    def getTradeDeals(self, accountId: int) -> list[TradePosition ]:
         # get the limig or stop orders
-        tradePositions: list[TradePosition] = meta_trader_5.positions_get()
         connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
         if accountId != connected_account.id:
             raise ValueError(" accountId != connected_account.id")
+        tradePositions: list[TradePosition] = meta_trader_5.positions_get()
         
         if bool(tradePositions):
             for tradePosition in tradePositions:

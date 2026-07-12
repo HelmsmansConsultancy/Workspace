@@ -9,7 +9,7 @@ from tabular.commands.database import database
 from tabular.commands.symbols import symbols
 from tabular.commands.pending_orders import pending_orders
 from tabular.commands.open_positions import open_positions
-from tabular.commands.closed_trades import closed_trades
+from tabular.commands.closed_deal import trade_deals
 from tabular.commands.list import list 
 from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_pending_orders, explain_empty, explain_MT5, explain_open_positions, allow_allways, no_active_account
 from tabular.service.singleton_service import SingletonService
@@ -39,7 +39,7 @@ SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | 
     [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_open_positions, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'Closed Trades', closed_trades.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Trade Deals', trade_deals.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Symbols', symbols.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
 ]
@@ -87,7 +87,6 @@ def main(ctx: click.Context, db_file: str):
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
-                click.echo(f"{__file__} next menu: {next_menu}")
                 choice = next_menu
             else:
                 choice = None  # Reset choice to None after invoking the command
@@ -98,7 +97,7 @@ main.add_command(accounts)
 main.add_command(symbols)
 main.add_command(pending_orders)
 main.add_command(open_positions)
-main.add_command(closed_trades)
+main.add_command(trade_deals)
 main.add_command(exit)
 
 if __name__ == "__main__":

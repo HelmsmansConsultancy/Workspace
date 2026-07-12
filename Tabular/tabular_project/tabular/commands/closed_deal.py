@@ -9,23 +9,23 @@ from tabular.util.menu_utils import interactive_menu, empty_string, explain_empt
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.data.open_position import OpenPosition
 from tabular.util.position_util import copyValuesInto
-from MetaTrader5 import TradeOrder
+from MetaTrader5 import TradeDeal 
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 @click.command()
-def current_open_positions():
+def history_trade_deals():
     """ Current Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    tradeOrders: list[TradeOrder] = metatrader5Service.getTradeDeals(connected_account.id)
-    click.echo(f"Gotten {len(tradeOrders)} trades")
+    tradeDeals : list[TradeDeal ] = metatrader5Service.getTradeDeals(connected_account.id)
+    click.echo(f"Gotten {len(tradeDeals)} trades")
     openPositions: list[OpenPosition] = databaseService.getTradeDeals(connected_account.id)
     existingOrders: list[OpenPosition] = []
     newPositions: list[OpenPosition] = []
     removedPositions: list[OpenPosition]
-    for tradeOrder in tradeOrders:
+    for tradeOrder in tradeDeals:
         order_exists = False
         for openPosition in openPositions:
             if openPosition.ticket == tradeOrder.ticket:
@@ -45,14 +45,14 @@ def current_open_positions():
     databaseService.removeOpenPositions(removedPositions)
 
 OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [no_active_account, explain_empty, 'Get current positions', current_open_positions.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Get historic deals', history_trade_deals.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
 
 @click.group()
 @click.pass_context
-def open_positions(ctx: click.Context):
+def trade_deals(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -85,4 +85,4 @@ def open_positions(ctx: click.Context):
         else:
             return result
         
-open_positions.add_command(current_open_positions)
+trade_deals.add_command(history_trade_deals)

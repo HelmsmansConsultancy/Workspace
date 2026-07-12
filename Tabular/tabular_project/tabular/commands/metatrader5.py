@@ -43,8 +43,13 @@ def append_mt5():
     metatraderPath = pick_file(start_dir=os.getcwd(), file_extension=".exe")
     click.echo(f"Selected MT5 path: {metatraderPath}")
     if bool(metatraderPath) and metatraderPath.endswith(".exe") and len(databaseService.getMetatradersByPath(metatraderPath)) == 0:
-        metatraderId = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath, name=Path(metatraderPath).parent.name))
-        click.echo(f"MT5 installation added with ID: {metatraderId} and path: {metatraderPath}")
+        mt5_to_connect = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath, name=Path(metatraderPath).parent.name))
+        click.echo(f"MT5 installation added with ID: {mt5_to_connect.id} and path: {mt5_to_connect.path}")
+        updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
+        databaseService.updateMetatrader(updated_mt5_config)
+        SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
+        click.echo(empty_string)
+        return accounts.callback.__name__.replace("_", "-")
 
 @click.command()
 def list_mt5():
@@ -143,7 +148,6 @@ def metatrader5(ctx):
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
             if bool(next_menu):
-                click.echo(f"{__file__} next menu: {next_menu}")
                 return next_menu
             else: 
                 choice = None  # Reset choice to None after invoking the command

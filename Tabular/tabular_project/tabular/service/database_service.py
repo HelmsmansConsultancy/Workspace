@@ -13,6 +13,7 @@ from tabular.data.metatrader_config import MetatraderConfig
 from tabular.data.application_config import ApplicationConfig
 from tabular.data.pending_order import PendingOrder
 from tabular.data.open_position import OpenPosition
+from tabular.data.symbol_info import SymbolInfomation
 
 applicationConfig: ApplicationConfig = None
 
@@ -92,11 +93,11 @@ class DatabaseService():
             count = session.query(MetatraderConfig).count()
             return count
 
-    def addMetatrader(self, metatraderConfig: MetatraderConfig) -> int:
+    def addMetatrader(self, metatraderConfig: MetatraderConfig) -> MetatraderConfig:
         with Session(self.engine) as session:
             session.add(metatraderConfig)
             session.commit()
-            return metatraderConfig.id
+            return metatraderConfig
         
     def updateMetatrader(self, metatraderConfig: MetatraderConfig) -> None:
         with Session(self.engine) as session:
@@ -158,7 +159,7 @@ class DatabaseService():
             count = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).count()
             return count
           
-    def getOpenPositions(self, accountId) -> list[OpenPosition]:
+    def getTradeDeals(self, accountId) -> list[OpenPosition]:
         with Session(self.engine) as session:  
             openPositions = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).all()
             return openPositions
@@ -182,6 +183,13 @@ class DatabaseService():
             for position in openPositions:
                 self.console.print(f"deleting: {position}")
                 session.delete(position)
+            session.commit()
+
+    def addSymbolInfo(self, symbols: list[SymbolInfomation]) -> None:
+        with Session(self.engine) as session:
+            for symbol in symbols:
+                self.console.print(f"adding: {symbol!r}")
+                session.add(symbol)
             session.commit()
 
 
