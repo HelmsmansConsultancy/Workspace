@@ -21,9 +21,9 @@ class Metatrader5Service():
         connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
         if accountId != connected_account.id:
             raise ValueError(f"AccountId({accountId}) != connected_account.id({connected_account.id})")
-        symbolInfo: list[SymbolInfo] = meta_trader_5.symbols_get()
-        self.console.print(symbolInfo)
-        return symbolInfo
+        symbolInfos: list[SymbolInfo] = meta_trader_5.symbols_get()
+        # self.console.print(symbolInfos)
+        return symbolInfos
 
     def getPendingOrders(self, accountId: int) -> list[TradeOrder]:
         # get the limig or stop orders

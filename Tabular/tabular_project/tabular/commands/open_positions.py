@@ -5,7 +5,9 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, no_active_account
+from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
+from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
+from tabular.util.menus_utils import interactive_menu
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.data.open_position import OpenPosition
 from tabular.util.position_util import copyValuesInto

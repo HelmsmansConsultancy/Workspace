@@ -1,11 +1,13 @@
 import click
 from decimal import Decimal, ROUND_HALF_UP
 import MetaTrader5 as meta_trader_5
-from MetaTrader5 import AccountInfo, SymbolInfo
+from MetaTrader5 import AccountInfo
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways, no_accounts
+from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
+from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
+from tabular.util.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.data.account_config import AccountConfig
@@ -14,33 +16,10 @@ from tabular.data.account_metatrader_connection import AccountMetatraderConnecti
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.commands.pending_orders import pending_orders
-from tabular.data.symbol_info import SymbolInfomation
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
-
-@click.command()
-def get_symbolinfo():
-    """ Get all the symbol info"""
-    global metatrader5Service
-    global databaseService
-    connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
-    if connected_mt5 is None:
-        click.echo("No connected MT5 installation found. Please connect to an MT5 installation first.")
-        return
-    symbolInfos: list[SymbolInfo] = metatrader5Service.getSymbolInfo(connected_mt5.id)
-    symbols: list[SymbolInfomation] = []
-    for symbolInfo in symbolInfos:
-        newSymbol = SymbolInfomation(
-            account_id=connect_account.id,
-            name=symbolInfo.name,
-            digits=symbolInfo.digits,
-            spread=symbolInfo.spread,
-            select=symbolInfo.select,
-            point=symbolInfo.point,
-        )
-    databaseService.addSymbolInfo(symbols)
 
 @click.command()
 def create_account_mt5():
@@ -132,7 +111,6 @@ ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str
     [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ], 
     [no_accounts, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
     [no_accounts, explain_empty, 'Connect account', connect_account.callback.__name__.replace("_", "-"), ], 
-    [no_accounts, explain_empty, 'Get Symbol Info', get_symbolinfo.callback.__name__.replace("_", "-"),],
     [allow_allways, explain_empty,  'Return to previous menu', None, ]
 ]
 
@@ -177,6 +155,5 @@ def accounts(ctx: click.Context):
             return result
 
 accounts.add_command(create_account_mt5)
-accounts.add_command(get_symbolinfo)
 accounts.add_command(list_accounts)
 accounts.add_command(connect_account)

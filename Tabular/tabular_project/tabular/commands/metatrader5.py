@@ -5,7 +5,9 @@ from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
 from tabular.util.file_utils import pick_file
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways
+from tabular.util.menus_allow import empty_string, allow_allways
+from tabular.util.menus_explain import explain_empty
+from tabular.util.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service

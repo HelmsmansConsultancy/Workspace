@@ -97,6 +97,7 @@ class DatabaseService():
         with Session(self.engine) as session:
             session.add(metatraderConfig)
             session.commit()
+            session.refresh(metatraderConfig)
             return metatraderConfig
         
     def updateMetatrader(self, metatraderConfig: MetatraderConfig) -> None:
@@ -136,21 +137,21 @@ class DatabaseService():
     def updatePendingOrders(self, pendingOrders: list[PendingOrder] ) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
-                self.console.print(f"updating: {order}")
+                # self.console.print(f"updating: {order}")
                 session.merge(order)
             session.commit()
     
     def addPendingOrders(self, pendingOrders: list[PendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
-                self.console.print(f"adding: {order!r}")
+                # self.console.print(f"adding: {order!r}")
                 session.add(order)
             session.commit()
 
     def removePendingOrders(self, pendingOrders: list[PendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
-                self.console.print(f"deleting: {order}")
+                # self.console.print(f"deleting: {order}")
                 session.delete(order)
             session.commit()
             
@@ -167,29 +168,46 @@ class DatabaseService():
     def updateOpenPositions(self, openPositions: list[OpenPosition] ) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
-                self.console.print(f"updating: {position}")
+                # self.console.print(f"updating: {position}")
                 session.merge(position)
             session.commit()
     
     def addOpenPositions(self, openPositions: list[OpenPosition]) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
-                self.console.print(f"adding: {position!r}")
+                # self.console.print(f"adding: {position!r}")
                 session.add(position)
             session.commit()
 
     def removeOpenPositions(self, openPositions: list[OpenPosition]) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
-                self.console.print(f"deleting: {position}")
+                # self.console.print(f"deleting: {position}")
                 session.delete(position)
             session.commit()
+
+    def getSymbolInformation(self, accountId: int) -> list[SymbolInfomation]:
+        with Session(self.engine) as session:
+            symbolInfomations = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).all()
+            return symbolInfomations
+
+    def countSymbolInformation(self, accountId: int) -> int:
+        with Session(self.engine) as session:
+            count = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).count()
+            return count
 
     def addSymbolInfo(self, symbols: list[SymbolInfomation]) -> None:
         with Session(self.engine) as session:
             for symbol in symbols:
-                self.console.print(f"adding: {symbol!r}")
+                # self.console.print(f"adding: {symbol!r}")
                 session.add(symbol)
+            session.commit()
+    
+    def updateSymbolInformation(self, existingSymbols: list[SymbolInfomation]) -> None:
+        with Session(self.engine) as session:
+            for symbol in existingSymbols:
+                # self.console.print(f"adding: {symbol!r}")
+                session.merge(symbol)
             session.commit()
 
 

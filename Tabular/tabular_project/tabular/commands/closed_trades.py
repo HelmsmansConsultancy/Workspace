@@ -5,7 +5,7 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_empty, allow_allways
+from tabular_project.tabular.util.menus_explain import interactive_menu, empty_string, explain_empty, allow_allways
 
 console = Console()
 databaseService: DatabaseService = None

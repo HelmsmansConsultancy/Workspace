@@ -14,14 +14,15 @@ class SymbolInfomation(Base):
     select: bool = Column("select", Boolean, nullable=False)
     point: float = Column("point", Float, nullable=False)
 
-    def __init__(self, account_id: int, name: str, digits: int, spread:int, select: bool, point: float):
+    def __init__(self, account_id: int):
         self.account_id = account_id
-        self.name = name
-        self.digits = digits
-        self.spread = spread
-        self.select = select
-        self.point = point
+
+    def __repr__(self):
+        return f"<SymbolInfomation(id={self.id}, account_id={self.account_id}, name={self.name}, digits={self.digits}, spread={self.spread}, select={self.select}, point={self.point})>"
         
+    
+    def __str__(self):
+        return f"<SymbolInfomation(id={self.id} name={self.name}, digits={self.digits},  point={self.point})>"
 
 
 

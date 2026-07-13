@@ -12,35 +12,6 @@ console = Console()
 
 empty_string = ""
 
-def allow_allways():
-    return True
-
-def no_metatraders():
-    metatraders: MetatraderConfig | None = SingletonService().get(S.METATRADERS)
-    if bool(metatraders) and len(metatraders) > 0:
-        return True
-    else:
-        return False
-    
-def no_accounts():
-    databaseService: DatabaseService =  SingletonService().get(S.DATABASE_SERVICE)
-    accounts = databaseService.countAccounts()
-    if accounts > 0:
-        return True
-    else:
-        return False
-
-def no_active_account():
-    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    if bool(connected_account):
-        return True
-    else:
-        return False 
-
-def allow_never():
-    return False
-
-
 def explain_accounts(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     message = ""
@@ -83,11 +54,24 @@ def explain_pending_orders(enabled:bool = True):
     if bool(connected_account):
         pending_orders = databaseService.countPendingOrders(connected_account.id)
         if pending_orders > 0:
-            message = f"\t\t\t<{pending_orders} pending order(s)>"
+            message = f"\t\t<{pending_orders} pending order(s)>"
         else:
-            message = "\t\t\t<No pending orders>"
+            message = f"\t\t<No pending orders>"
     else:
-        message = "\t\t\t<No database available.>"
+        message = f"\t\t<No database available.>"
+    return message
+
+def explain_symbols(enabled:bool = True):
+    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    if bool(connected_account):
+        symbols = databaseService.countSymbolInformation(connected_account.id)
+        if symbols > 0:
+            message = f"\t\t\t<{symbols} Symbol(s)>"
+        else:
+            message = f"\t\t\t<No Symbols>"
+    else:
+        message = f"\t\t\t<No database available.>"
     return message
 
 def explain_MT5(enabled:bool = True):
@@ -118,26 +102,9 @@ def explain_open_positions(enabled:bool = True):
     if bool(connected_account):
         openPositions = databaseService.countOpenPositions(connected_account.id)
         if openPositions > 0:
-            message = f"\t\t\t<{openPositions} open position(s)>"
+            message = f"\t\t<{openPositions} open position(s)>"
         else:
-            message = "\t\t\t<No open positions>"
+            message = f"\t\t<No open positions>"
     else:
-        message = "\t\t\t<No database available.>"
+        message = f"\t\t<No database available.>"
     return message
-
-def interactive_menu(subCommands: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]]) -> str:
-    click.echo(empty_string)
-    click.echo("What do you want to do?")
-    for i, tuple in enumerate(subCommands, 1):
-        enabled = tuple[0]()
-        line = f"  {i}. {tuple[2]} {tuple[1](enabled) if tuple[1] is not None else ''}"
-        if enabled:
-            click.echo(line)
-        else:
-            click.echo(click.style(line + " (disabled)", dim=True, fg="bright_black"))
-    idx = click.prompt(
-        "Enter number",
-        type=click.IntRange(1, len(subCommands))
-    )
-    return subCommands[idx - 1][3]
-

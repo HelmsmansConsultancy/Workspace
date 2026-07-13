@@ -11,7 +11,9 @@ from tabular.commands.pending_orders import pending_orders
 from tabular.commands.open_positions import open_positions
 from tabular.commands.closed_deal import trade_deals
 from tabular.commands.list import list 
-from tabular.util.menu_utils import interactive_menu, empty_string, explain_accounts, explain_DB, explain_pending_orders, explain_empty, explain_MT5, explain_open_positions, allow_allways, no_active_account
+from tabular.util.menus_allow import empty_string, allow_allways, no_active_account
+from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
+from tabular.util.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
@@ -37,6 +39,7 @@ SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | 
     [ allow_allways, explain_DB,'Database', database.callback.__name__, ], 
     [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_symbols, 'Symbols', symbols.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_open_positions, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Trade Deals', trade_deals.callback.__name__.replace("_", "-"), ],
