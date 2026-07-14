@@ -11,9 +11,9 @@ from tabular.util.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
-from tabular.data.metatrader_config import MetatraderConfig
-from tabular.commands.accounts import accounts
-from tabular.data.account_metatrader_connection import AccountMetatraderConnection
+from tabular.data.settings.metatrader_config import MetatraderConfig
+from tabular.commands.settings.accounts import accounts
+from tabular.data.settings.account_metatrader_connection import AccountMetatraderConnection
 
 console = Console()
 databaseService: DatabaseService = None

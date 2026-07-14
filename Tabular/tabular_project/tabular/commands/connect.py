@@ -1,12 +1,10 @@
 import click
 import MetaTrader5 as mt5
 import psutil
-import subprocess
 from rich.console import Console
 from tabular.service.s import S
 from ..service.singleton_service import SingletonService
-from ..data.account_config import AccountConfig
-from ..util.file_utils import list_files
+from ..data.settings.account_config import AccountConfig
 
 console = Console()
 

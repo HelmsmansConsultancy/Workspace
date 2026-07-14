@@ -1,7 +1,7 @@
 import psutil
 import MetaTrader5 as meta_trader_5
-from tabular.data.metatrader_config import MetatraderConfig
-from tabular.data.account_config import AccountConfig
+from tabular.data.settings.metatrader_config import MetatraderConfig
+from tabular.data.settings.account_config import AccountConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console

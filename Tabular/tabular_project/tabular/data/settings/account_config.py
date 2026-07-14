@@ -1,5 +1,5 @@
-from .backend import Backend
-from sqlalchemy import Boolean, Column, Integer, Numeric, String
+from ..backend import Backend
+from sqlalchemy import Boolean, Column, Integer, String
 from tabular.data.base import Base
 
 class AccountConfig(Base):

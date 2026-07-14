@@ -8,7 +8,7 @@ from tabular.service.s import S
 from tabular.util.menus_allow import empty_string, allow_allways, no_active_account
 from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
 from tabular.util.menus_utils import interactive_menu
-from tabular.data.metatrader_config import MetatraderConfig
+from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.pending_order import PendingOrder
 from tabular.util.orders_util import copyValuesInto
 from MetaTrader5 import TradeOrder

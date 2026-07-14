@@ -8,13 +8,13 @@ from tabular.service.s import S
 from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
 from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
 from tabular.util.menus_utils import interactive_menu
-from tabular.data.metatrader_config import MetatraderConfig
-from tabular.data.account_config import AccountConfig
+from tabular.data.settings.metatrader_config import MetatraderConfig
+from tabular.data.settings.account_config import AccountConfig
 from tabular.data.symbol_info import SymbolInfomation
 from tabular.data.application_config import ApplicationConfig
-from tabular.commands.metatrader5 import metatrader5
-from tabular.commands.database import database
-from tabular.commands.accounts import accounts
+from tabular.commands.settings.metatrader5 import metatrader5
+from tabular.commands.settings.database import database
+from tabular.commands.settings.accounts import accounts
 from tabular.util.menus_explain import explain_accounts, explain_empty, explain_MT5, explain_settings
 
 console = Console()
