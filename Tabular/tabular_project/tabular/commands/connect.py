@@ -336,7 +336,6 @@ def connect():
         idx = interactive_menu(accounts)
 
     account = accounts[idx]
-    click.echo(f"Connecting to: {account.backend.firm} {account.id} {account.path} of type {account.type} with Size {account.money.base} {account.money.currency}")
 
     initialize_connection(account.path)
     #query_terminal_info()

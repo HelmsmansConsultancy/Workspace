@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, ForeignKey, String
+from sqlalchemy import  Column, Integer, ForeignKey
 from tabular.data.base import Base
 
 class AccountMetatraderConnection(Base):

@@ -4,11 +4,10 @@ from decimal import Decimal
 from tabular.util.price_util import fmt_price
 
 
-class PendingOrder(Base):
-    __tablename__ = "PENDING_ORDER"
+class GenericOrder(Base):
+    __tablename__ = "GENERIC_ORDER"
 
     id: int = Column("id", Integer, primary_key=True)
-    account_id: int = Column("account_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
     magic: int = Column("magic", Integer, nullable=True)
@@ -33,13 +32,13 @@ class PendingOrder(Base):
         digits = 5
         if "JPY" in self.symbol:
             digits = 3
-        return f"<PendingOrder(id={self.id}, account_id='{self.account_id}', symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.stp, digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
+        return f"<GO(id={self.id}, symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.stp, digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
     
     def __str__(self):
         digits = 5
         if "JPY" in self.symbol:
             digits = 3
-        return f"<PO(ticket='{self.ticket}' symbol='{self.symbol}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}' )>"
+        return f"<GO(ticket='{self.ticket}' symbol='{self.symbol}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}' )>"
     
     
 

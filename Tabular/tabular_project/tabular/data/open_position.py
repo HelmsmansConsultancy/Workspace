@@ -23,6 +23,7 @@ class OpenPosition(Base):
     sl: float = Column("sl", Float, nullable=False)
     tp: float = Column("tp", Float, nullable=False)
     symbol: str = Column("symbol", String, nullable=False)
+    pair: str = Column("pair", String, nullable=False)
 
     def __init__(self):
         pass

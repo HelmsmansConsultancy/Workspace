@@ -9,6 +9,7 @@ class SymbolInfomation(Base):
     id: int = Column("id", Integer, primary_key=True)
     account_id: int = Column("account_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), nullable=False)
     name: str = Column("name",String, nullable=False)
+    pair: str = Column("pair",String, nullable=False)
     digits: int = Column("digits", Integer, nullable=False)
     spread: int = Column("spread", Integer, nullable=False)
     select: bool = Column("select", Boolean, nullable=False)
@@ -18,11 +19,11 @@ class SymbolInfomation(Base):
         self.account_id = account_id
 
     def __repr__(self):
-        return f"<SymbolInfomation(id={self.id}, account_id={self.account_id}, name={self.name}, digits={self.digits}, spread={self.spread}, select={self.select}, point={self.point})>"
+        return f"<SymbolInfomation(id={self.id}, account_id={self.account_id}, pair={self.pair} name={self.name}, pair={self.pair}, digits={self.digits}, spread={self.spread}, select={self.select}, point={self.point})>"
         
     
     def __str__(self):
-        return f"<SymbolInfomation(id={self.id} name={self.name}, digits={self.digits},  point={self.point})>"
+        return f"<SymbolInfomation(id={self.id} name={self.name}, digits={self.digits},  point={self.point}, pair={self.pair})>"
 
 
 

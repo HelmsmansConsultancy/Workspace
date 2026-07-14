@@ -9,52 +9,51 @@ from tabular.util.menu.menus_allow import empty_string,  no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.open_position import OpenPosition
-from tabular.util.order.open_position_util import copyValuesInto
-from MetaTrader5 import TradeDeal 
+from tabular.data.pending_order import PendingOrder
+from tabular.util.order.pending_order_util import copyValuesInto
+from MetaTrader5 import TradeOrder
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 @click.command()
-def history_trade_deals():
+def current_pending_orders():
     """ Current Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    tradeDeals : list[TradeDeal ] = metatrader5Service.getTradeDeals(connected_account.id)
-    click.echo(f"Gotten {len(tradeDeals)} trades")
-    openPositions: list[OpenPosition] = databaseService.getTradeDeals(connected_account.id)
-    existingOrders: list[OpenPosition] = []
-    newPositions: list[OpenPosition] = []
-    removedPositions: list[OpenPosition]
-    for tradeOrder in tradeDeals:
+    tradeOrders: list[TradeOrder] = metatrader5Service.getPendingOrders(connected_account.id)
+    click.echo(f"Gotten {len(tradeOrders)} trades")
+    pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    existingOrders: list[PendingOrder] = []
+    newOrders: list[PendingOrder] = []
+    removedOrders: list[PendingOrder]
+    for tradeOrder in tradeOrders:
         order_exists = False
-        for openPosition in openPositions:
-            if openPosition.ticket == tradeOrder.ticket:
+        for pendingOrder in pendingOrders:
+            if pendingOrder.ticket == tradeOrder.ticket:
                 order_exists = True
-                copyValuesInto(tradeOrder, openPosition)
-                existingOrders.append(openPosition)
+                copyValuesInto(tradeOrder, pendingOrder)
+                existingOrders.append(pendingOrder)
 
         if not order_exists:
-            newOrder = OpenPosition()
+            newOrder = PendingOrder()
             newOrder.account_id = connected_account.id
             copyValuesInto(tradeOrder, newOrder)
-            newPositions.append(newOrder)
+            newOrders.append(newOrder)
     
-    removedPositions = list(set(openPositions) - set(existingOrders))
-    databaseService.updateOpenPositions(existingOrders)
-    databaseService.addOpenPositions(newPositions)
-    databaseService.removeOpenPositions(removedPositions)
+    removedOrders = list(set(pendingOrders) - set(existingOrders))
+    databaseService.updatePendingOrders(existingOrders)
+    databaseService.addPendingOrders(newOrders)
+    databaseService.removePendingOrders(removedOrders)
 
-OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [no_active_account, explain_empty, 'Get historic deals', history_trade_deals.callback.__name__.replace("_", "-"), ],
+PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [no_active_account, explain_empty, 'Get current orders', current_pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
-
 @click.group()
 @click.pass_context
-def trade_deals(ctx: click.Context):
+def pending_orders(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -66,19 +65,19 @@ def trade_deals(ctx: click.Context):
     while True:
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
-            openPositions = databaseService.getTradeDeals(connected_account.id);
-            if len(openPositions) > 0:
+            pending_orders = databaseService.getPendingOrders(connected_account.id);
+            if len(pending_orders) > 0:
                 click.echo(empty_string)
-                for openPosition in openPositions:
-                    click.echo(f"{openPosition}")
+                for pending_order in pending_orders:
+                    click.echo(f"{pending_order}")
             else :
-                click.echo(f"No open position")
+                click.echo(f"No pending order")
         else :
             click.echo(f"No account connected")
         click.echo(empty_string)
 
         if choice is None:
-            choice = interactive_menu(OPEN_SUB_COMMANDS)
+            choice = interactive_menu(PENDING_SUB_COMMANDS)
 
         result = None
         if bool(choice):
@@ -86,5 +85,5 @@ def trade_deals(ctx: click.Context):
             choice = None  # Reset choice to None after invoking the command
         else:
             return result
-        
-trade_deals.add_command(history_trade_deals)
+
+pending_orders.add_command(current_pending_orders)

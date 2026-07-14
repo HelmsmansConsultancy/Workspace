@@ -6,12 +6,12 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
-from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
-from tabular.util.menus_utils import interactive_menu
+from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
+from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.settings.account_config import AccountConfig
-from tabular.data.symbol_info import SymbolInfomation
+from tabular.data.symbols.symbol_info import SymbolInfomation
 from tabular.util.symbols_util import copyValuesInto
 from tabular.data.application_config import ApplicationConfig
 
@@ -37,7 +37,6 @@ def get_symbolinfo():
     newSymbols: list[SymbolInfomation] = []
     existingSymbols: list[SymbolInfomation] = []
     for symbolInfo in symbolInfos:
-        click.echo(symbolInfo.name)
         existingSymbol = next((symbol for symbol in symbols if symbol.name == symbolInfo.name), None)
         if bool(existingSymbol): 
             copyValuesInto(symbolInfo, existingSymbol)
@@ -89,17 +88,20 @@ def symbols(ctx: click.Context):
     metatrader5Service = SingletonService().get(S.METATRADER5_SERVICE)
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
     
-    if bool(connected_account):
-        symbols = databaseService.countSymbolInformation(connected_account.id)
-        if symbols > 0:
-            click.echo(f"<{symbols} Symbol(s) in Account  {connected_account.name}>") 
-        else:
-            click.echo(f"<No Symbol(s)  in Account  {connected_account.name}>")
-    else:
-        click.echo(f"<No Account connected>")
-    
     choice = None
     while True:
+        """Show basic menu data"""    
+        click.echo(empty_string)
+        if bool(connected_account):
+            symbols = databaseService.countSymbolInformation(connected_account.id)
+            if symbols > 0:
+                click.echo(f"<{symbols} Symbol(s) in Account  {connected_account.name}>") 
+            else:
+                click.echo(f"<No Symbol(s)  in Account  {connected_account.name}>")
+        else:
+            click.echo(f"<No Account connected>")
+        
+
         if choice is None:
             choice = interactive_menu(SYMBOLS_SUB_COMMANDS)
 

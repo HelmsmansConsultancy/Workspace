@@ -3,20 +3,23 @@ import os
 import sys
 from typing import Callable 
 from rich.console import Console
-from tabular.service.s import S
-from tabular.commands.symbols import symbols
-from tabular.commands.pending_orders import pending_orders
-from tabular.commands.open_positions import open_positions
+from tabular.commands.settings.settings import settings
+from tabular.commands.orders_account.pending_orders import pending_orders
+from tabular.commands.orders_account.open_positions import open_positions
 from tabular.commands.closed_deal import trade_deals
 from tabular.commands.list import list 
-from tabular.util.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menus_explain import explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_settings
-from tabular.util.menus_utils import interactive_menu
+from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
+from tabular.util.menu.menus_explain import explain_symbols, explain_empty, explain_settings
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.application_config import ApplicationConfig
 from tabular.commands.settings.settings import settings
+from tabular.commands.symbols.symbols import symbols
+from tabular.commands.orders_account.account_orders import account_orders
+from tabular.commands.orders_generic.orders import generic_orders
+from tabular.service.s import S
 
 
 console = Console()
@@ -36,10 +39,9 @@ def exit():
 SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_settings, 'Settings', settings.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_symbols, 'Symbols', symbols.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_open_positions, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Generic Order', generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Account Order', account_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Trade Deals', trade_deals.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'Symbols', symbols.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
 ]
 
@@ -92,8 +94,8 @@ def main(ctx: click.Context, db_file: str):
 
 main.add_command(settings)
 main.add_command(symbols)
-main.add_command(pending_orders)
-main.add_command(open_positions)
+main.add_command(generic_orders)
+main.add_command(account_orders)
 main.add_command(trade_deals)
 main.add_command(exit)
 

@@ -1,7 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from tabular.data.base import Base
 
-
 class MetatraderConfig(Base):
     __tablename__ = "METATRADER_CONFIG"
 

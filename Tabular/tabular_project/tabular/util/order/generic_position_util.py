@@ -1,6 +1,7 @@
 from tabular.data.open_position import OpenPosition
 from MetaTrader5 import TradePosition
 from types import SimpleNamespace
+from tabular.util.symbols_util import getPairFromName
 
 def copyValuesInto(tradePosition: TradePosition, openPosition: OpenPosition):
     d = SimpleNamespace(**tradePosition._asdict())
@@ -9,7 +10,7 @@ def copyValuesInto(tradePosition: TradePosition, openPosition: OpenPosition):
     openPosition.type_order=d.type
     openPosition.profit=d.profit
     openPosition.swap=d.swap
-
+    openPosition.pair=getPairFromName(d.symbol) 
     openPosition.symbol=d.symbol
     openPosition.entry=d.price_open
     openPosition.sl=d.sl

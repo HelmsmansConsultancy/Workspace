@@ -5,24 +5,24 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
-from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
-from tabular.util.menus_utils import interactive_menu
+from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
+from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.settings.account_config import AccountConfig
-from tabular.data.symbol_info import SymbolInfomation
+from tabular.data.symbols.symbol_info import SymbolInfomation
 from tabular.data.application_config import ApplicationConfig
 from tabular.commands.settings.metatrader5 import metatrader5
 from tabular.commands.settings.database import database
 from tabular.commands.settings.accounts import accounts
-from tabular.util.menus_explain import explain_accounts, explain_empty, explain_MT5, explain_settings
+from tabular.util.menu.menus_explain import explain_accounts, explain_empty, explain_MT5
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 
-SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+SETTINGS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_DB,'Database', database.callback.__name__, ], 
     [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
@@ -87,7 +87,7 @@ def settings(ctx: click.Context):
         click.echo(message)
 
         if not bool(choice):
-            choice = interactive_menu(SUB_COMMANDS)
+            choice = interactive_menu(SETTINGS_SUB_COMMANDS)
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])

@@ -5,9 +5,9 @@ from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
 from tabular.util.file_utils import pick_file
-from tabular.util.menus_allow import empty_string, allow_allways
-from tabular.util.menus_explain import explain_empty
-from tabular.util.menus_utils import interactive_menu
+from tabular.util.menu.menus_allow import empty_string, allow_allways
+from tabular.util.menu.menus_explain import explain_empty
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
@@ -121,7 +121,7 @@ MT5_SUB_COMMANDS:  list[tuple[Callable[[], bool],  Callable[[bool], str], str, s
 @click.group()
 @click.pass_context
 def metatrader5(ctx):
-    """ Load the configuration from the XML file.  """
+    """Status of database."""
     global databaseService
     global metatrader5Service
     databaseService = SingletonService().get(S.DATABASE_SERVICE)

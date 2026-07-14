@@ -4,9 +4,9 @@ import sqlite3
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
-from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
-from tabular.util.menus_utils import interactive_menu
+from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
+from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.util.file_utils import determine_new_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
@@ -53,14 +53,14 @@ DB_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str
 def database(ctx: click.Context):
     """Status of database."""
     global databaseService
-
     databaseService = SingletonService().get("DatabaseService")
-    size_bytes = os.path.getsize(databaseService.db_file) if databaseService is not None else 0
-    click.echo(empty_string)
-    click.echo(f"Database file: <{databaseService.db_file}> - Size: {size_bytes:,} bytes")
 
     choice = None
     while True:
+        """Show basic menu data"""
+        size_bytes = os.path.getsize(databaseService.db_file) if databaseService is not None else 0
+        click.echo(empty_string)
+        click.echo(f"Database file: <{databaseService.db_file}> - Size: {size_bytes:,} bytes")
         if choice is None:
             choice = interactive_menu(DB_SUB_COMMANDS)
 

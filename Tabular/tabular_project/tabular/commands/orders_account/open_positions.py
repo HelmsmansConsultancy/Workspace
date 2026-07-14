@@ -5,12 +5,12 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menus_allow import empty_string, no_active_account
-from tabular.util.menus_explain import explain_empty
-from tabular.util.menus_utils import interactive_menu
+from tabular.util.menu.menus_allow import empty_string, no_active_account
+from tabular.util.menu.menus_explain import explain_empty
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.open_position import OpenPosition
-from tabular.util.position_util import copyValuesInto
+from tabular.util.order.generic_position_util import copyValuesInto
 from MetaTrader5 import TradeOrder
 
 console = Console()

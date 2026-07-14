@@ -13,7 +13,7 @@ from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.application_config import ApplicationConfig
 from tabular.data.pending_order import PendingOrder
 from tabular.data.open_position import OpenPosition
-from tabular.data.symbol_info import SymbolInfomation
+from tabular.data.symbols.symbol_info import SymbolInfomation
 
 applicationConfig: ApplicationConfig = None
 
