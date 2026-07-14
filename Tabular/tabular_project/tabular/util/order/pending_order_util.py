@@ -1,6 +1,7 @@
 from tabular.data.pending_order import PendingOrder
 from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
+from tabular.util.symbols_util import getPairFromName
 
 def copyValuesInto(tradeOrder: TradeOrder, pendingOrder: PendingOrder):
     d = SimpleNamespace(**tradeOrder._asdict())
@@ -9,6 +10,7 @@ def copyValuesInto(tradeOrder: TradeOrder, pendingOrder: PendingOrder):
     pendingOrder.type_order=d.type
     pendingOrder.type_time=d.type_time
     pendingOrder.type_filling=d.type_filling
+    pendingOrder.pair=getPairFromName(d.symbol) 
     pendingOrder.symbol=d.symbol
     pendingOrder.entry=d.price_open
     pendingOrder.sl=d.sl

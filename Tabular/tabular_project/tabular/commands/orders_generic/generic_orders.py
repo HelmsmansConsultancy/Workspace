@@ -10,7 +10,7 @@ from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.pending_order import PendingOrder
-from tabular.util.order.orders_util import copyValuesInto
+from tabular.util.order.pending_order_util import copyValuesInto
 from MetaTrader5 import TradeOrder
 
 console = Console()

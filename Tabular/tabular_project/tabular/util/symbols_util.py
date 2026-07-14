@@ -27,6 +27,8 @@ def getPairFromName(name: str) -> str:
             return "CADCHF"
         case val if "CADJPY" in val:
             return "CADJPY"
+        case val if "CHFJPY" in val:
+            return "CHFJPY"
         case val if "EURAUD" in val:
             return "EURAUD"
         case val if "EURCAD" in val:
@@ -41,6 +43,8 @@ def getPairFromName(name: str) -> str:
             return "EURNZD"
         case val if "EURUSD" in val:
             return "EURUSD"
+        case val if "GBPAUD" in val:
+            return "GBPAUD"
         case val if "GBPCAD" in val:
             return "GBPCAD"
         case val if "GBPCHF" in val:
@@ -65,5 +69,21 @@ def getPairFromName(name: str) -> str:
             return "USDCHF"
         case val if "USDJPY" in val:
             return "USDJPY"
+        case val if "XAGUSD" in val:
+            return "XAGUSD"
+        case val if "XAUUSD" in val:
+            return "XAUUSD"
+        case val if "US30" in val:
+            return "US30"
+        case val if "US30" in val:
+            return "US30"
+        case val if "NAS100" in val:
+            return "NAS100"
+        case val if "US500" in val:
+            return "US500"
+        case val if "USDHKD" in val:
+            return "USDHKD"
+        case val if "USDSGD" in val:
+            return "USDSGD"
         case _:
             return name
