@@ -13,6 +13,7 @@ from tabular.data.metatrader_config import MetatraderConfig
 from tabular.data.account_config import AccountConfig
 from tabular.data.symbol_info import SymbolInfomation
 from tabular.util.symbols_util import copyValuesInto
+from tabular.data.application_config import ApplicationConfig
 
 console = Console()
 databaseService: DatabaseService = None
@@ -43,7 +44,7 @@ def get_symbolinfo():
             click.echo(f"Existing: {existingSymbol}")
             existingSymbols.append(existingSymbol)
         else:
-            newSymbol = SymbolInfomation(
+            newSymbol =SymbolInfomation(
                 account_id=connect_account.id,      
             )
             copyValuesInto(symbolInfo, newSymbol)

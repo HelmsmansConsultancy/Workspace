@@ -13,6 +13,7 @@ from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.metatrader_config import MetatraderConfig
 from tabular.commands.accounts import accounts
+from tabular.data.account_metatrader_connection import AccountMetatraderConnection
 
 console = Console()
 databaseService: DatabaseService = None
@@ -134,6 +135,10 @@ def metatrader5(ctx):
         if bool(mt5_installations) and len(mt5_installations) > 0:
             for mt5 in mt5_installations:
                 click.echo(f"- {mt5}")
+                accountMetatraderConnections: AccountMetatraderConnection = databaseService.list_account_metatrader_connections_by_metatrader(mt5.id)
+                for accountMetatraderConnection in accountMetatraderConnections:
+                    account = databaseService.getAccount(accountMetatraderConnection.account_id)
+                    click.echo(f"\t- {account}")
         else:
             click.echo("No MT5 installations found.")
         click.echo(empty_string)
@@ -153,6 +158,8 @@ def metatrader5(ctx):
                 return next_menu
             else: 
                 choice = None  # Reset choice to None after invoking the command
+        else:
+            return
                 
 metatrader5.add_command(append_mt5)
 metatrader5.add_command(list_mt5)

@@ -10,3 +10,6 @@ class AccountMetatraderConnection(Base):
     def __init__(self, account_id: int, metatrader_id: int):
         self.account_id = account_id
         self.metatrader_id = metatrader_id
+
+    def __str__(self):
+        return f"<AccountMetatraderConnection(account_id={self.account_id}, metatrader_id={self.metatrader_id})"

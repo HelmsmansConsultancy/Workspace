@@ -71,8 +71,8 @@ def list_accounts():
     
     accountMetatraderConnections: AccountMetatraderConnection = []
     connected_Metatrader: MetatraderConfig = SingletonService().get(S.CONNECTED_MT5)
-    if bool(connected_Metatrader):
-        accountMetatraderConnections = databaseService.list_account_metatrader_connections(connected_Metatrader.id)
+    # if bool(connected_Metatrader):
+        # accountMetatraderConnections = databaseService.list_account_metatrader_connections(connected_Metatrader.id)
 
     click.echo(empty_string)
     click.echo("Accounts in the database:")

@@ -61,6 +61,11 @@ class DatabaseService():
             account_config = session.query(AccountConfig).filter_by(login=login, company=company).first()
             return account_config
 
+    def getAccount(self, account_id: int) -> AccountConfig | None:
+        with Session(self.engine) as session:
+            account_config = session.get(AccountConfig, account_id)
+            return account_config
+
     def addAccount(self, accountConfig: AccountConfig) -> int:
         with Session(self.engine) as session:
             session.add(accountConfig)
@@ -78,9 +83,14 @@ class DatabaseService():
             session.add(accountMetatraderConnection)
             session.commit()
 
-    def list_account_metatrader_connections(self, accountId: int) -> list[AccountMetatraderConnection]:
+    def list_account_metatrader_connections_by_account(self, accountId: int) -> list[AccountMetatraderConnection]:
         with Session(self.engine) as session:
             accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter_by(account_id= accountId).all()
+            return accountMetatraderConnections
+
+    def list_account_metatrader_connections_by_metatrader(self, metatrader_id: int) -> list[AccountMetatraderConnection]:
+        with Session(self.engine) as session:
+            accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.metatrader_id==metatrader_id).all()
             return accountMetatraderConnections
 
     def listMetatraders(self) -> list[MetatraderConfig]:

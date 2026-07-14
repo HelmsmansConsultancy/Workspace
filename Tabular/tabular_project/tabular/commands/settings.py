@@ -1,0 +1,104 @@
+import click
+from rich.console import Console
+from typing import Callable
+from tabular.service.singleton_service import SingletonService
+from tabular.service.database_service import DatabaseService
+from tabular.service.metatrader_5_service import Metatrader5Service
+from tabular.service.s import S
+from tabular.util.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
+from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
+from tabular.util.menus_utils import interactive_menu
+from tabular.data.metatrader_config import MetatraderConfig
+from tabular.data.account_config import AccountConfig
+from tabular.data.symbol_info import SymbolInfomation
+from tabular.data.application_config import ApplicationConfig
+from tabular.commands.metatrader5 import metatrader5
+from tabular.commands.database import database
+from tabular.commands.accounts import accounts
+from tabular.util.menus_explain import explain_accounts, explain_empty, explain_MT5, explain_settings
+
+console = Console()
+databaseService: DatabaseService = None
+metatrader5Service: Metatrader5Service = None
+
+
+SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
+    [allow_allways, explain_DB,'Database', database.callback.__name__, ], 
+    [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_empty, 'Return to previous menu', None, ]
+]
+
+@click.group()
+@click.pass_context
+def settings(ctx: click.Context):
+    """Tabular MT5 data management tool."""
+    click.echo("Tabular starting...")
+    global databaseService
+    global metatrader5Service
+    global ApplicationConfig
+
+    databaseService = SingletonService().get(S.DATABASE_SERVICE)
+    metatrader5Service = SingletonService().get(S.METATRADER5_SERVICE)
+
+    accounts = databaseService.accounts()
+
+    choice = None
+    while True:
+        click.echo(empty_string)
+        
+        message: None
+        if databaseService is not None:
+            message = f"<{databaseService.db_file}>"
+        else:
+            message = "<No database available.>"
+        
+        if databaseService is not None:
+            mt5_installations = databaseService.countMetatraders()
+            if mt5_installations > 0:
+                message += f" <{mt5_installations} MT5 installation(s)>"
+            else:
+                message += " <No MT5 installations found.>"
+        else:
+            message += " <No database available.>"
+
+        connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
+        if bool(connected_mt5):
+            message += f" <Connected to: {connected_mt5.name}>"
+        else:
+            message += " <Not connected>"
+        
+
+        if databaseService is not None:
+            accounts = databaseService.countAccounts()
+            if accounts > 0:
+                message += f" <{accounts} account(s)>"
+            else:
+                message += " <No accounts>"
+        else:
+            message += "<No database available.>"
+
+        connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+        if bool(connected_account):
+            message += f" <Connected with: {connected_account.name}>"
+        else:
+            message += " <Not connected>"
+        
+        click.echo(message)
+
+        if not bool(choice):
+            choice = interactive_menu(SUB_COMMANDS)
+        
+        if bool(choice):
+            next_menu = ctx.invoke(ctx.command.commands[choice])
+            if bool(next_menu):
+                choice = next_menu
+            else:
+                choice = None  # Reset choice to None after invoking the command
+        else:
+            return
+
+
+settings.add_command(database)
+settings.add_command(metatrader5)
+settings.add_command(accounts)

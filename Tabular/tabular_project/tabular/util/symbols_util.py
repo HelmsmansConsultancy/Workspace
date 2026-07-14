@@ -9,3 +9,4 @@ def copyValuesInto(symbolInfo: SymbolInfo, symbol: SymbolInfomation):
     symbol.spread=s.spread
     symbol.select=s.select
     symbol.point=s.point
+    

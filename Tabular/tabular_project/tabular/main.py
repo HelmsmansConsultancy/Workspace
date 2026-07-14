@@ -4,21 +4,19 @@ import sys
 from typing import Callable 
 from rich.console import Console
 from tabular.service.s import S
-from tabular.commands.metatrader5 import metatrader5
-from tabular.commands.database import database
 from tabular.commands.symbols import symbols
 from tabular.commands.pending_orders import pending_orders
 from tabular.commands.open_positions import open_positions
 from tabular.commands.closed_deal import trade_deals
 from tabular.commands.list import list 
 from tabular.util.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
+from tabular.util.menus_explain import explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_settings
 from tabular.util.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.data.application_config import ApplicationConfig
-from tabular.commands.accounts import accounts
+from tabular.commands.settings import settings
 
 
 console = Console()
@@ -36,9 +34,7 @@ def exit():
     sys.exit(0)
 
 SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [ allow_allways, explain_DB,'Database', database.callback.__name__, ], 
-    [allow_allways, explain_MT5, 'MetaTrader 5', metatrader5.callback.__name__.replace("_", "-"), ], 
-    [allow_allways, explain_accounts, 'Accounts', accounts.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_settings, 'Settings', settings.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_symbols, 'Symbols', symbols.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_open_positions, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
@@ -94,9 +90,7 @@ def main(ctx: click.Context, db_file: str):
             else:
                 choice = None  # Reset choice to None after invoking the command
 
-main.add_command(database)
-main.add_command(metatrader5)
-main.add_command(accounts)
+main.add_command(settings)
 main.add_command(symbols)
 main.add_command(pending_orders)
 main.add_command(open_positions)

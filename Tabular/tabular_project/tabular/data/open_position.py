@@ -1,7 +1,7 @@
 from tabular.data.base import Base
 from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey, String
 from decimal import Decimal
-
+from tabular.util.price_util import fmt_price
 
 class OpenPosition(Base):
     __tablename__ = "OPEN_POSITION"
@@ -28,10 +28,16 @@ class OpenPosition(Base):
         pass
 
     def __repr__(self):
-        return f"<PendingOrder(id={self.id}, account_id='{self.account_id}', symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', entry='{self.entry}', sl='{self.sl}', tp='{self.tp}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
+        digits = 5
+        if "JPY" in self.symbol:
+            digits = 3
+        return f"<PendingOrder(id={self.id}, account_id='{self.account_id}', symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
     
     def __str__(self):
-        return f"<PO(ticket='{self.ticket}' symbol='{self.symbol}', volume='{self.volume}', profit='{self.profit}', sl='{self.sl}', tp='{self.tp}' )>"
+        digits = 5
+        if "JPY" in self.symbol:
+            digits = 3
+        return f"<PO(ticket='{self.ticket}' symbol='{self.symbol}', volume='{self.volume}', profit='{self.profit}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}' )>"
     
     
 
