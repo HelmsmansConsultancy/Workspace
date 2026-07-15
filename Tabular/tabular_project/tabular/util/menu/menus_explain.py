@@ -46,6 +46,45 @@ def explain_DB(enabled:bool = True):
 def explain_empty(enabled:bool = True):
     return empty_string
 
+def explain_generic_orders(enabled = True):
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+
+    pending_orders = databaseService.countGenericOrders()
+    openPositions = databaseService.countGenericPositions()
+    
+    message = ""
+    if pending_orders > 0:
+        message += f"\t\t<{pending_orders} pending order(s)>"
+    else:
+        message += f"\t\t<No pending orders>"
+
+    if openPositions > 0:
+        message += f"\t\t<{openPositions} open position(s)>"
+    else:
+        message += f"\t\t<No open positions>"
+
+    return message
+
+def explain_account_orders(enabled = True):
+    connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    message = ""
+    if bool(connected_account):
+        pending_orders = databaseService.countPendingOrders(connected_account.id)
+        openPositions = databaseService.countOpenPositions(connected_account.id)
+        if pending_orders > 0:
+            message += f"\t\t<{pending_orders} pending order(s)>"
+        else:
+            message += f"\t\t<No pending orders>"
+        
+        if openPositions > 0:
+            message += f"\t\t<{openPositions} open position(s)>"
+        else:
+            message += f"\t\t<No open positions>"
+    else:
+        message += f"\t\t<No database available.>"
+    return message
+
 def explain_pending_orders(enabled:bool = True):
     connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)

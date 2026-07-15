@@ -85,5 +85,21 @@ def getPairFromName(name: str) -> str:
             return "USDHKD"
         case val if "USDSGD" in val:
             return "USDSGD"
+        case val if "GBPSGD" in val:
+            return "GBPSGD"
+        case val if "EUSTX50" in val:
+            return "EUSTX50"
+        case val if "EUSTX50" in val:
+            return "EUSTX50"
+        case val if "HK50" in val:
+            return "HK50"
+        case val if "JPN225" in val:
+            return "JPN225"
+        case val if "UK100" in val:
+            return "UK100"
+        case val if "UKOIL" in val:
+            return "UKOIL"
+        case val if "USOIL" in val:
+            return "USOIL"
         case _:
             return name

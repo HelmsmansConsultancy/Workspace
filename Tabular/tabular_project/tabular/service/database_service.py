@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session
 from rich.console import Console
 from tabular.service.s import S
@@ -14,6 +14,8 @@ from tabular.data.application_config import ApplicationConfig
 from tabular.data.pending_order import PendingOrder
 from tabular.data.open_position import OpenPosition
 from tabular.data.symbols.symbol_info import SymbolInfomation
+from tabular.data.generic_order import GenericOrder
+from tabular.data.generic_position import GenericPosition
 
 applicationConfig: ApplicationConfig = None
 
@@ -21,6 +23,8 @@ class DatabaseService():
     db_file: str
     db_url: str
     engine: create_engine
+
+    TOL = 0.0005
 
     def __init__(self):
         global applicationConfig
@@ -40,6 +44,11 @@ class DatabaseService():
         inspector = inspect(self.engine)
         tables = inspector.get_table_names()
         return tables
+    
+    def countRows(self, tableName: str) -> int:
+        with  Session(self.engine) as session:
+            count: int = session.execute(text(f'SELECT COUNT(*) FROM "{tableName}"')).scalar()
+            return count
 
     def list_account_configs(self) -> list[AccountConfig]:
         with Session(self.engine) as session:
@@ -133,6 +142,12 @@ class DatabaseService():
         with Session(self.engine) as session:
             accounts = session.query(AccountConfig).all()
             return accounts
+        
+    def countGenericOrders(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(GenericOrder).count()
+            return count
+
     
     def countPendingOrders(self, accountId) -> int:
         with Session(self.engine) as session:
@@ -169,6 +184,12 @@ class DatabaseService():
         with Session(self.engine) as session:
             count = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).count()
             return count
+        
+    def countGenericPositions(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(GenericPosition).count()
+            return count
+
           
     def getTradeDeals(self, accountId) -> list[OpenPosition]:
         with Session(self.engine) as session:  
@@ -200,6 +221,25 @@ class DatabaseService():
         with Session(self.engine) as session:
             symbolInfomations = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).all()
             return symbolInfomations
+        
+    def getGenericOrderByStats(self, entry: float, sl: float, tp: float) -> GenericOrder:
+        with Session(self.engine) as session:
+            session.query(GenericOrder).filter(
+                GenericOrder.entry.between(entry - self.TOL, entry + self.TOL),
+                GenericOrder.sl.between(sl - self.TOL, sl + self.TOL),
+                GenericOrder.tp.between(tp - self.TOL, tp + self.TOL),
+            ).first()
+
+    def addGenericOrder(self, genericOrder: GenericOrder) -> int:
+        with Session(self.engine) as session:
+            session.add(genericOrder)
+            session.commit()
+            return genericOrder.id
+
+    def getSymbolInformationBySymbol(self, symbol: str):
+        with Session(self.engine) as session:
+            symbol: SymbolInfomation = session.query(SymbolInfomation).filter(SymbolInfomation.pair == symbol).first()
+            return symbol
 
     def countSymbolInformation(self, accountId: int) -> int:
         with Session(self.engine) as session:

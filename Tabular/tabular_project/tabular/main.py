@@ -4,22 +4,20 @@ import sys
 from typing import Callable 
 from rich.console import Console
 from tabular.commands.settings.settings import settings
-from tabular.commands.orders_account.pending_orders import pending_orders
-from tabular.commands.orders_account.open_positions import open_positions
 from tabular.commands.closed_deal import trade_deals
 from tabular.commands.list import list 
-from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menu.menus_explain import explain_symbols, explain_empty, explain_settings
-from tabular.util.menu.menus_utils import interactive_menu
-from tabular.service.singleton_service import SingletonService
-from tabular.service.database_service import DatabaseService
-from tabular.service.metatrader_5_service import Metatrader5Service
-from tabular.data.application_config import ApplicationConfig
 from tabular.commands.settings.settings import settings
 from tabular.commands.symbols.symbols import symbols
 from tabular.commands.orders_account.account_orders import account_orders
 from tabular.commands.orders_generic.orders import generic_orders
+from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
+from tabular.util.menu.menus_explain import explain_symbols, explain_empty, explain_settings, explain_generic_orders, explain_account_orders
+from tabular.util.menu.menus_utils import interactive_menu
 from tabular.service.s import S
+from tabular.service.singleton_service import SingletonService
+from tabular.service.database_service import DatabaseService
+from tabular.service.metatrader_5_service import Metatrader5Service
+from tabular.data.application_config import ApplicationConfig
 
 
 console = Console()
@@ -39,8 +37,8 @@ def exit():
 SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_settings, 'Settings', settings.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_symbols, 'Symbols', symbols.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'Generic Order', generic_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'Account Order', account_orders.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_generic_orders, 'Generic Order', generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_account_orders, 'Account Order', account_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Trade Deals', trade_deals.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
 ]

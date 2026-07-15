@@ -3,7 +3,7 @@ from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey, String
 from decimal import Decimal
 from tabular.util.price_util import fmt_price
 
-class OpenPosition(Base):
+class GenericPosition(Base):
     __tablename__ = "GENERIC_POSITION"
 
     id: int = Column("id", Integer, primary_key=True)

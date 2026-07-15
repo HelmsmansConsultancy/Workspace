@@ -39,7 +39,8 @@ def list_tables():
     click.echo(empty_string)
     click.echo("Tables in the database:")
     for table in tables:
-        click.echo(f"- {table}")
+        rows: int = databaseService.countRows(table)
+        click.echo(f"- Table {table} {'\t' if len(table) < 15 else ''}{'\t' if len(table) < 25 else ''}\t {rows} Rows")
     click.echo(empty_string)
 
 

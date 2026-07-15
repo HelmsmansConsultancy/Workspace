@@ -9,6 +9,8 @@ class PendingOrder(Base):
 
     id: int = Column("id", Integer, primary_key=True)
     account_id: int = Column("account_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), nullable=False)
+    symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
+    generic_id:  int = Column("generic_id", Integer, ForeignKey("GENERIC_ORDER.id"), nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
     magic: int = Column("magic", Integer, nullable=True)
@@ -24,7 +26,6 @@ class PendingOrder(Base):
     sl: float = Column("sl", Float, nullable=False)
     tp: float = Column("tp", Float, nullable=False)
     symbol: str = Column("symbol", String, nullable=False)
-    pair: str = Column("pair", String, nullable=False)
 
     def __init__(self):
         pass

@@ -9,8 +9,12 @@ from tabular.util.menu.menus_allow import empty_string,  no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
+from tabular.data.symbols.symbol_info import SymbolInfomation
 from tabular.data.pending_order import PendingOrder
-from tabular.util.order.pending_order_util import copyValuesInto
+from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
+from tabular.util.order.generic_order_util import copyValuesIntoGenericOrder
+from tabular.util.symbols_util import getPairFromName
+from tabular.data.generic_order import GenericOrder
 from MetaTrader5 import TradeOrder
 
 console = Console()
@@ -21,24 +25,41 @@ metatrader5Service: Metatrader5Service = None
 def current_pending_orders():
     """ Current Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+
     tradeOrders: list[TradeOrder] = metatrader5Service.getPendingOrders(connected_account.id)
-    click.echo(f"Gotten {len(tradeOrders)} trades")
     pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
+
     existingOrders: list[PendingOrder] = []
     newOrders: list[PendingOrder] = []
     removedOrders: list[PendingOrder]
+    
     for tradeOrder in tradeOrders:
         order_exists = False
         for pendingOrder in pendingOrders:
             if pendingOrder.ticket == tradeOrder.ticket:
                 order_exists = True
-                copyValuesInto(tradeOrder, pendingOrder)
+                copyValuesIntoPendingOrder(tradeOrder, pendingOrder)
                 existingOrders.append(pendingOrder)
 
         if not order_exists:
             newOrder = PendingOrder()
             newOrder.account_id = connected_account.id
-            copyValuesInto(tradeOrder, newOrder)
+            copyValuesIntoPendingOrder(tradeOrder, newOrder)
+
+            symbol = getPairFromName(tradeOrder.symbol)
+            symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(symbol)
+            newOrder.symbol_id = symbolInfomation.id
+
+            genericOrder: GenericOrder = databaseService.getGenericOrderByStats(newOrder.entry, newOrder.sl, newOrder.tp)
+            if bool(genericOrder):
+                newOrder.generic_id = genericOrder.id
+            else:
+                genericOrder: GenericOrder = GenericOrder()
+                copyValuesIntoGenericOrder(tradeOrder, genericOrder)
+                genericOrder.symbol_id = symbolInfomation.id
+                genericOrderId = databaseService.addGenericOrder(genericOrder)
+                newOrder.generic_id = genericOrderId
+
             newOrders.append(newOrder)
     
     removedOrders = list(set(pendingOrders) - set(existingOrders))

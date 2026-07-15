@@ -8,6 +8,7 @@ class GenericOrder(Base):
     __tablename__ = "GENERIC_ORDER"
 
     id: int = Column("id", Integer, primary_key=True)
+    symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
     magic: int = Column("magic", Integer, nullable=True)
@@ -23,7 +24,6 @@ class GenericOrder(Base):
     sl: float = Column("sl", Float, nullable=False)
     tp: float = Column("tp", Float, nullable=False)
     symbol: str = Column("symbol", String, nullable=False)
-    pair: str = Column("pair", String, nullable=False)
 
     def __init__(self):
         pass

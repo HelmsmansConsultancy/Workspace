@@ -10,7 +10,7 @@ from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.pending_order import PendingOrder
-from tabular.util.order.pending_order_util import copyValuesInto
+from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from MetaTrader5 import TradeOrder
 
 console = Console()
@@ -32,13 +32,13 @@ def current_pending_orders():
         for pendingOrder in pendingOrders:
             if pendingOrder.ticket == tradeOrder.ticket:
                 order_exists = True
-                copyValuesInto(tradeOrder, pendingOrder)
+                copyValuesIntoPendingOrder(tradeOrder, pendingOrder)
                 existingOrders.append(pendingOrder)
 
         if not order_exists:
             newOrder = PendingOrder()
             newOrder.account_id = connected_account.id
-            copyValuesInto(tradeOrder, newOrder)
+            copyValuesIntoPendingOrder(tradeOrder, newOrder)
             newOrders.append(newOrder)
     
     removedOrders = list(set(pendingOrders) - set(existingOrders))

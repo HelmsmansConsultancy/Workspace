@@ -3,14 +3,14 @@ from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
 from tabular.util.symbols_util import getPairFromName
 
-def copyValuesInto(tradeOrder: TradeOrder, genericOrder: GenericOrder):
+def copyValuesIntoGenericOrder(tradeOrder: TradeOrder, genericOrder: GenericOrder):
     d = SimpleNamespace(**tradeOrder._asdict())
     genericOrder.ticket=d.ticket
     genericOrder.magic=d.magic
     genericOrder.type_order=d.type
     genericOrder.type_time=d.type_time
     genericOrder.type_filling=d.type_filling
-    genericOrder.pair=getPairFromName(d.symbol) 
+
     genericOrder.symbol=d.symbol
     genericOrder.entry=d.price_open
     genericOrder.sl=d.sl
