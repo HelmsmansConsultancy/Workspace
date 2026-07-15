@@ -1,4 +1,4 @@
-from tabular.data.open_position import OpenPosition
+from tabular.data.orders.open_position import OpenPosition
 from MetaTrader5 import TradePosition
 from types import SimpleNamespace
 from tabular.util.symbols_util import getPairFromName

@@ -1,4 +1,4 @@
-from tabular.data.generic_order import GenericOrder
+from tabular.data.orders.generic_order import GenericOrder
 from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
 from tabular.util.symbols_util import getPairFromName

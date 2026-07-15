@@ -20,7 +20,7 @@ tabular/commands/orders_account/pending_orders.py
 tabular/commands/orders_generic/__init__.py
 tabular/commands/orders_generic/generic_orders.py
 tabular/commands/orders_generic/generic_positions.py
-tabular/commands/orders_generic/orders.py
+tabular/commands/orders_generic/overview_orders.py
 tabular/commands/settings/__init__.py
 tabular/commands/settings/accounts.py
 tabular/commands/settings/database.py
@@ -34,8 +34,10 @@ tabular/data/base.py
 tabular/data/closed_deal.py
 tabular/data/csvfile.py
 tabular/data/menu_item.py
-tabular/data/open_position.py
-tabular/data/pending_order.py
+tabular/data/orders/generic_order.py
+tabular/data/orders/generic_position.py
+tabular/data/orders/open_position.py
+tabular/data/orders/pending_order.py
 tabular/data/settings/__init__.py
 tabular/data/settings/account_config.py
 tabular/data/settings/account_metatrader_connection.py
@@ -54,5 +56,7 @@ tabular/util/symbols_util.py
 tabular/util/menu/menus_allow.py
 tabular/util/menu/menus_explain.py
 tabular/util/menu/menus_utils.py
-tabular/util/order/orders_util.py
-tabular/util/order/position_util.py
+tabular/util/order/generic_order_util.py
+tabular/util/order/generic_position_util.py
+tabular/util/order/open_position_util.py
+tabular/util/order/pending_order_util.py

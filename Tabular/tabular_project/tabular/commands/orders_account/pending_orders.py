@@ -10,11 +10,11 @@ from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.symbols.symbol_info import SymbolInfomation
-from tabular.data.pending_order import PendingOrder
+from tabular.data.orders.pending_order import PendingOrder
+from tabular.data.orders.generic_order import GenericOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.order.generic_order_util import copyValuesIntoGenericOrder
 from tabular.util.symbols_util import getPairFromName
-from tabular.data.generic_order import GenericOrder
 from MetaTrader5 import TradeOrder
 
 console = Console()

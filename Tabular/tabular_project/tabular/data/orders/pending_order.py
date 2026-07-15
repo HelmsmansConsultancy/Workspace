@@ -25,7 +25,6 @@ class PendingOrder(Base):
     entry: float = Column("entry", Float, nullable=False)
     sl: float = Column("sl", Float, nullable=False)
     tp: float = Column("tp", Float, nullable=False)
-    symbol: str = Column("symbol", String, nullable=False)
 
     def __init__(self):
         pass

@@ -9,7 +9,7 @@ from tabular.util.menu.menus_allow import empty_string, no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.open_position import OpenPosition
+from tabular.data.orders.open_position import OpenPosition
 from tabular.util.order.generic_position_util import copyValuesInto
 from MetaTrader5 import TradeOrder
 

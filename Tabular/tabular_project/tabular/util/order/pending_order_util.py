@@ -1,4 +1,4 @@
-from tabular.data.pending_order import PendingOrder
+from tabular.data.orders.pending_order import PendingOrder
 from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
 

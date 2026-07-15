@@ -11,11 +11,11 @@ from tabular.service.singleton_service import SingletonService
 from tabular.data.base import Base
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.application_config import ApplicationConfig
-from tabular.data.pending_order import PendingOrder
-from tabular.data.open_position import OpenPosition
+from tabular.data.orders.pending_order import PendingOrder
+from tabular.data.orders.open_position import OpenPosition
 from tabular.data.symbols.symbol_info import SymbolInfomation
-from tabular.data.generic_order import GenericOrder
-from tabular.data.generic_position import GenericPosition
+from tabular.data.orders.generic_order import GenericOrder
+from tabular.data.orders.generic_position import GenericPosition
 
 applicationConfig: ApplicationConfig = None
 

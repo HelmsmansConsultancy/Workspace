@@ -7,7 +7,7 @@ class GenericPosition(Base):
     __tablename__ = "GENERIC_POSITION"
 
     id: int = Column("id", Integer, primary_key=True)
-    account_id: int = Column("account_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), nullable=False)
+    symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
     magic: int = Column("magic", Integer, nullable=True)
@@ -22,8 +22,6 @@ class GenericPosition(Base):
     entry: float = Column("entry", Float, nullable=False)
     sl: float = Column("sl", Float, nullable=False)
     tp: float = Column("tp", Float, nullable=False)
-    symbol: str = Column("symbol", String, nullable=False)
-    pair: str = Column("pair", String, nullable=False)
 
     def __init__(self):
         pass
