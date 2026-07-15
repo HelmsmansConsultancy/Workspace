@@ -49,17 +49,17 @@ def explain_empty(enabled:bool = True):
 def explain_generic_orders(enabled = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
 
-    pending_orders = databaseService.countGenericOrders()
-    openPositions = databaseService.countGenericPositions()
+    generic_orders = databaseService.countGenericOrders()
+    generic_positions = databaseService.countGenericPositions()
     
     message = ""
-    if pending_orders > 0:
-        message += f"\t\t<{pending_orders} pending order(s)>"
+    if generic_orders > 0:
+        message += f"\t\t<{generic_orders} generic order(s)>"
     else:
         message += f"\t\t<No pending orders>"
 
-    if openPositions > 0:
-        message += f"\t\t<{openPositions} open position(s)>"
+    if generic_positions > 0:
+        message += f"\t\t<{generic_positions} generic position(s)>"
     else:
         message += f"\t\t<No open positions>"
 
@@ -71,14 +71,14 @@ def explain_account_orders(enabled = True):
     message = ""
     if bool(connected_account):
         pending_orders = databaseService.countPendingOrders(connected_account.id)
-        openPositions = databaseService.countOpenPositions(connected_account.id)
+        open_positions = databaseService.countOpenPositions(connected_account.id)
         if pending_orders > 0:
             message += f"\t\t<{pending_orders} pending order(s)>"
         else:
             message += f"\t\t<No pending orders>"
         
-        if openPositions > 0:
-            message += f"\t\t<{openPositions} open position(s)>"
+        if open_positions > 0:
+            message += f"\t\t<{open_positions} open position(s)>"
         else:
             message += f"\t\t<No open positions>"
     else:

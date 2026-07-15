@@ -56,15 +56,15 @@ def settings(ctx: click.Context):
         if databaseService is not None:
             mt5_installations = databaseService.countMetatraders()
             if mt5_installations > 0:
-                message += f" <{mt5_installations} MT5 installation(s)>"
+                message += f" <{mt5_installations} MT5(s)>"
             else:
-                message += " <No MT5 installations found.>"
+                message += " <No MT5 found.>"
         else:
             message += " <No database available.>"
 
         connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
         if bool(connected_mt5):
-            message += f" <Connected to: {connected_mt5.name}>"
+            message += f" <Conned to: {connected_mt5.name}>"
         else:
             message += " <Not connected>"
         
@@ -76,18 +76,18 @@ def settings(ctx: click.Context):
             else:
                 message += " <No accounts>"
         else:
-            message += "<No database available.>"
+            message += "<No DB available.>"
 
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
-            message += f" <Connected with: {connected_account.name}>"
+            message += f" <Conned with: {connected_account.name}>"
         else:
             message += " <Not connected>"
         
         click.echo(message)
 
         if not bool(choice):
-            choice = interactive_menu(SETTINGS_SUB_COMMANDS)
+            choice = interactive_menu(SETTINGS_SUB_COMMANDS, menuName="Settings - Overview")
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])

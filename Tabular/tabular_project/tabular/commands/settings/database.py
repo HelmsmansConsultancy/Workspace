@@ -63,7 +63,7 @@ def database(ctx: click.Context):
         click.echo(empty_string)
         click.echo(f"Database file: <{databaseService.db_file}> - Size: {size_bytes:,} bytes")
         if choice is None:
-            choice = interactive_menu(DB_SUB_COMMANDS)
+            choice = interactive_menu(DB_SUB_COMMANDS, menuName="Settings - Database")
 
         result = None
         if bool(choice):

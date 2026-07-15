@@ -150,7 +150,7 @@ def metatrader5(ctx):
             click.echo("Not connected to any MT5 installation.")
 
         if not bool(choice):
-            choice = interactive_menu(MT5_SUB_COMMANDS)
+            choice = interactive_menu(MT5_SUB_COMMANDS, menuName="Settings - MetaTrader 5")
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])

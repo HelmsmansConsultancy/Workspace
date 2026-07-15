@@ -73,8 +73,8 @@ def getPairFromName(name: str) -> str:
             return "XAGUSD"
         case val if "XAUUSD" in val:
             return "XAUUSD"
-        case val if "US30" in val:
-            return "US30"
+        case val if "GER30" in val:
+            return "GER30"
         case val if "US30" in val:
             return "US30"
         case val if "NAS100" in val:

@@ -222,6 +222,11 @@ class DatabaseService():
             symbolInfomations = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).all()
             return symbolInfomations
         
+    def getGenericOrders(self) -> list[GenericOrder]:
+        with Session(self.engine) as session:
+            genericOrders = session.query(GenericOrder).all()
+            return genericOrders
+
     def getGenericOrderByStats(self, entry: float, sl: float, tp: float) -> GenericOrder:
         with Session(self.engine) as session:
             session.query(GenericOrder).filter(

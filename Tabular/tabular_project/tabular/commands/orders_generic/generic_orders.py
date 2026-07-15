@@ -53,7 +53,7 @@ PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str
 
 @click.group()
 @click.pass_context
-def pending_orders(ctx: click.Context):
+def generic_orders(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -65,11 +65,11 @@ def pending_orders(ctx: click.Context):
     while True:
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
-            pending_orders = databaseService.getPendingOrders(connected_account.id);
-            if len(pending_orders) > 0:
+            generic_orders = databaseService.getGenericOrders();
+            if len(generic_orders) > 0:
                 click.echo(empty_string)
-                for pending_order in pending_orders:
-                    click.echo(f"{pending_order}")
+                for generic_order in generic_orders:
+                    click.echo(f"{generic_order}")
             else :
                 click.echo(f"No pending order")
         else :
@@ -86,4 +86,4 @@ def pending_orders(ctx: click.Context):
         else:
             return result
 
-pending_orders.add_command(current_pending_orders)
+generic_orders.add_command(current_pending_orders)

@@ -15,7 +15,7 @@ from tabular.data.settings.account_status import AccountStatus
 from tabular.data.settings.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.service.metatrader_5_service import Metatrader5Service
-from tabular.commands.orders_account.pending_orders import pending_orders
+from tabular.commands.orders_account.pending_orders import generic_orders
 
 console = Console()
 databaseService: DatabaseService = None
@@ -144,7 +144,7 @@ def accounts(ctx: click.Context):
 
         result = None
         if not bool(choice):
-            choice = interactive_menu(ACCOUNT_SUB_COMMANDS)
+            choice = interactive_menu(ACCOUNT_SUB_COMMANDS, menuName="Settings - Accounts")
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])

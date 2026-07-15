@@ -12,9 +12,9 @@ console = Console()
 
 empty_string = ""
 
-def interactive_menu(subCommands: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]]) -> str:
+def interactive_menu(subCommands: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]], menuName: str = None) -> str:
     click.echo(empty_string)
-    click.echo("What do you want to do?")
+    click.echo(f"{menuName} - What do you want to do?")
     for i, tuple in enumerate(subCommands, 1):
         enabled = tuple[0]()
         line = f"  {i}. {tuple[2]} {tuple[1](enabled) if tuple[1] is not None else ''}"
