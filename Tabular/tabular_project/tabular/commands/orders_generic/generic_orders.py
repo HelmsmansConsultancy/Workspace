@@ -63,7 +63,7 @@ def generic_orders(ctx: click.Context):
         click.echo(empty_string)
 
         if choice is None:
-            choice = interactive_menu(PENDING_SUB_COMMANDS)
+            choice = interactive_menu(PENDING_SUB_COMMANDS, menuName="Generic Orders - Pending")
 
         result = None
         if bool(choice):

@@ -103,7 +103,7 @@ def symbols(ctx: click.Context):
         
 
         if choice is None:
-            choice = interactive_menu(SYMBOLS_SUB_COMMANDS)
+            choice = interactive_menu(SYMBOLS_SUB_COMMANDS, menuName="Symbols")
 
         result = None
         if bool(choice):

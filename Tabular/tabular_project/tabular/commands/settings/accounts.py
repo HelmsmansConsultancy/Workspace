@@ -131,11 +131,9 @@ def accounts(ctx: click.Context):
         if bool(account_configs) and len(account_configs) > 0:
             for account_config in account_configs:
                 click.echo(f"- {account_config!r}")
-            if bool(account_states) and len(account_states) > 0:
-                click.echo(empty_string)
-                click.echo("Account States:")
-                for account_state in account_states:
-                    click.echo(f"- {account_state!r}")
+                account_state = databaseService.get_account_state(account_config.id)
+                if bool(account_state):
+                    click.echo(f"\t - {account_state!r}")
         else:
             click.echo("No Account Configs found.")
         click.echo(empty_string)

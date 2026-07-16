@@ -74,6 +74,11 @@ class DatabaseService():
         with Session(self.engine) as session:
             account_states = session.query(AccountStatus).all()
             return account_states
+        
+    def get_account_state(self, account_id: int) -> AccountStatus:
+        with Session(self.engine) as session:
+            account_state = session.query(AccountStatus).filter(AccountStatus.account_id == account_id).first()
+            return account_state
     
     def countAccounts(self) -> int:
         with Session(self.engine) as session:

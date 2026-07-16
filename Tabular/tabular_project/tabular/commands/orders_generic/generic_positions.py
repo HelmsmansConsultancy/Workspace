@@ -78,7 +78,7 @@ def generic_positions(ctx: click.Context):
         click.echo(empty_string)
 
         if choice is None:
-            choice = interactive_menu(OPEN_SUB_COMMANDS)
+            choice = interactive_menu(OPEN_SUB_COMMANDS, menuName="Generic Orders - Open")
 
         result = None
         if bool(choice):
