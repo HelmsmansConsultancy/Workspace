@@ -17,6 +17,7 @@ class GenericPosition(Base):
     type_order: int = Column("type_order", Integer, nullable=False)
     profit: float = Column("profit", Float, nullable=False)
     swap: float = Column("swap", Float, nullable=False)
+    digits: int = Column("digits", Integer, nullable=False)
 
     volume: float = Column("volume", Float, nullable=False)
     entry: float = Column("entry", Float, nullable=False)
@@ -27,16 +28,11 @@ class GenericPosition(Base):
         pass
 
     def __repr__(self):
-        digits = 5
-        if "JPY" in self.symbol:
-            digits = 3
-        return f"<PendingOrder(id={self.id}, account_id='{self.account_id}', symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
+        return f"<PendingOrder(id={self.id}, symbol='{self.symbol_id}', ticket='{self.ticket}', volume='{self.volume}', digits'={self.digits}' ,entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
     
     def __str__(self):
         digits = 5
-        if "JPY" in self.symbol:
-            digits = 3
-        return f"<PO(ticket='{self.ticket}' symbol='{self.symbol}', volume='{self.volume}', profit='{self.profit}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}' )>"
+        return f"<PO(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{self.volume}', profit='{self.profit}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}' )>"
     
     
 

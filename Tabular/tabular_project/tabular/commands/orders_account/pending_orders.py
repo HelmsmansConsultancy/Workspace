@@ -49,14 +49,18 @@ def current_pending_orders():
             symbol = getPairFromName(tradeOrder.symbol)
             symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(symbol)
             newOrder.symbol_id = symbolInfomation.id
+            newOrder.digits = symbolInfomation.digits
 
-            genericOrder: GenericOrder = databaseService.getGenericOrderByStats(newOrder.entry, newOrder.sl, newOrder.tp)
+            genericOrder: GenericOrder = databaseService.getGenericOrderByStats(newOrder.digits, newOrder.entry, newOrder.sl, newOrder.tp)
             if bool(genericOrder):
+                click.echo(f"Found GO {genericOrder}")
                 newOrder.generic_id = genericOrder.id
             else:
                 genericOrder: GenericOrder = GenericOrder()
                 copyValuesIntoGenericOrder(tradeOrder, genericOrder)
                 genericOrder.symbol_id = symbolInfomation.id
+                genericOrder.digits = symbolInfomation.digits
+                click.echo(f"Making GO {genericOrder}")
                 genericOrderId = databaseService.addGenericOrder(genericOrder)
                 newOrder.generic_id = genericOrderId
 
@@ -67,14 +71,30 @@ def current_pending_orders():
     databaseService.addPendingOrders(newOrders)
     databaseService.removePendingOrders(removedOrders)
 
+@click.command()
+def list__pending_orders():
+    """ List Pending order"""
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
+
+    if bool(pendingOrders):
+        if len(pendingOrders) > 0:
+            for order in pendingOrders:
+                click.echo(f"{order}")
+        else:
+            click.echo(f"No Pending orders")
+    else:
+        click.echo("No database")
+
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'Get current orders', current_pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'List current orders', list__pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
 @click.group()
 @click.pass_context
-def generic_orders(ctx: click.Context):
+def pending_orders(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -107,4 +127,5 @@ def generic_orders(ctx: click.Context):
         else:
             return result
 
-generic_orders.add_command(current_pending_orders)
+pending_orders.add_command(current_pending_orders)
+pending_orders.add_command(list__pending_orders)

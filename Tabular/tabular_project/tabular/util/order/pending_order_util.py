@@ -9,8 +9,7 @@ def copyValuesIntoPendingOrder(tradeOrder: TradeOrder, pendingOrder: PendingOrde
     pendingOrder.type_order=d.type
     pendingOrder.type_time=d.type_time
     pendingOrder.type_filling=d.type_filling
-    
-    pendingOrder.symbol=d.symbol
+    # pendingOrder.digits=d.digits There are no digits in tradeorder
     pendingOrder.entry=d.price_open
     pendingOrder.sl=d.sl
     pendingOrder.tp=d.tp

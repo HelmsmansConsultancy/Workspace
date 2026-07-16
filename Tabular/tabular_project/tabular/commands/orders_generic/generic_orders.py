@@ -18,36 +18,22 @@ databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 @click.command()
-def current_pending_orders():
-    """ Current Pending order"""
+def list__generic_orders():
+    """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    tradeOrders: list[TradeOrder] = metatrader5Service.getPendingOrders(connected_account.id)
-    click.echo(f"Gotten {len(tradeOrders)} trades")
     pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
-    existingOrders: list[PendingOrder] = []
-    newOrders: list[PendingOrder] = []
-    removedOrders: list[PendingOrder]
-    for tradeOrder in tradeOrders:
-        order_exists = False
-        for pendingOrder in pendingOrders:
-            if pendingOrder.ticket == tradeOrder.ticket:
-                order_exists = True
-                copyValuesIntoPendingOrder(tradeOrder, pendingOrder)
-                existingOrders.append(pendingOrder)
 
-        if not order_exists:
-            newOrder = PendingOrder()
-            newOrder.account_id = connected_account.id
-            copyValuesIntoPendingOrder(tradeOrder, newOrder)
-            newOrders.append(newOrder)
-    
-    removedOrders = list(set(pendingOrders) - set(existingOrders))
-    databaseService.updatePendingOrders(existingOrders)
-    databaseService.addPendingOrders(newOrders)
-    databaseService.removePendingOrders(removedOrders)
+    if bool(pendingOrders):
+        if len(pendingOrders) > 0:
+            for order in pendingOrders:
+                click.echo(f"{order}")
+        else:
+            click.echo(f"No Pending orders")
+    else:
+        click.echo("No database")
 
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [no_active_account, explain_empty, 'Get current orders', current_pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'List generic orders', list__generic_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
@@ -86,4 +72,4 @@ def generic_orders(ctx: click.Context):
         else:
             return result
 
-generic_orders.add_command(current_pending_orders)
+generic_orders.add_command(list__generic_orders)

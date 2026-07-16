@@ -18,6 +18,7 @@ class GenericOrder(Base):
     type_order: int = Column("type_order", Integer, nullable=False)
     type_time: int = Column("type_time", Integer, nullable=False)
     type_filling: int = Column("type_filling", Integer, nullable=False)
+    digits: int = Column("digits", Integer, nullable=False)
 
     volume: float = Column("volume", Float, nullable=False)
     entry: float = Column("entry", Float, nullable=False)
@@ -28,16 +29,11 @@ class GenericOrder(Base):
         pass
 
     def __repr__(self):
-        digits = 5
-        if "JPY" in self.symbol:
-            digits = 3
-        return f"<GO(id={self.id}, symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.stp, digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
+        return f"<GO(id={self.id}, symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{self.volume}', digits={self.digits}, entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
     
     def __str__(self):
         digits = 5
-        if "JPY" in self.symbol:
-            digits = 3
-        return f"<GO(ticket='{self.ticket}' symbol='{self.symbol}', volume='{self.volume}', entry='{fmt_price(self.entry, digits)}', sl='{fmt_price(self.sl, digits)}', tp='{fmt_price(self.tp, digits)}' )>"
+        return f"<GO(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{self.volume}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}' )>"
     
     
 

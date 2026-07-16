@@ -1,7 +1,7 @@
 import click
 from typing import Callable 
 from rich.console import Console
-from tabular.commands.orders_account.pending_orders import generic_orders
+from tabular.commands.orders_account.pending_orders import pending_orders
 from tabular.commands.orders_account.open_positions import open_positions
 from tabular.commands.closed_deal import trade_deals
 from tabular.commands.list import list 
@@ -17,7 +17,7 @@ from tabular.commands.settings.settings import settings
 console = Console()
 
 ACCOUNT_ORDERS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [\
-    [no_active_account, explain_pending_orders, 'Pending Orders', generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_open_positions, 'Open Position', open_positions.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
@@ -43,5 +43,5 @@ def account_orders(ctx):
         else:
             return
 
-account_orders.add_command(generic_orders)
+account_orders.add_command(pending_orders)
 account_orders.add_command(open_positions)

@@ -11,7 +11,7 @@ def copyValuesIntoGenericOrder(tradeOrder: TradeOrder, genericOrder: GenericOrde
     genericOrder.type_time=d.type_time
     genericOrder.type_filling=d.type_filling
 
-    genericOrder.symbol=d.symbol
+    # genericOrder.digits=d.digits No digits from TradeOrders
     genericOrder.entry=d.price_open
     genericOrder.sl=d.sl
     genericOrder.tp=d.tp

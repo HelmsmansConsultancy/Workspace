@@ -24,7 +24,10 @@ class DatabaseService():
     db_url: str
     engine: create_engine
 
-    TOL = 0.0005
+    TOL = [5, 0.5, 0.05, 0.005, 0.0005, 0.00005, 0.000005, 0.000005]
+    TOL3 = 0.005
+    TOL4 = 0.0005
+    TOL5 = 0.0005
 
     def __init__(self):
         global applicationConfig
@@ -39,6 +42,18 @@ class DatabaseService():
         self.console.print(f"Starting database at: {self.db_file}")
         self.engine = create_engine(self.db_url, echo=False, future=True)
         Base.metadata.create_all(self.engine)
+
+    def getGenericOrderByStats(self, digits: int, entry: float, sl: float, tp: float) -> GenericOrder:
+        self.console.print(f"Searching entry {entry - self.TOL[digits]} - {entry + self.TOL[digits]}, sl {sl - self.TOL[digits]} - {entry + self.TOL[digits]}, tp {tp - self.TOL[digits]} - {tp + self.TOL[digits]}")
+        with Session(self.engine) as session:
+            found = session.query(GenericOrder).filter(
+                GenericOrder.digits == digits,
+                GenericOrder.entry.between(entry - self.TOL[digits], entry + self.TOL[digits]),
+                GenericOrder.sl.between(sl - self.TOL[digits], sl + self.TOL[digits]),
+                GenericOrder.tp.between(tp - self.TOL[digits], tp + self.TOL[digits]),
+            ).first()
+            self.console.print(f"Found in DB: {found}")
+            return found
 
     def listTables(self) -> list[str]:
         inspector = inspect(self.engine)
@@ -226,14 +241,6 @@ class DatabaseService():
         with Session(self.engine) as session:
             genericOrders = session.query(GenericOrder).all()
             return genericOrders
-
-    def getGenericOrderByStats(self, entry: float, sl: float, tp: float) -> GenericOrder:
-        with Session(self.engine) as session:
-            session.query(GenericOrder).filter(
-                GenericOrder.entry.between(entry - self.TOL, entry + self.TOL),
-                GenericOrder.sl.between(sl - self.TOL, sl + self.TOL),
-                GenericOrder.tp.between(tp - self.TOL, tp + self.TOL),
-            ).first()
 
     def addGenericOrder(self, genericOrder: GenericOrder) -> int:
         with Session(self.engine) as session:
