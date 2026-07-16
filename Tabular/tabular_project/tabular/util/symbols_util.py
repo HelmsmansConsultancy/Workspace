@@ -101,5 +101,45 @@ def getPairFromName(name: str) -> str:
             return "UKOIL"
         case val if "USOIL" in val:
             return "USOIL"
+        case val if "AUS200" in val:
+            return "AUS200"
+        case val if "EU50" in val:
+            return "EU50"
+        case val if "GER40" in val:
+            return "GER40"
+        case val if "US100" in val:
+            return "US100"
+        case val if "FRA40" in val:
+            return "FRA40"
+        case val if "JP225" in val:
+            return "JP225"
+        case val if "N25" in val:
+            return "N25"
+        case val if "SPN35" in val:
+            return "SPN35"
+        case val if "US2000" in val:
+            return "US2000"
+        case val if "DXY" in val:
+            return "DXY"
+        case val if "COCOA" in val:
+            return "COCOA"
+        case val if "COFFEE" in val:
+            return "COFFEE"
+        case val if "CORN" in val:
+            return "CORN"
+        case val if "SOYBEAN" in val:
+            return "SOYBEAN"
+        case val if "WHEAT" in val:
+            return "WHEAT"
+        case val if "COTTON" in val:
+            return "COTTON"
+        case val if "SUGAR" in val:
+            return "SUGAR"
+        case val if "NATGAS" in val:
+            return "NATGAS"
+        case val if "HEATOIL" in val:
+            return "HEATOIL"
+        case val if "BRK" in val:
+            return "BRK"
         case _:
             return name

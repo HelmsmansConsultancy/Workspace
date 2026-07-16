@@ -105,7 +105,6 @@ def connect_account():
     #     click.echo("Invalid choice. No MT5 installation connected.")
     # return pending_orders.callback.__name__.replace("_", "-")
 
-
 ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ], 
     [no_accounts, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
@@ -116,7 +115,7 @@ ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str
 @click.group()
 @click.pass_context
 def accounts(ctx: click.Context):
-    """Status of db."""
+    """Status of Acounts"""
     global databaseService
     global metatrader5Service
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
