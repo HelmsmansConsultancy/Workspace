@@ -8,6 +8,7 @@ class GenericOrder(Base):
     __tablename__ = "GENERIC_ORDER"
 
     id: int = Column("id", Integer, primary_key=True)
+    
     symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
     symbol: str = Column("symbol", String, nullable=False)
 

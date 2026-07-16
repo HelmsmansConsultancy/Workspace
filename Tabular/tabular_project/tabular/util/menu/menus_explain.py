@@ -20,7 +20,7 @@ def explain_accounts(enabled:bool = True):
         else:
             message = "\t\t\t<No accounts>"
     else:
-        message = "\t\t\t<No database available.>"
+        message = "\t\t\t<No database available>"
 
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     if bool(connected_account):
@@ -38,7 +38,7 @@ def explain_DB(enabled:bool = True):
     if databaseService is not None:
         message = f"\t\t\t<{databaseService.db_file}>"
     else:
-        message = "\t\t\t<No database available.>"
+        message = "\t\t\t<No database available>"
     if not enabled:
         message += " (Disabled)"
     return message
@@ -82,7 +82,7 @@ def explain_account_orders(enabled = True):
         else:
             message += f"\t\t<No open positions>"
     else:
-        message += f"\t\t<No database available.>"
+        message += f"\t\t<No database available>"
     return message
 
 def explain_pending_orders(enabled:bool = True):
@@ -95,7 +95,7 @@ def explain_pending_orders(enabled:bool = True):
         else:
             message = f"\t\t<No pending orders>"
     else:
-        message = f"\t\t<No database available.>"
+        message = f"\t\t<No database available>"
     return message
 
 def explain_MT5(enabled:bool = True):
@@ -108,7 +108,7 @@ def explain_MT5(enabled:bool = True):
         else:
             message = "\t\t<No MT5 installations found.>"
     else:
-        message = "\t\t<No database available.>"
+        message = "\t\t<No database available>"
 
     connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
     if bool(connected_mt5):
@@ -127,7 +127,7 @@ def explain_settings(enabled:bool = True):
     if databaseService is not None:
         message = f"\t\t\t<{databaseService.db_file}>"
     else:
-        message = "\t\t\t<No database available.>"
+        message = "\t\t\t<No database available>"
     if not enabled:
         message += " (Disabled)"
     
@@ -138,7 +138,7 @@ def explain_settings(enabled:bool = True):
         else:
             message += " <No MT5 installations found.>"
     else:
-        message += " <No database available.>"
+        message += " <No database available>"
 
     connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
     if bool(connected_mt5):
@@ -156,7 +156,7 @@ def explain_settings(enabled:bool = True):
         else:
             message += " <No accounts>"
     else:
-        message += "<No database available.>"
+        message += "<No database available>"
 
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     if bool(connected_account):
@@ -178,7 +178,7 @@ def explain_symbols(enabled:bool = True):
         else:
             message = f"\t\t\t<No Symbols>"
     else:
-        message = f"\t\t\t<No database available.>"
+        message = f"\t\t\t<No database available>"
     return message
 
 def explain_open_positions(enabled:bool = True):
@@ -191,5 +191,5 @@ def explain_open_positions(enabled:bool = True):
         else:
             message = f"\t\t<No open positions>"
     else:
-        message = f"\t\t<No database available.>"
+        message = f"\t\t<No database available>"
     return message

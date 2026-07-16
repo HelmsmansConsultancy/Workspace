@@ -14,7 +14,7 @@ from tabular.data.orders.pending_order import PendingOrder
 from tabular.data.orders.generic_order import GenericOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.order.generic_order_util import copyValuesIntoGenericOrder
-from tabular.util.symbols_util import getPairFromName
+from tabular.util.symbols_util import getSymbolFromName
 from MetaTrader5 import TradeOrder
 
 console = Console()
@@ -46,8 +46,8 @@ def current_pending_orders():
             newOrder.account_id = connected_account.id
             copyValuesIntoPendingOrder(tradeOrder, newOrder)
 
-            symbol = getPairFromName(tradeOrder.symbol)
-            symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(symbol)
+            symbol = getSymbolFromName(tradeOrder.symbol)
+            symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
             newOrder.symbol_id = symbolInfomation.id
             newOrder.digits = symbolInfomation.digits
 
@@ -59,6 +59,7 @@ def current_pending_orders():
                 genericOrder: GenericOrder = GenericOrder()
                 copyValuesIntoGenericOrder(tradeOrder, genericOrder)
                 genericOrder.symbol_id = symbolInfomation.id
+                genericOrder.symbol = symbolInfomation.symbol
                 genericOrder.digits = symbolInfomation.digits
                 click.echo(f"Making GO {genericOrder}")
                 genericOrderId = databaseService.addGenericOrder(genericOrder)

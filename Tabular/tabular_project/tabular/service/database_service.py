@@ -253,9 +253,9 @@ class DatabaseService():
             session.commit()
             return genericOrder.id
 
-    def getSymbolInformationBySymbol(self, symbol: str):
+    def getSymbolInformationBySymbol(self, accountId: int, symbol: str):
         with Session(self.engine) as session:
-            symbol: SymbolInfomation = session.query(SymbolInfomation).filter(SymbolInfomation.pair == symbol).first()
+            symbol: SymbolInfomation = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId, SymbolInfomation.pair == symbol).first()
             return symbol
 
     def countSymbolInformation(self, accountId: int) -> int:

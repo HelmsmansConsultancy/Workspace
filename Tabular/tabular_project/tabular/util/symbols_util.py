@@ -5,13 +5,13 @@ from types import SimpleNamespace
 def copyValuesInto(symbolInfo: SymbolInfo, symbol: SymbolInfomation):
     s = SimpleNamespace(symbolInfo._asdict())
     symbol.name=s.name
-    symbol.pair = getPairFromName(s.name)
+    symbol.symbol = getSymbolFromName(s.name)
     symbol.digits=s.digits
     symbol.spread=s.spread
     symbol.select=s.select
     symbol.point=s.point
     
-def getPairFromName(name: str) -> str:
+def getSymbolFromName(name: str) -> str:
     match name:
         case val if "AUDCAD" in val:
             return "AUDCAD"

@@ -7,7 +7,7 @@ class GenericPosition(Base):
     __tablename__ = "GENERIC_POSITION"
 
     id: int = Column("id", Integer, primary_key=True)
-    
+
     symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
     symbol: str = Column("symbol", String, nullable=False)
 
@@ -30,7 +30,7 @@ class GenericPosition(Base):
         pass
 
     def __repr__(self):
-        return f"<PendingOrder(id={self.id}, symbol='{self.symbol_id}', ticket='{self.ticket}', volume='{self.volume}', digits'={self.digits}' ,entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
+        return f"<PendingOrder(id={self.id}, symbol_id='{self.symbol_id}', symbol='{self.symbol}', ticket='{self.ticket}', volume='{self.volume}', digits'={self.digits}' ,entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
     
     def __str__(self):
         digits = 5

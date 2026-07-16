@@ -33,6 +33,7 @@ def list__generic_orders():
 @click.command()
 def copy_generic_orders():
     """ Copy a generic pending order"""
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     global databaseService
     global metatrader5Service
 
@@ -48,6 +49,7 @@ def copy_generic_orders():
     choice = click.prompt("Enter the number of the Account to connect to", type=int)
     if 1 <= choice <= len(genericOrders):
         orderToPlace: GenericOrder = genericOrders[choice - 1]
+        databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
         
         metatrader5Service.placePendingOrder()
 

@@ -1,7 +1,7 @@
 from tabular.data.orders.generic_order import GenericOrder
 from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
-from tabular.util.symbols_util import getPairFromName
+from tabular.util.symbols_util import getSymbolFromName
 
 def copyValuesIntoGenericOrder(tradeOrder: TradeOrder, genericOrder: GenericOrder):
     d = SimpleNamespace(**tradeOrder._asdict())
@@ -10,6 +10,7 @@ def copyValuesIntoGenericOrder(tradeOrder: TradeOrder, genericOrder: GenericOrde
     genericOrder.type_order=d.type
     genericOrder.type_time=d.type_time
     genericOrder.type_filling=d.type_filling
+    # genericOrder.symbol=d.symbol
 
     # genericOrder.digits=d.digits No digits from TradeOrders
     genericOrder.entry=d.price_open

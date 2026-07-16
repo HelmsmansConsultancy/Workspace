@@ -51,7 +51,7 @@ def settings(ctx: click.Context):
         if databaseService is not None:
             message = f"<{databaseService.db_file}>"
         else:
-            message = "<No database available.>"
+            message = "<No database available>"
         
         if databaseService is not None:
             mt5_installations = databaseService.countMetatraders()
@@ -60,7 +60,7 @@ def settings(ctx: click.Context):
             else:
                 message += " <No MT5 found.>"
         else:
-            message += " <No database available.>"
+            message += " <No database available>"
 
         connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
         if bool(connected_mt5):
@@ -76,7 +76,7 @@ def settings(ctx: click.Context):
             else:
                 message += " <No accounts>"
         else:
-            message += "<No DB available.>"
+            message += "<No DB available>"
 
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
