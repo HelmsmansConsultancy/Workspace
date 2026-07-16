@@ -66,6 +66,7 @@ def create_account_mt5():
 def list_accounts():
     """List all accounts."""
     global databaseService
+    global metatrader5Service
     account_configs: list[AccountConfig] = databaseService.list_account_configs()
     
     accountMetatraderConnections: AccountMetatraderConnection = []

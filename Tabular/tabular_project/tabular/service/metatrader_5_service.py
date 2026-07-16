@@ -6,6 +6,7 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console
 from MetaTrader5 import TerminalInfo, TradeOrder, TradePosition, SymbolInfo
+from tabular.data.orders.pending_order import PendingOrder
 
 console = Console()
 
@@ -15,6 +16,33 @@ class Metatrader5Service():
     def __init__(self):
         self.console = Console()
 
+    def placePendingOrder(self, pendingOrder: PendingOrder) -> PendingOrder:
+        if not meta_trader_5.symbol_select(pendingOrder.symbol, True):
+            return None
+        
+        request = {
+            "action": meta_trader_5.TRADE_ACTION_PENDING,       # pending order, not market execution
+            "symbol": pendingOrder.symbol,
+            "volume": pendingOrder.volume,                             # lot size
+            "type": meta_trader_5.ORDER_TYPE_BUY_LIMIT,          # order type (see options below)
+            "price": pendingOrder.entry,       # the pending price level
+            "sl": pendingOrder.sl,         # stop loss (optional)
+            "tp": pendingOrder.tp,          # take profit (optional)
+            "deviation": 0,
+            "magic": pendingOrder.magic,                           # your EA/script identifier
+            "comment": pendingOrder.comment,
+            "type_time": meta_trader_5.ORDER_TIME_GTC,           # good till cancelled
+            "type_filling": meta_trader_5.ORDER_FILLING_RETURN,
+        }
+        
+        result = meta_trader_5.order_send(request)
+        
+        if result.retcode != meta_trader_5.TRADE_RETCODE_DONE:
+            print(f"Order failed, retcode={result.retcode}")
+            print(result)
+        else:
+            print(f"Pending order placed! Ticket: {result.order}")
+            return pendingOrder
 
     def getSymbolInfo(self, accountId: int) -> list[SymbolInfo]:
         # get the SymbolInfo

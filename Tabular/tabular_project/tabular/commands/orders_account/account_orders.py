@@ -32,7 +32,7 @@ def account_orders(ctx):
         
 
         if not bool(choice):
-            choice = interactive_menu(ACCOUNT_ORDERS_SUB_COMMANDS, menuName="Account Orders - Pending")
+            choice = interactive_menu(ACCOUNT_ORDERS_SUB_COMMANDS, menuName="Account Orders - Overview")
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])

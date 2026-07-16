@@ -7,7 +7,9 @@ class GenericPosition(Base):
     __tablename__ = "GENERIC_POSITION"
 
     id: int = Column("id", Integer, primary_key=True)
+    
     symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
+    symbol: str = Column("symbol", String, nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
     magic: int = Column("magic", Integer, nullable=True)

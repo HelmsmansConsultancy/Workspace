@@ -8,10 +8,8 @@ from tabular.service.s import S
 from tabular.util.menu.menus_allow import empty_string,  no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
-from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.orders.pending_order import PendingOrder
-from MetaTrader5 import TradeOrder
+from tabular.data.orders.generic_order import GenericOrder
 
 console = Console()
 databaseService: DatabaseService = None
@@ -21,16 +19,37 @@ metatrader5Service: Metatrader5Service = None
 def list__generic_orders():
     """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    genericOrders: list[GenericOrder] = databaseService.getGenericOrders()
 
-    if bool(pendingOrders):
-        if len(pendingOrders) > 0:
-            for order in pendingOrders:
+    if bool(genericOrders):
+        if len(genericOrders) > 0:
+            for order in genericOrders:
                 click.echo(f"{order}")
         else:
             click.echo(f"No Pending orders")
     else:
         click.echo("No database")
+
+@click.command()
+def copy_generic_orders():
+    """ Copy a generic pending order"""
+    global databaseService
+    global metatrader5Service
+
+    genericOrders: list[GenericOrder] = databaseService.getGenericOrders()
+    if len(genericOrders) == 0:
+        click.echo("No Generic Orders found.")
+        return
+
+    click.echo("Select an Order to Copy:")
+    for index, order in enumerate(genericOrders, start=1):
+        click.echo(f"{index}. {order}")
+
+    choice = click.prompt("Enter the number of the Account to connect to", type=int)
+    if 1 <= choice <= len(genericOrders):
+        orderToPlace: GenericOrder = genericOrders[choice - 1]
+        
+        metatrader5Service.placePendingOrder()
 
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'List generic orders', list__generic_orders.callback.__name__.replace("_", "-"), ],
@@ -73,3 +92,4 @@ def generic_orders(ctx: click.Context):
             return result
 
 generic_orders.add_command(list__generic_orders)
+generic_orders.add_command(copy_generic_orders)

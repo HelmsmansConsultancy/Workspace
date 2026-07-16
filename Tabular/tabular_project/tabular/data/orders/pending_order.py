@@ -9,7 +9,10 @@ class PendingOrder(Base):
 
     id: int = Column("id", Integer, primary_key=True)
     account_id: int = Column("account_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), nullable=False)
+
     symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
+    symbol: str = Column("symbol", String, nullable=False)
+
     generic_id:  int = Column("generic_id", Integer, ForeignKey("GENERIC_ORDER.id"), nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
@@ -21,7 +24,7 @@ class PendingOrder(Base):
     type_time: int = Column("type_time", Integer, nullable=False)
     type_filling: int = Column("type_filling", Integer, nullable=False)
     digits: int = Column("digits", Integer, nullable=False)
-
+    
     volume: float = Column("volume", Float, nullable=False)
     entry: float = Column("entry", Float, nullable=False)
     sl: float = Column("sl", Float, nullable=False)
