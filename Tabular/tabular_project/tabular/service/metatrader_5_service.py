@@ -21,7 +21,6 @@ class Metatrader5Service():
         return account_info
 
     def login(self, account_login: int, password: str, server: str) -> AccountInfo:
-        self.console.print(f"account_login: {account_login}, password: {password}, server: {server}")
         result: bool = meta_trader_5.login(account_login, password=password, server=server, timeout=60000)
         if bool(result):
             return meta_trader_5.account_info()

@@ -93,35 +93,39 @@ def create_account_with_password():
         click.echo(f"Account with login {account_info.login} and company {account_info.company} already exists in the database.")
         return
     else:
-        new_account_config = AccountConfig(
-            currency=account_info.currency,
-            company=account_info.company,
-            leverage=account_info.leverage,
-            account_login=account_info.login,
-            name=account_info.name,
-            server=account_info.server,
-            trade_mode=account_info.trade_mode,
-            password=password,
-        )
-        databaseService.addAccount(new_account_config)
-        new_account_status = AccountStatus(
-            account_id=new_account_config.id,
-            balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP),
-            equity=Decimal(account_info.equity).quantize(S.CENT, rounding=ROUND_HALF_UP),
-            profit=Decimal(account_info.profit).quantize(S.CENT, rounding=ROUND_HALF_UP)    ,
-            trade_allowed=account_info.trade_allowed,
-            trade_expert=account_info.trade_expert,
-        )
-        databaseService.addAccountStatus(new_account_status)
-        result = databaseService.getAccountMetatraderConnection(new_account_config.account_login, connected_mt5.id)
-        if bool(result):
+        account_config: AccountConfig = databaseService.find_account_by_login_and_company(account_info.login, account_info.company)
+        if not bool(account_config):
+            account_config = AccountConfig(
+                currency=account_info.currency,
+                company=account_info.company,
+                leverage=account_info.leverage,
+                account_login=account_info.login,
+                name=account_info.name,
+                server=account_info.server,
+                trade_mode=account_info.trade_mode,
+                password=password,
+            )
+            databaseService.addAccount(account_config)
+        account_status: AccountStatus = databaseService.getAccountStatus(account_config.id)
+        if not bool(account_status):
+            new_account_status = AccountStatus(
+                account_id=account_config.id,
+                balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP),
+                equity=Decimal(account_info.equity).quantize(S.CENT, rounding=ROUND_HALF_UP),
+                profit=Decimal(account_info.profit).quantize(S.CENT, rounding=ROUND_HALF_UP)    ,
+                trade_allowed=account_info.trade_allowed,
+                trade_expert=account_info.trade_expert,
+            )
+            databaseService.addAccountStatus(new_account_status)
+        result = databaseService.getAccountMetatraderConnection(account_config.account_login, connected_mt5.id)
+        if not bool(result):
             new_account_metatrader_connection = AccountMetatraderConnection(
-                new_account_config.id,
+                account_config.id,
                 connected_mt5.id
             )
             databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
-        SingletonService().put(S.CONNECTED_ACCOUNT, new_account_config)
-        click.echo(f"New account with login {new_account_config.account_login} and company {new_account_config.company} added to the database.")
+        SingletonService().put(S.CONNECTED_ACCOUNT, account_config)
+        click.echo(f"New account with login {account_config.account_login} and company {account_config.company} added to the database.")
 
 @click.command()
 def change_account_password():
@@ -198,7 +202,7 @@ def accounts(ctx: click.Context):
         if bool(account_configs) and len(account_configs) > 0:
             for account_config in account_configs:
                 click.echo(f"- {account_config!r}")
-                account_state = databaseService.get_account_state(account_config.id)
+                account_state = databaseService.getAccountStatus(account_config.id)
                 if bool(account_state):
                     click.echo(f"\t - {account_state!r}")
         else:

@@ -75,7 +75,7 @@ class DatabaseService():
             account_states = session.query(AccountStatus).all()
             return account_states
         
-    def get_account_state(self, account_id: int) -> AccountStatus:
+    def getAccountStatus(self, account_id: int) -> AccountStatus:
         with Session(self.engine) as session:
             account_state = session.query(AccountStatus).filter(AccountStatus.account_id == account_id).first()
             return account_state
@@ -85,9 +85,9 @@ class DatabaseService():
             count = session.query(AccountConfig).count()
             return count
 
-    def find_account_by_login_and_company(self, login: int, company: str) -> AccountConfig | None:
+    def find_account_by_login_and_company(self, accountLogin: int, company: str) -> AccountConfig | None:
         with Session(self.engine) as session:
-            account_config = session.query(AccountConfig).filter_by(login=login, company=company).first()
+            account_config = session.query(AccountConfig).filter(AccountConfig.account_login==accountLogin, AccountConfig.company==company).first()
             return account_config
 
     def getAccount(self, account_id: int) -> AccountConfig | None:
