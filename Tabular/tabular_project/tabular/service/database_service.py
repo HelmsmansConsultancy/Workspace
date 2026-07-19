@@ -106,12 +106,17 @@ class DatabaseService():
             session.merge(accountConfig)
             session.commit()
 
-        
     def addAccountStatus(self, accountStatus: AccountStatus) -> int:
         with Session(self.engine) as session:
             session.add(accountStatus)
             session.commit()
             return accountStatus.account_id
+            
+    def updateAccountStatus(self,  accountStatus: AccountStatus) -> None:
+        with Session(self.engine) as session:
+            session.merge(accountStatus)
+            session.commit()
+
         
     def addAccountMetatraderConnection(self, accountMetatraderConnection: AccountMetatraderConnection):
         with Session(self.engine) as session:

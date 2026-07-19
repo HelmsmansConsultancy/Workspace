@@ -21,7 +21,7 @@ class AccountStatus(Base):
         self.trade_expert = trade_expert
 
     def __repr__(self):
-        return f"<AccountStatus(account_id={self.account_id}, trade_allowed={self.trade_allowed}, trade_expert={self.trade_expert}, balance={self.balance}, equity={self.equity}, profit={self.profit})>"
+        return f"<AccountStatus(account_id={self.account_id}, trade_allowed={self.trade_allowed}, trade_expert={self.trade_expert}, balance={self.balance}, equity={self.equity}, Running profit={self.profit})>"
 
     def __str__(self):
         return f"<AccountStatus(account_id={self.account_id}, balance={self.balance}, equity={self.equity})>"
