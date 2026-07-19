@@ -32,8 +32,8 @@ def get_symbolinfo():
         return
     
     connect_account = SingletonService().get(S.CONNECTED_ACCOUNT)
-    symbolInfos: list[SymbolInfo] = metatrader5Service.getSymbolInfo(connected_mt5.id)
-    symbols: list[SymbolInfomation] = databaseService.getSymbolInformation(connected_mt5.id)
+    symbolInfos: list[SymbolInfo] = metatrader5Service.getSymbolInfo(connect_account.id)
+    symbols: list[SymbolInfomation] = databaseService.getSymbolInformation(connect_account.id)
     newSymbols: list[SymbolInfomation] = []
     existingSymbols: list[SymbolInfomation] = []
     for symbolInfo in symbolInfos:

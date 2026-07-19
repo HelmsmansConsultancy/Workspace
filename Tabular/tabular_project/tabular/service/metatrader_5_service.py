@@ -59,7 +59,7 @@ class Metatrader5Service():
         # get the SymbolInfo
         connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
         if accountId != connected_account.id:
-            raise ValueError(f"AccountId({accountId}) != connected_account.id({connected_account.id})")
+            raise ValueError(f"AccountId={accountId} != connected_account.id=={connected_account.id}")
         symbolInfos: list[SymbolInfo] = meta_trader_5.symbols_get()
         # self.console.print(symbolInfos)
         return symbolInfos
