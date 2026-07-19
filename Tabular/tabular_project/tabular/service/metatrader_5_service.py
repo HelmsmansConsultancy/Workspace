@@ -67,6 +67,7 @@ class Metatrader5Service():
     def getPendingOrders(self, accountId: int) -> list[TradeOrder]:
         # get the limig or stop orders
         connected_account: AccountConfig = SingletonService().get(S.CONNECTED_ACCOUNT)
+        self.console.print(f"{accountId} - {connected_account}")
         if accountId != connected_account.id:
             raise ValueError(" accountId != connected_account.id")
         tradeOrders: list[TradeOrder] = meta_trader_5.orders_get()

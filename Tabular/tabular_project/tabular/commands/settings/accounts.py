@@ -177,6 +177,7 @@ def change_account_password():
 @click.command()
 def connect_account():
     """Connect account."""
+    global metatrader5Service
     account_configs: list[AccountConfig] = databaseService.list_account_configs()
     if len(account_configs) == 0:
         click.echo("No Account Configs found.")
@@ -191,7 +192,7 @@ def connect_account():
         account_to_connect: AccountConfig = account_configs[choice - 1]
         SingletonService().put(S.CONNECTED_ACCOUNT, account_to_connect)
         account_status: AccountStatus = databaseService.getAccountStatus(account_to_connect.id)
-        account_info: AccountInfo = meta_trader_5.account_info()
+        account_info: AccountInfo = metatrader5Service.getAccountInfo()
         click.echo(f"{account_status}")
         if bool(account_status):
             account_status.balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP)
