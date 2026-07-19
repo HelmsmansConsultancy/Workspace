@@ -15,6 +15,7 @@ from tabular.data.settings.account_config import AccountConfig
 from tabular.data.settings.account_status import AccountStatus
 from tabular.data.settings.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.settings.metatrader_config import MetatraderConfig
+from getpass import getpass
 
 console = Console()
 databaseService: DatabaseService = None
@@ -65,28 +66,41 @@ def create_account_mt5():
 @click.command()
 def list_accounts():
     """List all accounts."""
-    global databaseService
-    global metatrader5Service
-    account_configs: list[AccountConfig] = databaseService.list_account_configs()
-    
-    accountMetatraderConnections: AccountMetatraderConnection = []
-    connected_Metatrader: MetatraderConfig = SingletonService().get(S.CONNECTED_MT5)
-    # if bool(connected_Metatrader):
-        # accountMetatraderConnections = databaseService.list_account_metatrader_connections(connected_Metatrader.id)
-
     click.echo(empty_string)
-    click.echo("Accounts in the database:")
-    if bool(account_configs) and len(account_configs) > 0:
-        for account_config in account_configs:
-            click.echo(f"- {account_config}")
+    connected_account = SingletonService().get(S.CONNECTED_ACCOUNT)
+    if bool(connect_account):
+        click.echo(f"Connected to {connected_account}")
     else:
+        click.echo(f"Currently not connected with any account")
+
+@click.command()
+def change_account_password():
+
+    account_configs: list[AccountConfig] = databaseService.list_account_configs()
+    if len(account_configs) == 0:
         click.echo("No Account Configs found.")
-    click.echo(empty_string)
+        return
+
+    click.echo("Select an Account to connect to:")
+    for index, mt5 in enumerate(account_configs, start=1):
+        click.echo(f"{index}. {mt5}")
+
+    choice = click.prompt("Enter the number of the Account to connect to", type=int)
+    if 1 <= choice <= len(account_configs):
+        account_to_change: AccountConfig = account_configs[choice - 1]
+        password = getpass(f"New password for {account_to_change.login}: ")
+        confirm = getpass("Confirm new password: ")
+        if password == confirm:
+            account_to_change.password = password
+            databaseService.updateAccount(account_to_change)
+            click.echo(f"Password for {account_to_change.login} updated")
+        else:
+            click.echo(f"Password for {account_to_change.login} did not match!")
+    
 
 @click.command()
 def connect_account():
     """Connect account."""
-    
     account_configs: list[AccountConfig] = databaseService.list_account_configs()
     if len(account_configs) == 0:
         click.echo("No Account Configs found.")
@@ -107,8 +121,9 @@ def connect_account():
     # return pending_orders.callback.__name__.replace("_", "-")
 
 ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ], 
     [no_accounts, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
+    [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ],  
+    [no_accounts, explain_empty, 'Change account Password', change_account_password.callback.__name__.replace("_", "-"), ], 
     [no_accounts, explain_empty, 'Connect account', connect_account.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty,  'Return to previous menu', None, ]
 ]
@@ -152,6 +167,7 @@ def accounts(ctx: click.Context):
         else:
             return result
 
-accounts.add_command(create_account_mt5)
 accounts.add_command(list_accounts)
+accounts.add_command(create_account_mt5)
+accounts.add_command(change_account_password)
 accounts.add_command(connect_account)

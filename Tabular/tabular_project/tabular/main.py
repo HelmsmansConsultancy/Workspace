@@ -5,7 +5,6 @@ from typing import Callable
 from rich.console import Console
 from tabular.commands.settings.settings import settings
 from tabular.commands.closed_deal import trade_deals
-from tabular.commands.list import list 
 from tabular.commands.settings.settings import settings
 from tabular.commands.symbols.symbols import symbols
 from tabular.commands.orders_account.account_orders import account_orders

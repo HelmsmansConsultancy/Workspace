@@ -5,7 +5,7 @@ from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
 from tabular.util.file_utils import pick_file
-from tabular.util.menu.menus_allow import empty_string, allow_allways
+from tabular.util.menu.menus_allow import empty_string, allow_allways, no_metatraders
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.service.singleton_service import SingletonService
@@ -20,25 +20,17 @@ databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 @click.command()
-def delete_mt5():
-    """ Delete a MetaTrader 5 installation"""
+def list_mt5():
+    """ List all MetaTrader 5 installations"""
     mt5_installations = databaseService.listMetatraders()
-    if len(mt5_installations) == 0:
-        click.echo("No MT5 installations found.")
-        return
-
-    click.echo("Select a MT5 installation to delete:")
-    for index, mt5 in enumerate(mt5_installations, start=1):
-        click.echo(f"{index}. {mt5}")
-
-    choice = click.prompt("Enter the number of the MT5 installation to delete", type=int)
-    if 1 <= choice <= len(mt5_installations):
-        mt5_to_delete = mt5_installations[choice - 1]
-        databaseService.deleteMetatrader(mt5_to_delete.id)
-        click.echo(f"Deleted MT5 installation: {mt5_to_delete}")
+    click.echo(empty_string)
+    if len(mt5_installations) > 0:
+        click.echo("MT5 Installations:")
+        for mt5 in mt5_installations:
+            click.echo(f"- {mt5!r}")
     else:
-        click.echo("Invalid choice. No MT5 installation deleted.")
-
+        click.echo("No MT5 installations found.")
+    click.echo(empty_string)
 
 @click.command()
 def append_mt5():
@@ -53,19 +45,6 @@ def append_mt5():
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
         click.echo(empty_string)
         return accounts.callback.__name__.replace("_", "-")
-
-@click.command()
-def list_mt5():
-    """ List all MetaTrader 5 installations"""
-    mt5_installations = databaseService.listMetatraders()
-    click.echo(empty_string)
-    if len(mt5_installations) > 0:
-        click.echo("MT5 Installations:")
-        for mt5 in mt5_installations:
-            click.echo(f"- {mt5!r}")
-    else:
-        click.echo("No MT5 installations found.")
-    click.echo(empty_string)
 
 @click.command()
 def connect_mt5():
@@ -109,12 +88,34 @@ def disconnect_mt5():
     else:
         click.echo("No MT5 installation is currently connected.")
 
-MT5_SUB_COMMANDS:  list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [allow_allways, explain_empty,  'Append a MT5', append_mt5.callback.__name__.replace("_", "-"),], 
+
+@click.command()
+def delete_mt5():
+    """ Delete a MetaTrader 5 installation"""
+    mt5_installations = databaseService.listMetatraders()
+    if len(mt5_installations) == 0:
+        click.echo("No MT5 installations found.")
+        return
+
+    click.echo("Select a MT5 installation to delete:")
+    for index, mt5 in enumerate(mt5_installations, start=1):
+        click.echo(f"{index}. {mt5}")
+
+    choice = click.prompt("Enter the number of the MT5 installation to delete", type=int)
+    if 1 <= choice <= len(mt5_installations):
+        mt5_to_delete = mt5_installations[choice - 1]
+        databaseService.deleteMetatrader(mt5_to_delete.id)
+        click.echo(f"Deleted MT5 installation: {mt5_to_delete}")
+    else:
+        click.echo("Invalid choice. No MT5 installation deleted.")
+
+
+MT5_SUB_COMMANDS:  list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [ 
     [allow_allways, explain_empty,  'List all MT5', list_mt5.callback.__name__.replace("_", "-"), ], 
-    [allow_allways, explain_empty, 'Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), ],
-    [allow_allways, explain_empty,  'Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), ],
-    [allow_allways, explain_empty, 'Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_empty,  'Append an Installation', append_mt5.callback.__name__.replace("_", "-"),],
+    [no_metatraders, explain_empty, 'Connect to a MT5', connect_mt5.callback.__name__.replace("_", "-"), ],
+    [no_metatraders, explain_empty,  'Disconnect from a MT5', disconnect_mt5.callback.__name__.replace("_", "-"), ],
+    [no_metatraders, explain_empty, 'Delete a MT5', delete_mt5.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty,  'Return to previous menu', None, ]
 ]
 

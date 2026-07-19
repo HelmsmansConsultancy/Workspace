@@ -101,6 +101,12 @@ class DatabaseService():
             session.commit()
             return accountConfig.id
         
+    def updateAccount(self,  accountConfig: AccountConfig) -> None:
+        with Session(self.engine) as session:
+            session.merge(accountConfig)
+            session.commit()
+
+        
     def addAccountStatus(self, accountStatus: AccountStatus) -> int:
         with Session(self.engine) as session:
             session.add(accountStatus)
