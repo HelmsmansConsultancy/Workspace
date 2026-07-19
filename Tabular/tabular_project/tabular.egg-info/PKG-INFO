@@ -3,9 +3,11 @@ Name: tabular
 Version: 0.1.0
 Summary: Tabular MT5 management CLI
 Requires-Python: >=3.9
+Requires-Dist: pyinstaller>=6.20
 Requires-Dist: click>=8.0
 Requires-Dist: sqlalchemy>=2.0.50
 Requires-Dist: rich>=14.3.4
 Requires-Dist: questionary>=2.1
 Requires-Dist: MetaTrader5>=5.0.5735
 Requires-Dist: psutil>=7
+Requires-Dist: numpy>=2.5

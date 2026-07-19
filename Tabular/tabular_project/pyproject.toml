@@ -9,15 +9,16 @@ description = "Tabular MT5 management CLI"
 requires-python = ">=3.9"
 
 dependencies = [
+    "pyinstaller>=6.20",     # executable maker
     "click>=8.0",            # CLI framework
     "sqlalchemy>=2.0.50",    # SQL Alchemy
     "rich>=14.3.4",          # Logging
     "questionary>=2.1",      # CLI interaction
     "MetaTrader5>=5.0.5735", # MetaTrader5 library
     "psutil>=7",             # Program control
+    "numpy>=2.5.1",
 ##    "pandas>=2.0",
 ##    "readline>=6.2.4",
-##    "numpy>=1.26",
 ##    "rich>=13.0",       # pretty terminal output
 ##    "rich>=13.0",
 ##    "pytz>=2024.1",     # timezone handling

@@ -22,6 +22,16 @@ databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 @click.command()
+def list_accounts():
+    """List all accounts."""
+    click.echo(empty_string)
+    connected_account = SingletonService().get(S.CONNECTED_ACCOUNT)
+    if bool(connect_account):
+        click.echo(f"Connected to {connected_account}")
+    else:
+        click.echo(f"Currently not connected with any account")
+
+@click.command()
 def create_account_mt5():
     """Create a new account from MT5."""
     click.echo("Creating a new account from MT5...")
@@ -40,7 +50,7 @@ def create_account_mt5():
             currency=account_info.currency,
             company=account_info.company,
             leverage=account_info.leverage,
-            login=account_info.login,
+            account_login=account_info.login,
             name=account_info.name,
             server=account_info.server,
             trade_mode=account_info.trade_mode
@@ -55,23 +65,63 @@ def create_account_mt5():
             trade_expert=account_info.trade_expert,
         )
         databaseService.addAccountStatus(new_account_status)
-        new_account_metatrader_connection = AccountMetatraderConnection(
-            new_account_config.id,
-            connected_mt5.id
-        )
-        databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
+        result = databaseService.getAccountMetatraderConnection(new_account_config.account_login, connected_mt5.id)
+        if bool(result):
+            new_account_metatrader_connection = AccountMetatraderConnection(
+                new_account_config.id,
+                connected_mt5.id
+            )
+            databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
         SingletonService().put(S.CONNECTED_ACCOUNT, new_account_config)
-        click.echo(f"New account with login {new_account_config.login} and company {new_account_config.company} added to the database.")
+        click.echo(f"New account with login {new_account_config.account_login} and company {new_account_config.company} added to the database.")
 
 @click.command()
-def list_accounts():
-    """List all accounts."""
+def create_account_with_password():
+    global metatrader5Service
+    connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
+    if connected_mt5 is None:
+        click.echo("No connected MT5 installation found. Please connect to an MT5 installation first.")
+        return
+    
     click.echo(empty_string)
-    connected_account = SingletonService().get(S.CONNECTED_ACCOUNT)
-    if bool(connect_account):
-        click.echo(f"Connected to {connected_account}")
+    account_login = int(input("Login (account number): ").strip())
+    password = getpass("Password: ")  # hidden while typing
+    server = input("Server (e.g. MetaQuotes-Demo): ").strip()
+    account_info: None | AccountInfo = metatrader5Service.login(account_login, password=password, server=server)
+    
+    if not bool(account_info):
+        click.echo(f"Account with login {account_info.login} and company {account_info.company} already exists in the database.")
+        return
     else:
-        click.echo(f"Currently not connected with any account")
+        new_account_config = AccountConfig(
+            currency=account_info.currency,
+            company=account_info.company,
+            leverage=account_info.leverage,
+            account_login=account_info.login,
+            name=account_info.name,
+            server=account_info.server,
+            trade_mode=account_info.trade_mode,
+            password=password,
+        )
+        databaseService.addAccount(new_account_config)
+        new_account_status = AccountStatus(
+            account_id=new_account_config.id,
+            balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP),
+            equity=Decimal(account_info.equity).quantize(S.CENT, rounding=ROUND_HALF_UP),
+            profit=Decimal(account_info.profit).quantize(S.CENT, rounding=ROUND_HALF_UP)    ,
+            trade_allowed=account_info.trade_allowed,
+            trade_expert=account_info.trade_expert,
+        )
+        databaseService.addAccountStatus(new_account_status)
+        result = databaseService.getAccountMetatraderConnection(new_account_config.account_login, connected_mt5.id)
+        if bool(result):
+            new_account_metatrader_connection = AccountMetatraderConnection(
+                new_account_config.id,
+                connected_mt5.id
+            )
+            databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
+        SingletonService().put(S.CONNECTED_ACCOUNT, new_account_config)
+        click.echo(f"New account with login {new_account_config.account_login} and company {new_account_config.company} added to the database.")
 
 @click.command()
 def change_account_password():
@@ -88,14 +138,14 @@ def change_account_password():
     choice = click.prompt("Enter the number of the Account to connect to", type=int)
     if 1 <= choice <= len(account_configs):
         account_to_change: AccountConfig = account_configs[choice - 1]
-        password = getpass(f"New password for {account_to_change.login}: ")
+        password = getpass(f"New password for {account_to_change.account_login}: ")
         confirm = getpass("Confirm new password: ")
         if password == confirm:
             account_to_change.password = password
             databaseService.updateAccount(account_to_change)
-            click.echo(f"Password for {account_to_change.login} updated")
+            click.echo(f"Password for {account_to_change.account_login} updated")
         else:
-            click.echo(f"Password for {account_to_change.login} did not match!")
+            click.echo(f"Password for {account_to_change.account_login} did not match!")
     
 
 @click.command()
@@ -123,6 +173,7 @@ def connect_account():
 ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_accounts, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty,  'Create account from MT5', create_account_mt5.callback.__name__.replace("_", "-"), ],  
+    [no_accounts, explain_empty, 'Create account with Password etc...', create_account_with_password.callback.__name__.replace("_", "-"), ],
     [no_accounts, explain_empty, 'Change account Password', change_account_password.callback.__name__.replace("_", "-"), ], 
     [no_accounts, explain_empty, 'Connect account', connect_account.callback.__name__.replace("_", "-"), ], 
     [allow_allways, explain_empty,  'Return to previous menu', None, ]
@@ -169,5 +220,6 @@ def accounts(ctx: click.Context):
 
 accounts.add_command(list_accounts)
 accounts.add_command(create_account_mt5)
+accounts.add_command(create_account_with_password)
 accounts.add_command(change_account_password)
 accounts.add_command(connect_account)

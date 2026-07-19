@@ -11,7 +11,6 @@ tabular/commands/__init__.py
 tabular/commands/closed_deal.py
 tabular/commands/closed_trades.py
 tabular/commands/connect.py
-tabular/commands/list.py
 tabular/commands/orders.py
 tabular/commands/orders_account/__init__.py
 tabular/commands/orders_account/account_orders.py

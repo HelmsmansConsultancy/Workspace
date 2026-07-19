@@ -1,0 +1,8 @@
+__pycache__
+tickdata.egg-info
+.spyproject
+.vs
+.DS_Store
+*.db
+/build
+/dist

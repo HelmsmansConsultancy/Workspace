@@ -118,9 +118,14 @@ class DatabaseService():
             session.add(accountMetatraderConnection)
             session.commit()
 
+    def getAccountMetatraderConnection(self, accountId: int, metatraderId: int) -> AccountMetatraderConnection:
+        with Session(self.engine) as session:
+            connection: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.account_id==accountId, AccountMetatraderConnection.metatrader_id==metatraderId).first()
+            return connection
+
     def list_account_metatrader_connections_by_account(self, accountId: int) -> list[AccountMetatraderConnection]:
         with Session(self.engine) as session:
-            accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter_by(account_id= accountId).all()
+            accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.account_id==accountId).all()
             return accountMetatraderConnections
 
     def list_account_metatrader_connections_by_metatrader(self, metatrader_id: int) -> list[AccountMetatraderConnection]:

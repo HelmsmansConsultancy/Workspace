@@ -5,7 +5,7 @@ from tabular.data.settings.account_config import AccountConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console
-from MetaTrader5 import TerminalInfo, TradeOrder, TradePosition, SymbolInfo
+from MetaTrader5 import AccountInfo, TerminalInfo, TradeOrder, TradePosition, SymbolInfo
 from tabular.data.orders.pending_order import PendingOrder
 
 console = Console()
@@ -15,6 +15,18 @@ class Metatrader5Service():
 
     def __init__(self):
         self.console = Console()
+
+    def getAccountInfo(self) -> AccountInfo: 
+        account_info: AccountInfo = meta_trader_5.account_info()
+        return account_info
+
+    def login(self, account_login: int, password: str, server: str) -> AccountInfo:
+        self.console.print(f"account_login: {account_login}, password: {password}, server: {server}")
+        result: bool = meta_trader_5.login(account_login, password=password, server=server, timeout=60000)
+        if bool(result):
+            return meta_trader_5.account_info()
+        else:
+            return None
 
     def placePendingOrder(self, pendingOrder: PendingOrder) -> PendingOrder:
         if not meta_trader_5.symbol_select(pendingOrder.symbol, True):

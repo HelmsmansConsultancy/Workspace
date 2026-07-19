@@ -4,4 +4,5 @@ tickdata.egg-info
 .vs
 .DS_Store
 *.db
-
+/build
+/dist

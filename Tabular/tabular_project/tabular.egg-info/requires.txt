@@ -1,6 +1,8 @@
+pyinstaller>=6.20
 click>=8.0
 sqlalchemy>=2.0.50
 rich>=14.3.4
 questionary>=2.1
 MetaTrader5>=5.0.5735
 psutil>=7
+numpy>=2.5
