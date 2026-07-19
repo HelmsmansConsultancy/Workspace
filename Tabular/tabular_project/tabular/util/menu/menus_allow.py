@@ -20,7 +20,14 @@ def no_metatraders():
         return True
     else:
         return False
-    
+
+def no_active_metatrader():
+    connected_metatrader: AccountConfig | None = SingletonService().get(S.CONNECTED_MT5)
+    if bool(connected_metatrader):
+        return True
+    else:
+        return False 
+
 def no_accounts():
     databaseService: DatabaseService =  SingletonService().get(S.DATABASE_SERVICE)
     accounts = databaseService.countAccounts()

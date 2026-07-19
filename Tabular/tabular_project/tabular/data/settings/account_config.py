@@ -14,12 +14,13 @@ class AccountConfig(Base):
     server: str = Column("server", String, nullable=False)
     trade_mode: int = Column("trade_mode", Integer, nullable=True)
 
-    def __init__(self, company: str, currency: str, leverage: int, account_login: int, name: str, server: str, trade_mode: int):
+    def __init__(self, company: str, currency: str, leverage: int, account_login: int, name: str, password: str, server: str, trade_mode: int):
         self.company = company
         self.currency = currency
         self.leverage = leverage
         self.account_login = account_login
         self.name = name
+        self.password = password
         self.server = server
         self.trade_mode = trade_mode
 
