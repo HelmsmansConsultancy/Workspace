@@ -1,5 +1,6 @@
 import click
 import os
+from pathlib import Path
 import sys
 from typing import Callable 
 from rich.console import Console
@@ -83,9 +84,13 @@ def main(ctx: click.Context, db_file: str):
             choice = interactive_menu(SUB_COMMANDS, menuName="Main Menu")
         
         if bool(choice):
-            next_menu = ctx.invoke(ctx.command.commands[choice])
+            next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
-                choice = next_menu
+                if len(next_menu) > 1:
+                    return next_menu[1:]
+                else:
+                    choice = next_menu[0]
             else:
                 choice = None  # Reset choice to None after invoking the command
 

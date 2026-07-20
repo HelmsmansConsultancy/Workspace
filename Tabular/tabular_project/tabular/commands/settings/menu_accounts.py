@@ -1,4 +1,6 @@
 import click
+import os
+from pathlib import Path
 from decimal import Decimal, ROUND_HALF_UP
 from MetaTrader5 import AccountInfo
 from typing import Callable 
@@ -14,6 +16,7 @@ from tabular.data.settings.account_config import AccountConfig
 from tabular.data.settings.account_status import AccountStatus
 from tabular.data.settings.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.settings.metatrader_config import MetatraderConfig
+from tabular.commands.symbols.symbols import symbols
 from getpass import getpass
 
 console = Console()
@@ -56,7 +59,7 @@ def create_account_mt5():
             trade_mode=account_info.trade_mode
         )
         databaseService.addAccount(account_config)
-        new_account_status = AccountStatus(
+        account_status = AccountStatus(
             account_id=account_config.id,
             balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP),
             equity=Decimal(account_info.equity).quantize(S.CENT, rounding=ROUND_HALF_UP),
@@ -64,7 +67,7 @@ def create_account_mt5():
             trade_allowed=account_info.trade_allowed,
             trade_expert=account_info.trade_expert,
         )
-        databaseService.addAccountStatus(new_account_status)
+        databaseService.addAccountStatus(account_status)
         result = databaseService.getAccountMetatraderConnection(account_config.account_login, connected_mt5.id)
         if bool(result):
             new_account_metatrader_connection = AccountMetatraderConnection(
@@ -72,8 +75,8 @@ def create_account_mt5():
                 connected_mt5.id
             )
             databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
-        SingletonService().put(S.CONNECTED_ACCOUNT, new_account_config)
-        click.echo(f"New account with login {new_account_config.account_login} and company {new_account_config.company} added to the database.")
+        SingletonService().put(S.CONNECTED_ACCOUNT, account_config)
+        click.echo(f"New account with login {account_config.account_login} and company {account_config.company} added to the database.")
 
 @click.command()
 def create_account_with_password():
@@ -203,6 +206,7 @@ def connect_account():
             databaseService.updateAccountStatus(account_status)
         else: 
             click.echo(f"Could not update accountStatus")
+        return ["", symbols.callback.__name__.replace("_", "-")]
 
 ACCOUNT_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_accounts, explain_empty,  'List accounts', list_accounts.callback.__name__.replace("_", "-"), ], 
@@ -245,6 +249,7 @@ def accounts(ctx: click.Context):
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
                 return next_menu
             else: 

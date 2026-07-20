@@ -1,4 +1,6 @@
 import click
+import os
+from pathlib import Path
 from rich.console import Console
 from typing import Callable
 from tabular.service.singleton_service import SingletonService
@@ -88,9 +90,13 @@ def settings(ctx: click.Context):
             choice = interactive_menu(SETTINGS_SUB_COMMANDS, menuName="Settings - Overview")
         
         if bool(choice):
-            next_menu = ctx.invoke(ctx.command.commands[choice])
+            next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
-                choice = next_menu
+                if len(next_menu) > 1:
+                    return next_menu[1:]
+                else:
+                    choice = next_menu[0]
             else:
                 choice = None  # Reset choice to None after invoking the command
         else:

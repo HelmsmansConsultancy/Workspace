@@ -100,14 +100,14 @@ def symbols(ctx: click.Context):
                 click.echo(f"<No Symbol(s)  in Account  {connected_account.name}>")
         else:
             click.echo(f"<No Account connected>")
-        
 
         if choice is None:
             choice = interactive_menu(SYMBOLS_SUB_COMMANDS, menuName="Symbols")
 
         result = None
         if bool(choice):
-            ctx.invoke(ctx.command.commands[choice])
+            next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {__file__}: {next_menu}")
             choice = None  # Reset choice to None after invoking the command
         else:
             return result

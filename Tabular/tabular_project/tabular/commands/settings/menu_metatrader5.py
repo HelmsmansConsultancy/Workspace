@@ -44,7 +44,7 @@ def append_mt5():
         databaseService.updateMetatrader(updated_mt5_config)
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
         click.echo(empty_string)
-        return accounts.callback.__name__.replace("_", "-")
+        return [accounts.callback.__name__.replace("_", "-")]
 
 @click.command()
 def connect_mt5():
@@ -68,12 +68,10 @@ def connect_mt5():
         databaseService.updateMetatrader(updated_mt5_config)
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
         click.echo(empty_string)
-        return accounts.callback.__name__.replace("_", "-")
     else:
         click.echo("Invalid choice. No MT5 installation connected.")
         click.echo(empty_string)
-        return
-
+    return [accounts.callback.__name__.replace("_", "-")]
 
 @click.command()
 def disconnect_mt5():
@@ -154,9 +152,10 @@ def metatrader5(ctx):
             choice = interactive_menu(MT5_SUB_COMMANDS, menuName="Settings - MetaTrader 5")
         
         if bool(choice):
-            next_menu = ctx.invoke(ctx.command.commands[choice])
+            next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
-                return next_menu
+                    return next_menu
             else: 
                 choice = None  # Reset choice to None after invoking the command
         else:
