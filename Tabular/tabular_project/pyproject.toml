@@ -9,7 +9,7 @@ description = "Tabular MT5 management CLI"
 requires-python = ">=3.9"
 
 dependencies = [
-    "pipdeptree>=3.1.1"      # depemdemcies
+    "pipdeptree>=3.1.1",      # depemdemcies
     "pyinstaller>=6.20",     # executable maker
     "click>=8.0",            # CLI framework
     "sqlalchemy>=2.0.50",    # SQL Alchemy

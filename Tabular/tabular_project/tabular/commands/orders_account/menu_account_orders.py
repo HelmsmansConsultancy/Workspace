@@ -1,8 +1,8 @@
 import click
 from typing import Callable 
 from rich.console import Console
-from tabular.commands.orders_account.pending_orders import pending_orders
-from tabular.commands.orders_account.open_positions import open_positions
+from tabular.commands.orders_account.menu_pending_orders import pending_orders
+from tabular.commands.orders_account.menu_open_positions import open_positions
 from tabular.commands.orders_account.menu_closed_deal import trade_deals
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
 from tabular.util.menu.menus_explain import explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_settings

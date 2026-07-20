@@ -7,7 +7,7 @@ from tabular.commands.settings.settings import settings
 from tabular.commands.orders_account.menu_closed_deal import trade_deals
 from tabular.commands.settings.settings import settings
 from tabular.commands.symbols.symbols import symbols
-from tabular.commands.orders_account.account_orders import account_orders
+from tabular.commands.orders_account.menu_account_orders import account_orders
 from tabular.commands.orders_generic.overview_orders import overview_orders
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
 from tabular.util.menu.menus_explain import explain_symbols, explain_empty, explain_settings, explain_generic_orders, explain_account_orders
