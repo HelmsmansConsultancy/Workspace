@@ -1,9 +1,9 @@
-from tabular.data.orders.open_position import OpenPosition
+from tabular.data.orders.specific_open_position import SpecificOpenPosition
 from MetaTrader5 import TradePosition
 from types import SimpleNamespace
 from tabular.util.util.symbols_util import getSymbolFromName
 
-def copyValuesInto(tradePosition: TradePosition, openPosition: OpenPosition):
+def copyValuesInto(tradePosition: TradePosition, openPosition: SpecificOpenPosition):
     d = SimpleNamespace(**tradePosition._asdict())
     openPosition.ticket=d.ticket
     openPosition.magic=d.magic

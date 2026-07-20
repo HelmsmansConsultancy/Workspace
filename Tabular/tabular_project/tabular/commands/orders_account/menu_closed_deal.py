@@ -9,7 +9,7 @@ from tabular.util.menu.menus_allow import empty_string,  no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.orders.open_position import OpenPosition
+from tabular.data.orders.specific_open_position import SpecificOpenPosition
 from tabular.util.order.open_position_util import copyValuesInto
 from MetaTrader5 import TradeDeal 
 
@@ -23,10 +23,10 @@ def history_trade_deals():
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     tradeDeals : list[TradeDeal ] = metatrader5Service.getTradeDeals(connected_account.id)
     click.echo(f"Gotten {len(tradeDeals)} trades")
-    openPositions: list[OpenPosition] = databaseService.getTradeDeals(connected_account.id)
-    existingOrders: list[OpenPosition] = []
-    newPositions: list[OpenPosition] = []
-    removedPositions: list[OpenPosition]
+    openPositions: list[SpecificOpenPosition] = databaseService.getTradeDeals(connected_account.id)
+    existingOrders: list[SpecificOpenPosition] = []
+    newPositions: list[SpecificOpenPosition] = []
+    removedPositions: list[SpecificOpenPosition]
     for tradeOrder in tradeDeals:
         order_exists = False
         for openPosition in openPositions:
@@ -36,7 +36,7 @@ def history_trade_deals():
                 existingOrders.append(openPosition)
 
         if not order_exists:
-            newOrder = OpenPosition()
+            newOrder = SpecificOpenPosition()
             newOrder.account_id = connected_account.id
             copyValuesInto(tradeOrder, newOrder)
             newPositions.append(newOrder)

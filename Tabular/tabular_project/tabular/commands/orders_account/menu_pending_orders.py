@@ -10,12 +10,13 @@ from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.symbols.symbol_info import SymbolInfomation
-from tabular.data.orders.pending_order import PendingOrder
-from tabular.data.orders.generic_order import GenericOrder
+from tabular.data.orders.specific_pending_order import SpecificPendingOrder
+from tabular.data.orders.generic_pending_order import GenericPendingOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.order.generic_order_util import copyValuesIntoGenericOrder
 from tabular.util.util.symbols_util import getSymbolFromName
 from MetaTrader5 import TradeOrder
+from tabular.commands.orders_generic.generic_orders import generic_orders
 
 console = Console()
 databaseService: DatabaseService = None
@@ -27,11 +28,11 @@ def current_pending_orders():
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
 
     tradeOrders: list[TradeOrder] = metatrader5Service.getPendingOrders(connected_account.id)
-    pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
 
-    existingOrders: list[PendingOrder] = []
-    newOrders: list[PendingOrder] = []
-    removedOrders: list[PendingOrder]
+    existingOrders: list[SpecificPendingOrder] = []
+    newOrders: list[SpecificPendingOrder] = []
+    removedOrders: list[SpecificPendingOrder]
     
     for tradeOrder in tradeOrders:
         order_exists = False
@@ -42,7 +43,7 @@ def current_pending_orders():
                 existingOrders.append(pendingOrder)
 
         if not order_exists:
-            newOrder = PendingOrder()
+            newOrder = SpecificPendingOrder()
             newOrder.account_id = connected_account.id
 
             copyValuesIntoPendingOrder(tradeOrder, newOrder)
@@ -53,12 +54,12 @@ def current_pending_orders():
             newOrder.digits = symbolInfomation.digits
             newOrder.symbol = symbolInfomation.symbol
 
-            genericOrder: GenericOrder = databaseService.getGenericOrderByStats(newOrder.digits, newOrder.entry, newOrder.sl, newOrder.tp)
+            genericOrder: GenericPendingOrder = databaseService.getGenericOrderByStats(newOrder.digits, newOrder.entry, newOrder.sl, newOrder.tp)
             if bool(genericOrder):
                 click.echo(f"Found GO {genericOrder}")
                 newOrder.generic_id = genericOrder.id
             else:
-                genericOrder: GenericOrder = GenericOrder()
+                genericOrder: GenericPendingOrder = GenericPendingOrder()
                 copyValuesIntoGenericOrder(tradeOrder, genericOrder)
                 genericOrder.symbol_id = symbolInfomation.id
                 genericOrder.symbol = symbolInfomation.symbol
@@ -73,12 +74,13 @@ def current_pending_orders():
     databaseService.updatePendingOrders(existingOrders)
     databaseService.addPendingOrders(newOrders)
     databaseService.removePendingOrders(removedOrders)
+    return ["", "", generic_orders.callback.__name__.replace("_", "-")]
 
 @click.command()
 def list__pending_orders():
     """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
 
     if bool(pendingOrders):
         if len(pendingOrders) > 0:

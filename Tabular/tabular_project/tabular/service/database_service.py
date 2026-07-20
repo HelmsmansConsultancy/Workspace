@@ -11,11 +11,11 @@ from tabular.service.singleton_service import SingletonService
 from tabular.data.base.base import Base
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.base.application_config import ApplicationConfig
-from tabular.data.orders.pending_order import PendingOrder
-from tabular.data.orders.open_position import OpenPosition
+from tabular.data.orders.specific_pending_order import SpecificPendingOrder
+from tabular.data.orders.specific_open_position import SpecificOpenPosition
 from tabular.data.symbols.symbol_info import SymbolInfomation
-from tabular.data.orders.generic_order import GenericOrder
-from tabular.data.orders.generic_position import GenericPosition
+from tabular.data.orders.generic_pending_order import GenericPendingOrder
+from tabular.data.orders.generic_open_position import GenericOpenPosition
 
 applicationConfig: ApplicationConfig = None
 
@@ -43,14 +43,14 @@ class DatabaseService():
         self.engine = create_engine(self.db_url, echo=False, future=True)
         Base.metadata.create_all(self.engine)
 
-    def getGenericOrderByStats(self, digits: int, entry: float, sl: float, tp: float) -> GenericOrder:
+    def getGenericOrderByStats(self, digits: int, entry: float, sl: float, tp: float) -> GenericPendingOrder:
         self.console.print(f"Searching entry {entry - self.TOL[digits]} - {entry + self.TOL[digits]}, sl {sl - self.TOL[digits]} - {entry + self.TOL[digits]}, tp {tp - self.TOL[digits]} - {tp + self.TOL[digits]}")
         with Session(self.engine) as session:
-            found = session.query(GenericOrder).filter(
-                GenericOrder.digits == digits,
-                GenericOrder.entry.between(entry - self.TOL[digits], entry + self.TOL[digits]),
-                GenericOrder.sl.between(sl - self.TOL[digits], sl + self.TOL[digits]),
-                GenericOrder.tp.between(tp - self.TOL[digits], tp + self.TOL[digits]),
+            found = session.query(GenericPendingOrder).filter(
+                GenericPendingOrder.digits == digits,
+                GenericPendingOrder.entry.between(entry - self.TOL[digits], entry + self.TOL[digits]),
+                GenericPendingOrder.sl.between(sl - self.TOL[digits], sl + self.TOL[digits]),
+                GenericPendingOrder.tp.between(tp - self.TOL[digits], tp + self.TOL[digits]),
             ).first()
             self.console.print(f"Found in DB: {found}")
             return found
@@ -181,35 +181,35 @@ class DatabaseService():
         
     def countGenericOrders(self) -> int:
         with Session(self.engine) as session:
-            count = session.query(GenericOrder).count()
+            count = session.query(GenericPendingOrder).count()
             return count
 
     
     def countPendingOrders(self, accountId) -> int:
         with Session(self.engine) as session:
-            count = session.query(PendingOrder).filter(PendingOrder.account_id == accountId).count()
+            count = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).count()
             return count
         
-    def getPendingOrders(self, accountId) -> list[PendingOrder]:
+    def getPendingOrders(self, accountId) -> list[SpecificPendingOrder]:
         with Session(self.engine) as session:  
-            pendingOrders = session.query(PendingOrder).filter(PendingOrder.account_id == accountId).all()
+            pendingOrders = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).all()
             return pendingOrders
 
-    def updatePendingOrders(self, pendingOrders: list[PendingOrder] ) -> None:
+    def updatePendingOrders(self, pendingOrders: list[SpecificPendingOrder] ) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
                 # self.console.print(f"updating: {order}")
                 session.merge(order)
             session.commit()
     
-    def addPendingOrders(self, pendingOrders: list[PendingOrder]) -> None:
+    def addPendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
                 # self.console.print(f"adding: {order!r}")
                 session.add(order)
             session.commit()
 
-    def removePendingOrders(self, pendingOrders: list[PendingOrder]) -> None:
+    def removePendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
                 # self.console.print(f"deleting: {order}")
@@ -218,35 +218,35 @@ class DatabaseService():
             
     def countOpenPositions(self, accountId) -> int:
         with Session(self.engine) as session:
-            count = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).count()
+            count = session.query(SpecificOpenPosition).filter(SpecificOpenPosition.account_id == accountId).count()
             return count
         
     def countGenericPositions(self) -> int:
         with Session(self.engine) as session:
-            count = session.query(GenericPosition).count()
+            count = session.query(GenericOpenPosition).count()
             return count
 
           
-    def getTradeDeals(self, accountId) -> list[OpenPosition]:
+    def getTradeDeals(self, accountId) -> list[SpecificOpenPosition]:
         with Session(self.engine) as session:  
-            openPositions = session.query(OpenPosition).filter(OpenPosition.account_id == accountId).all()
+            openPositions = session.query(SpecificOpenPosition).filter(SpecificOpenPosition.account_id == accountId).all()
             return openPositions
 
-    def updateOpenPositions(self, openPositions: list[OpenPosition] ) -> None:
+    def updateOpenPositions(self, openPositions: list[SpecificOpenPosition] ) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
                 # self.console.print(f"updating: {position}")
                 session.merge(position)
             session.commit()
     
-    def addOpenPositions(self, openPositions: list[OpenPosition]) -> None:
+    def addOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
                 # self.console.print(f"adding: {position!r}")
                 session.add(position)
             session.commit()
 
-    def removeOpenPositions(self, openPositions: list[OpenPosition]) -> None:
+    def removeOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
                 # self.console.print(f"deleting: {position}")
@@ -258,12 +258,12 @@ class DatabaseService():
             symbolInfomations = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).all()
             return symbolInfomations
         
-    def getGenericOrders(self) -> list[GenericOrder]:
+    def getGenericOrders(self) -> list[GenericPendingOrder]:
         with Session(self.engine) as session:
-            genericOrders = session.query(GenericOrder).all()
+            genericOrders = session.query(GenericPendingOrder).all()
             return genericOrders
 
-    def addGenericOrder(self, genericOrder: GenericOrder) -> int:
+    def addGenericOrder(self, genericOrder: GenericPendingOrder) -> int:
         with Session(self.engine) as session:
             session.add(genericOrder)
             session.commit()

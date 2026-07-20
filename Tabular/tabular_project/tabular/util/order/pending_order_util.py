@@ -1,8 +1,8 @@
-from tabular.data.orders.pending_order import PendingOrder
+from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
 
-def copyValuesIntoPendingOrder(tradeOrder: TradeOrder, pendingOrder: PendingOrder):
+def copyValuesIntoPendingOrder(tradeOrder: TradeOrder, pendingOrder: SpecificPendingOrder):
     d = SimpleNamespace(**tradeOrder._asdict())
     pendingOrder.ticket=d.ticket
     pendingOrder.magic=d.magic

@@ -10,17 +10,17 @@ from tabular.util.menu.menus_allow import empty_string,  no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.orders.generic_order import GenericOrder
+from tabular.data.orders.generic_pending_order import GenericPendingOrder
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
 @click.command()
-def list__generic_orders():
+def list_generic_orders():
     """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    genericOrders: list[GenericOrder] = databaseService.getGenericOrders()
+    genericOrders: list[GenericPendingOrder] = databaseService.getGenericOrders()
 
     if bool(genericOrders):
         if len(genericOrders) > 0:
@@ -38,7 +38,7 @@ def copy_generic_orders():
     global databaseService
     global metatrader5Service
 
-    genericOrders: list[GenericOrder] = databaseService.getGenericOrders()
+    genericOrders: list[GenericPendingOrder] = databaseService.getGenericOrders()
     if len(genericOrders) == 0:
         click.echo("No Generic Orders found.")
         return
@@ -49,13 +49,14 @@ def copy_generic_orders():
 
     choice = click.prompt("Enter the number of the Account to connect to", type=int)
     if 1 <= choice <= len(genericOrders):
-        orderToPlace: GenericOrder = genericOrders[choice - 1]
+        orderToPlace: GenericPendingOrder = genericOrders[choice - 1]
         databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
         
         metatrader5Service.placePendingOrder()
 
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
-    [no_active_account, explain_empty, 'List generic orders', list__generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'List generic orders', list_generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Copy generic orders', copy_generic_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
@@ -100,5 +101,5 @@ def generic_orders(ctx: click.Context):
         else:
             return
 
-generic_orders.add_command(list__generic_orders)
+generic_orders.add_command(list_generic_orders)
 generic_orders.add_command(copy_generic_orders)

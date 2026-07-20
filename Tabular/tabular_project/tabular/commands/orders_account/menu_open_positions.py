@@ -9,7 +9,7 @@ from tabular.util.menu.menus_allow import empty_string, no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.orders.open_position import OpenPosition
+from tabular.data.orders.specific_open_position import SpecificOpenPosition
 from tabular.util.order.generic_position_util import copyValuesInto
 from MetaTrader5 import TradeOrder
 
@@ -23,10 +23,10 @@ def current_open_positions():
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     tradeOrders: list[TradeOrder] = metatrader5Service.getTradeDeals(connected_account.id)
     click.echo(f"Gotten {len(tradeOrders)} trades")
-    openPositions: list[OpenPosition] = databaseService.getTradeDeals(connected_account.id)
-    existingOrders: list[OpenPosition] = []
-    newPositions: list[OpenPosition] = []
-    removedPositions: list[OpenPosition]
+    openPositions: list[SpecificOpenPosition] = databaseService.getTradeDeals(connected_account.id)
+    existingOrders: list[SpecificOpenPosition] = []
+    newPositions: list[SpecificOpenPosition] = []
+    removedPositions: list[SpecificOpenPosition]
     for tradeOrder in tradeOrders:
         order_exists = False
         for openPosition in openPositions:
@@ -36,7 +36,7 @@ def current_open_positions():
                 existingOrders.append(openPosition)
 
         if not order_exists:
-            newOrder = OpenPosition()
+            newOrder = SpecificOpenPosition()
             newOrder.account_id = connected_account.id
             copyValuesInto(tradeOrder, newOrder)
             newPositions.append(newOrder)
@@ -54,7 +54,7 @@ OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, s
 
 @click.group()
 @click.pass_context
-def open_positions(ctx: click.Context):
+def specific_open_positions(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -87,4 +87,4 @@ def open_positions(ctx: click.Context):
         else:
             return result
         
-open_positions.add_command(current_open_positions)
+specific_open_positions.add_command(current_open_positions)

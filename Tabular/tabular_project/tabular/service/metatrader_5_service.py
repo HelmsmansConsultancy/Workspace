@@ -6,7 +6,7 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console
 from MetaTrader5 import AccountInfo, TerminalInfo, TradeOrder, TradePosition, SymbolInfo
-from tabular.data.orders.pending_order import PendingOrder
+from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 
 console = Console()
 
@@ -27,7 +27,7 @@ class Metatrader5Service():
         else:
             return None
 
-    def placePendingOrder(self, pendingOrder: PendingOrder) -> PendingOrder:
+    def placePendingOrder(self, pendingOrder: SpecificPendingOrder) -> SpecificPendingOrder:
         if not meta_trader_5.symbol_select(pendingOrder.symbol, True):
             return None
         
