@@ -10,4 +10,4 @@ Requires-Dist: rich>=14.3.4
 Requires-Dist: questionary>=2.1
 Requires-Dist: MetaTrader5>=5.0.5735
 Requires-Dist: psutil>=7
-Requires-Dist: numpy>=2.5
+Requires-Dist: numpy>=2.5.1

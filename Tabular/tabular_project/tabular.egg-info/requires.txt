@@ -5,4 +5,4 @@ rich>=14.3.4
 questionary>=2.1
 MetaTrader5>=5.0.5735
 psutil>=7
-numpy>=2.5
+numpy>=2.5.1
