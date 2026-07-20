@@ -19,7 +19,7 @@ class SymbolInfomation(Base):
         self.account_id = account_id
 
     def __repr__(self):
-        return f"<SymbolInfomation(id={self.id}, account_id={self.account_id}, symbol={self.symbol} name={self.name}, pair={self.pair}, digits={self.digits}, spread={self.spread}, select={self.select}, point={self.point})>"
+        return f"<SymbolInfomation(id={self.id}, account_id={self.account_id}, symbol={self.symbol} name={self.name} digits={self.digits}, spread={self.spread}, select={self.select}, point={self.point})>"
         
     
     def __str__(self):

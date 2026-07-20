@@ -44,12 +44,14 @@ def current_pending_orders():
         if not order_exists:
             newOrder = PendingOrder()
             newOrder.account_id = connected_account.id
+
             copyValuesIntoPendingOrder(tradeOrder, newOrder)
 
             symbol = getSymbolFromName(tradeOrder.symbol)
             symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
             newOrder.symbol_id = symbolInfomation.id
             newOrder.digits = symbolInfomation.digits
+            newOrder.symbol = symbolInfomation.symbol
 
             genericOrder: GenericOrder = databaseService.getGenericOrderByStats(newOrder.digits, newOrder.entry, newOrder.sl, newOrder.tp)
             if bool(genericOrder):
@@ -107,7 +109,7 @@ def pending_orders(ctx: click.Context):
     while True:
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
-            pending_orders = databaseService.getPendingOrders(connected_account.id);
+            pending_orders = databaseService.getPendingOrders(connected_account.id)
             if len(pending_orders) > 0:
                 click.echo(empty_string)
                 for pending_order in pending_orders:
