@@ -1,4 +1,5 @@
 import click
+from pathlib import Path
 from rich.console import Console
 from typing import Callable
 from MetaTrader5 import SymbolInfo
@@ -13,12 +14,11 @@ from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.settings.account_config import AccountConfig
 from tabular.data.symbols.symbol_info import SymbolInfomation
 from tabular.util.util.symbols_util import copyValuesInto
-from tabular.data.base.application_config import ApplicationConfig
+from tabular.commands.orders_account.menu_account_orders import account_orders
 
 console = Console()
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
-
 
 @click.command()
 def get_symbolinfo():
@@ -51,6 +51,7 @@ def get_symbolinfo():
             newSymbols.append(newSymbol)
     databaseService.addSymbolInfo(newSymbols)
     databaseService.updateSymbolInformation(existingSymbols)
+    return ["", account_orders.callback.__name__.replace("_", "-")]
 
 
 @click.command()
@@ -107,10 +108,16 @@ def symbols(ctx: click.Context):
         result = None
         if bool(choice):
             next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
-            click.echo(f"Next_menu {__file__}: {next_menu}")
-            choice = None  # Reset choice to None after invoking the command
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            if bool(next_menu):
+                if len(next_menu) > 1:
+                    return next_menu[1:]
+                else:
+                    choice = next_menu[0]
+            else:
+                choice = None  # Reset choice to None after invoking the command
         else:
-            return result
+            return
         
 symbols.add_command(get_symbolinfo)
 symbols.add_command(list_symbolinfo)
