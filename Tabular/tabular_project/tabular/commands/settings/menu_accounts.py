@@ -76,7 +76,7 @@ def create_account_mt5():
             )
             databaseService.addAccountMetatraderConnection(new_account_metatrader_connection)
         SingletonService().put(S.CONNECTED_ACCOUNT, account_config)
-        click.echo(f"New account with login {account_config.account_login} and company {account_config.company} added to the database.")
+        return ["", symbols.callback.__name__.replace("_", "-")]
 
 @click.command()
 def create_account_with_password():
@@ -151,6 +151,7 @@ def create_account_with_password():
             databaseService.addAccountMetatraderConnection(account_metatrader_connection)
         SingletonService().put(S.CONNECTED_ACCOUNT, account_config)
         click.echo(f"New account with login {account_config.account_login} and company {account_config.company} added to the database.")
+        return ["", symbols.callback.__name__.replace("_", "-")]
 
 @click.command()
 def change_account_password():

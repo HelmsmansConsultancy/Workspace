@@ -1,6 +1,5 @@
 from tabular.data.base.base import Base
-from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey, String
-from decimal import Decimal
+from sqlalchemy import Column, Integer, Float, ForeignKey, String
 from tabular.util.util.price_util import fmt_price
 
 class SpecificOpenPosition(Base):
@@ -12,7 +11,7 @@ class SpecificOpenPosition(Base):
     symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
     symbol: str = Column("symbol", String, nullable=False)
 
-    generic_id:  int = Column("generic_id", Integer, ForeignKey("GENERIC_ORDER.id"), nullable=False)
+    generic_id:  int = Column("generic_id", Integer, ForeignKey("GENERIC_OPEN_POSITION.id"), nullable=False)
 
     ticket: int = Column("ticket", Integer, nullable=False)
     magic: int = Column("magic", Integer, nullable=True)
@@ -33,12 +32,10 @@ class SpecificOpenPosition(Base):
         pass
 
     def __repr__(self):
-        digits = 5
-        return f"<PendingOrder(id={self.id}, account_id='{self.account_id}', symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{self.volume}', digits'={self.digits}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
+        return f"<SpecificOpenPosition(id={self.id}, account_id='{self.account_id}', symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{self.volume}', digits'={self.digits}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', profit='{self.profit}, swap='{self.swap}')>"
     
     def __str__(self):
-        digits = 5
-        return f"<PO(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{self.volume}', profit='{self.profit}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}')>"
+        return f"<SOP(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{self.volume}', profit='{self.profit}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}')>"
     
     
 

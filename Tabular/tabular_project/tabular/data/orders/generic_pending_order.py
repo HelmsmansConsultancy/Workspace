@@ -1,6 +1,5 @@
 from tabular.data.base.base import Base
-from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey, String
-from decimal import Decimal
+from sqlalchemy import Column, Integer, Float, ForeignKey, String
 from tabular.util.util.price_util import fmt_price
 
 
@@ -31,11 +30,10 @@ class GenericPendingOrder(Base):
         pass
 
     def __repr__(self):
-        return f"<GO(id={self.id}, symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{self.volume}', digits={self.digits}, entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
+        return f"<GenericPendingOrder(id={self.id}, symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{fmt_price(self.volume, 2)}', digits={self.digits}, entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
     
     def __str__(self):
-        digits = 5
-        return f"<GO(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{self.volume}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}' )>"
+        return f"<GOP(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{fmt_price(self.volume, 2)}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}' )>"
     
     
 
