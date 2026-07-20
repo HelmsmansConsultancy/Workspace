@@ -77,7 +77,7 @@ def current_pending_orders():
 @click.command()
 def list__pending_orders():
     """ List Pending order"""
-    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT, menuName="Account Orders - Pending")
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     pendingOrders: list[PendingOrder] = databaseService.getPendingOrders(connected_account.id)
 
     if bool(pendingOrders):
@@ -121,7 +121,7 @@ def pending_orders(ctx: click.Context):
         click.echo(empty_string)
 
         if choice is None:
-            choice = interactive_menu(PENDING_SUB_COMMANDS)
+            choice = interactive_menu(PENDING_SUB_COMMANDS, menuName="Account Orders - Pending")
 
         result = None
         if bool(choice):

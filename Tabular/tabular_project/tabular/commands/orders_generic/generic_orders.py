@@ -1,4 +1,5 @@
 import click
+from pathlib import Path
 from rich.console import Console
 from typing import Callable
 from tabular.service.singleton_service import SingletonService
@@ -86,12 +87,18 @@ def generic_orders(ctx: click.Context):
         if choice is None:
             choice = interactive_menu(PENDING_SUB_COMMANDS, menuName="Generic Orders - Pending")
 
-        result = None
         if bool(choice):
-            ctx.invoke(ctx.command.commands[choice])
-            choice = None  # Reset choice to None after invoking the command
+            next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            if bool(next_menu):
+                if len(next_menu) > 1:
+                    return next_menu[1:]
+                else:
+                    choice = next_menu[0]
+            else:
+                choice = None  # Reset choice to None after invoking the command
         else:
-            return result
+            return
 
 generic_orders.add_command(list__generic_orders)
 generic_orders.add_command(copy_generic_orders)

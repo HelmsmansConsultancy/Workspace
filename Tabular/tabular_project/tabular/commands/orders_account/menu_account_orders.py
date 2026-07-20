@@ -1,4 +1,5 @@
 import click
+from pathlib import Path
 from typing import Callable 
 from rich.console import Console
 from tabular.commands.orders_account.menu_pending_orders import pending_orders
@@ -29,9 +30,13 @@ def account_orders(ctx):
             choice = interactive_menu(ACCOUNT_ORDERS_SUB_COMMANDS, menuName="Account Orders - Overview")
         
         if bool(choice):
-            next_menu = ctx.invoke(ctx.command.commands[choice])
+            next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
+            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
-                choice = next_menu
+                if len(next_menu) > 1:
+                    return next_menu[1:]
+                else:
+                    choice = next_menu[0]
             else:
                 choice = None  # Reset choice to None after invoking the command
         else:
