@@ -16,7 +16,7 @@ from tabular.service.s import S
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
-from tabular.data.application_config import ApplicationConfig
+from tabular.data.base.application_config import ApplicationConfig
 
 
 console = Console()

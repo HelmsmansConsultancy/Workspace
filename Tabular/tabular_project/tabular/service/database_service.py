@@ -8,9 +8,9 @@ from tabular.data.settings.account_status import AccountStatus
 from tabular.data.settings.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
-from tabular.data.base import Base
+from tabular.data.base.base import Base
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.application_config import ApplicationConfig
+from tabular.data.base.application_config import ApplicationConfig
 from tabular.data.orders.pending_order import PendingOrder
 from tabular.data.orders.open_position import OpenPosition
 from tabular.data.symbols.symbol_info import SymbolInfomation

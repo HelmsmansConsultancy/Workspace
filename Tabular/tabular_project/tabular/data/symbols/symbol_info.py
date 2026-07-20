@@ -1,4 +1,4 @@
-from tabular.data.base import Base
+from tabular.data.base.base import Base
 from sqlalchemy import Boolean, Column, Integer, Numeric, ForeignKey, String, Float
 
 

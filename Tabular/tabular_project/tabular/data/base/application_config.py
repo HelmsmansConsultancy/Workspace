@@ -1,6 +1,6 @@
 import os
 from sqlalchemy import Column, Integer, String
-from tabular.data.base import Base
+from tabular.data.base.base import Base
 
 class ApplicationConfig(Base):
     __tablename__ = "APPLICATION_CONFIG"

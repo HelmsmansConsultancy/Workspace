@@ -1,5 +1,5 @@
 from sqlalchemy import  Column, Integer, String
-from tabular.data.base import Base
+from tabular.data.base.base import Base
 
 class AccountConfig(Base):
     __tablename__ = "ACCOUNT_CONFIG"

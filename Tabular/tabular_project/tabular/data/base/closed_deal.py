@@ -1,8 +1,7 @@
-from tabular.data.base import Base
-from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey, String
-from decimal import Decimal
+from tabular.data.base.base import Base
+from sqlalchemy import Column, Integer, Float, ForeignKey, String
 
-class ClosedDeal(Base)
+class ClosedDeal(Base):
     __tablename__ = "CLOSED_DEAL"
 
     id: int = Column("id", Integer, primary_key=True)

@@ -3,15 +3,10 @@ from typing import Callable
 from rich.console import Console
 from tabular.commands.orders_generic.generic_orders import generic_orders
 from tabular.commands.orders_generic.generic_positions import generic_positions
-from tabular.commands.closed_deal import trade_deals
-from tabular.commands.settings.settings import settings
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
 from tabular.util.menu.menus_explain import explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_settings
 from tabular.util.menu.menus_utils import interactive_menu
-from tabular.service.singleton_service import SingletonService
-from tabular.service.database_service import DatabaseService
-from tabular.service.metatrader_5_service import Metatrader5Service
-from tabular.data.application_config import ApplicationConfig
+
 console = Console()
 
 ACCOUNT_ORDERS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [\

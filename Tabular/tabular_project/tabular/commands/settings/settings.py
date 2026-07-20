@@ -5,13 +5,11 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
 from tabular.service.s import S
-from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
-from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_MT5
+from tabular.util.menu.menus_allow import empty_string, allow_allways
+from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_empty, explain_MT5
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.settings.account_config import AccountConfig
-from tabular.data.symbols.symbol_info import SymbolInfomation
-from tabular.data.application_config import ApplicationConfig
+from tabular.data.base.application_config import ApplicationConfig
 from tabular.commands.settings.metatrader5 import metatrader5
 from tabular.commands.settings.database import database
 from tabular.commands.settings.accounts import accounts

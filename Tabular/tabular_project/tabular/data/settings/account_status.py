@@ -1,6 +1,6 @@
 from decimal import Decimal
 from sqlalchemy import Boolean, Column, Integer, Numeric, ForeignKey
-from tabular.data.base import Base
+from tabular.data.base.base import Base
 
 class AccountStatus(Base):
     __tablename__ = "ACCOUNT_STATUS"

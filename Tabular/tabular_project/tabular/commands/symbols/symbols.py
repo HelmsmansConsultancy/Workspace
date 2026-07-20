@@ -13,7 +13,7 @@ from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.settings.account_config import AccountConfig
 from tabular.data.symbols.symbol_info import SymbolInfomation
 from tabular.util.symbols_util import copyValuesInto
-from tabular.data.application_config import ApplicationConfig
+from tabular.data.base.application_config import ApplicationConfig
 
 console = Console()
 databaseService: DatabaseService = None

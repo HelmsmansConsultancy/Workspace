@@ -1,5 +1,5 @@
 from sqlalchemy import  Column, Integer, ForeignKey
-from tabular.data.base import Base
+from tabular.data.base.base import Base
 
 class AccountMetatraderConnection(Base):
     __tablename__ = "ACCOUNT_METATRADER_CONNECTION"
