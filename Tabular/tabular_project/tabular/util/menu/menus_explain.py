@@ -120,6 +120,46 @@ def explain_MT5(enabled:bool = True):
         message += " (Disabled)"
     return message
 
+def explain_settings_short(enabled:bool = True):
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    
+    if databaseService is not None:
+        mt5_installations = databaseService.countMetatraders()
+        if mt5_installations > 0:
+            message = f" <{mt5_installations} MT5 installation(s)>"
+        else:
+            message = " <No MT5 installations found.>"
+    else:
+        message = " <No database available>"
+
+    connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
+    if bool(connected_mt5):
+        message += f" <Connected to: {connected_mt5.name}>"
+    else:
+        message += " <Not connected>"
+    
+    if not enabled:
+        message += " (Disabled)"
+
+    if databaseService is not None:
+        accounts = databaseService.countAccounts()
+        if accounts > 0:
+            message += f" <{accounts} account(s)>"
+        else:
+            message += " <No accounts>"
+    else:
+        message += "<No database available>"
+
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    if bool(connected_account):
+        message += f" <Connected with: {connected_account.name}>"
+    else:
+        message += " <Not connected>"
+    
+    if not enabled:
+        message += " (Disabled)"
+    return message
+
 
 def explain_settings(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
