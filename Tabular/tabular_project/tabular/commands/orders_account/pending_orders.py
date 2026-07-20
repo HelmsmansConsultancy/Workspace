@@ -14,7 +14,7 @@ from tabular.data.orders.pending_order import PendingOrder
 from tabular.data.orders.generic_order import GenericOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.order.generic_order_util import copyValuesIntoGenericOrder
-from tabular.util.symbols_util import getSymbolFromName
+from tabular.util.util.symbols_util import getSymbolFromName
 from MetaTrader5 import TradeOrder
 
 console = Console()

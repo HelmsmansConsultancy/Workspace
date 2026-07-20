@@ -1,7 +1,7 @@
 from tabular.data.base.base import Base
 from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey, String
 from decimal import Decimal
-from tabular.util.price_util import fmt_price
+from tabular.util.util.price_util import fmt_price
 
 
 class GenericOrder(Base):

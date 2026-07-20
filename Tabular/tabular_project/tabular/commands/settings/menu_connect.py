@@ -3,8 +3,8 @@ import MetaTrader5 as mt5
 import psutil
 from rich.console import Console
 from tabular.service.s import S
-from ..service.singleton_service import SingletonService
-from ..data.settings.account_config import AccountConfig
+from ...service.singleton_service import SingletonService
+from ...data.settings.account_config import AccountConfig
 
 console = Console()
 

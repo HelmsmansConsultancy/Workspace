@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Callable
 from rich.console import Console
 from tabular.service.s import S
-from tabular.util.file_utils import pick_file
+from tabular.util.util.file_utils import pick_file
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_metatraders
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu

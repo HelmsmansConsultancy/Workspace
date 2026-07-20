@@ -7,7 +7,7 @@ from tabular.service.s import S
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account, no_accounts
 from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_pending_orders, explain_open_positions, explain_symbols, explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
-from tabular.util.file_utils import determine_new_file
+from tabular.util.util.file_utils import determine_new_file
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 
