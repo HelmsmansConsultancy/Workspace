@@ -6,3 +6,4 @@ tickdata.egg-info
 *.db
 /build
 /dist
+/.venv
