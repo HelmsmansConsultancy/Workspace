@@ -77,7 +77,7 @@ def current_pending_orders():
     return ["", "", generic_orders.callback.__name__.replace("_", "-")]
 
 @click.command()
-def list__pending_orders():
+def list_pending_orders():
     """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
@@ -91,9 +91,32 @@ def list__pending_orders():
     else:
         click.echo("No database")
 
+@click.command()
+def delete_pending_order():
+    """ Delete orders"""
+    global databaseService
+    global metatrader5Service
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    if len(pendingOrders) == 0:
+        click.echo("No Pending Orders found.")
+        return
+    
+    click.echo("Select an order to delete:")
+    for index, order in enumerate(pendingOrders, start=1):
+        click.echo(f"{index}. {order}")
+
+    choice = click.prompt("Enter the number of the Order to delete", type=int)
+    if 1 <= choice <= len(pendingOrders):
+        orderToDelete: SpecificPendingOrder = pendingOrders[choice - 1]
+        metatrader5Service.deletePendingOrder(orderToDelete.ticket)
+        databaseService.deleteSpecificPendingOrder(orderToDelete)
+        click.echo(f"Deleted {orderToDelete}")
+
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'Get current orders', current_pending_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_empty, 'List current orders', list__pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'List current orders', list_pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Delete current order', delete_pending_order.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
@@ -133,4 +156,5 @@ def pending_orders(ctx: click.Context):
             return result
 
 pending_orders.add_command(current_pending_orders)
-pending_orders.add_command(list__pending_orders)
+pending_orders.add_command(list_pending_orders)
+pending_orders.add_command(delete_pending_order)

@@ -27,6 +27,19 @@ class Metatrader5Service():
         else:
             return None
 
+    def deletePendingOrder(self, ticket : int) -> None:
+        request = {
+            "action": meta_trader_5.TRADE_ACTION_REMOVE,
+            "order":  ticket,   # int: the pending order's ticket
+        }
+
+        result = meta_trader_5.order_send(request)
+        
+        if result.retcode != meta_trader_5.TRADE_RETCODE_DONE:
+            print(f"Delete failed: retcode={result.retcode}, comment={result.comment}")
+        else:
+            print(f"Order {ticket} removed.")
+
     def placePendingOrder(self, pendingOrder: SpecificPendingOrder) -> SpecificPendingOrder:
         if not meta_trader_5.symbol_select(pendingOrder.symbol, True):
             return None

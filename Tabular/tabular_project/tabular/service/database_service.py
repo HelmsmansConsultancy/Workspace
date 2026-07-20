@@ -54,6 +54,11 @@ class DatabaseService():
             ).first()
             self.console.print(f"Found in DB: {found}")
             return found
+        
+    def deleteSpecificPendingOrder(self, order: SpecificPendingOrder) -> None:
+        self.console.print(f"Deleting {order}")
+        with Session(self.engine) as session:
+            session.delete(order)
 
     def listTables(self) -> list[str]:
         inspector = inspect(self.engine)
