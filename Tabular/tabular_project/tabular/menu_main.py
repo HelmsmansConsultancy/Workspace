@@ -8,10 +8,10 @@ from tabular.commands.settings.settings import settings
 from tabular.commands.orders_account.menu_closed_deal import trade_deals
 from tabular.commands.settings.settings import settings
 from tabular.commands.symbols.symbols import symbols
-from tabular.commands.orders_account.menu_account_orders import account_orders
-from tabular.commands.orders_generic.overview_orders import overview_orders
+from tabular.commands.orders_account.menu_account_orders import menu_account_orders
+from tabular.commands.orders_generic.menu_generic_orders import menu_generic_orders
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menu.menus_explain import explain_symbols, explain_empty, explain_settings_short, explain_generic_orders, explain_account_orders
+from tabular.util.menu.menus_explain import explain_symbols, explain_empty, explain_settings_short, explain_generic_orders, explain_specific_orders
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.service.s import S
 from tabular.service.singleton_service import SingletonService
@@ -37,8 +37,8 @@ def exit():
 SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [allow_allways, explain_settings_short, 'Settings', settings.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_symbols, 'Symbols', symbols.callback.__name__.replace("_", "-"), ],
-    [allow_allways, explain_generic_orders, 'Generic Order', overview_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_account_orders, 'Account Order', account_orders.callback.__name__.replace("_", "-"), ],
+    [allow_allways, explain_generic_orders, 'Generic Order', menu_generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_specific_orders, 'Account Order', menu_account_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Trade Deals', trade_deals.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty, 'Exit nicely', exit.callback.__name__.replace("_", "-"), ]
 ]
@@ -96,8 +96,8 @@ def main(ctx: click.Context, db_file: str):
 
 main.add_command(settings)
 main.add_command(symbols)
-main.add_command(overview_orders)
-main.add_command(account_orders)
+main.add_command(menu_generic_orders)
+main.add_command(menu_account_orders)
 main.add_command(trade_deals)
 main.add_command(exit)
 

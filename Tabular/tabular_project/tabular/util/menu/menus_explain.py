@@ -65,13 +65,13 @@ def explain_generic_orders(enabled = True):
 
     return message
 
-def explain_account_orders(enabled = True):
+def explain_specific_orders(enabled = True):
     connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     message = ""
     if bool(connected_account):
-        pending_orders = databaseService.countPendingOrders(connected_account.id)
-        open_positions = databaseService.countOpenPositions(connected_account.id)
+        pending_orders = databaseService.countSpecificPendingOrders(connected_account.id)
+        open_positions = databaseService.countSpecificOpenPositions(connected_account.id)
         if pending_orders > 0:
             message += f"\t\t<{pending_orders} pending order(s)>"
         else:
@@ -85,11 +85,23 @@ def explain_account_orders(enabled = True):
         message += f"\t\t<No database available>"
     return message
 
-def explain_pending_orders(enabled:bool = True):
+def explain_generic_pending_orders(enabled:bool = True):
     connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     if bool(connected_account):
-        pending_orders = databaseService.countPendingOrders(connected_account.id)
+        pending_orders = databaseService.countSpecificPendingOrders(connected_account.id)
+        if pending_orders > 0:
+            message = f"\t\t<{pending_orders} pending order(s)>"
+        else:
+            message = f"\t\t<No pending orders>"
+    else:
+        message = f"\t\t<No database available>"
+    return message
+
+def explain_generic_pending_orders(enabled:bool = True):
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    if bool(databaseService):
+        pending_orders = databaseService.countGenericPendingOrders()
         if pending_orders > 0:
             message = f"\t\t<{pending_orders} pending order(s)>"
         else:
@@ -221,11 +233,24 @@ def explain_symbols(enabled:bool = True):
         message = f"\t\t\t<No database available>"
     return message
 
-def explain_open_positions(enabled:bool = True):
+def explain_specific_open_positions(enabled:bool = True):
     connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     if bool(connected_account):
-        openPositions = databaseService.countOpenPositions(connected_account.id)
+        openPositions = databaseService.countSpecificOpenPositions(connected_account.id)
+        if openPositions > 0:
+            message = f"\t\t<{openPositions} open position(s)>"
+        else:
+            message = f"\t\t<No open positions>"
+    else:
+        message = f"\t\t<No database available>"
+    return message
+
+
+def explain_generic_open_positions(enabled:bool = True):
+    databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
+    if bool(databaseService):
+        openPositions = databaseService.countGenericOpenPositions()
         if openPositions > 0:
             message = f"\t\t<{openPositions} open position(s)>"
         else:

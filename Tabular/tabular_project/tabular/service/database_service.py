@@ -189,12 +189,16 @@ class DatabaseService():
             count = session.query(GenericPendingOrder).count()
             return count
 
-    
-    def countPendingOrders(self, accountId) -> int:
+    def countSpecificPendingOrders(self, accountId) -> int:
         with Session(self.engine) as session:
             count = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).count()
             return count
         
+    def countGenericPendingOrders(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(GenericPendingOrder).count()
+            return count
+
     def getPendingOrders(self, accountId) -> list[SpecificPendingOrder]:
         with Session(self.engine) as session:  
             pendingOrders = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).all()
@@ -221,9 +225,14 @@ class DatabaseService():
                 session.delete(order)
             session.commit()
             
-    def countOpenPositions(self, accountId) -> int:
+    def countSpecificOpenPositions(self, accountId) -> int:
         with Session(self.engine) as session:
             count = session.query(SpecificOpenPosition).filter(SpecificOpenPosition.account_id == accountId).count()
+            return count
+        
+    def countGenericOpenPositions(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(SpecificOpenPosition).count()
             return count
         
     def countGenericPositions(self) -> int:
@@ -298,6 +307,10 @@ class DatabaseService():
                 session.merge(symbol)
             session.commit()
 
+    def getGenericPendingOrders(self) -> list[GenericPendingOrder]:
+        with Session(self.engine) as session:
+            orders = session.query(GenericPendingOrder).all()
+            return orders
 
 
     

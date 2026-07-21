@@ -54,6 +54,28 @@ def copy_generic_orders():
         
         metatrader5Service.placePendingOrder()
 
+
+@click.command()
+def delete_pending_order():
+    """ Delete orders"""
+    global databaseService
+    global metatrader5Service
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    pendingOrders: list[GenericPendingOrder] = databaseService.getGenericPendingOrders(connected_account.id)
+    if len(pendingOrders) == 0:
+        click.echo("No Pending Orders found.")
+        return
+    
+    click.echo("Select an order to delete:")
+    for index, order in enumerate(pendingOrders, start=1):
+        click.echo(f"{index}. {order}")
+
+    choice = click.prompt("Enter the number of the Order to delete", type=int)
+    if 1 <= choice <= len(pendingOrders):
+        orderToDelete: GenericPendingOrder = pendingOrders[choice - 1]
+        databaseService.deleteSpecificPendingOrder(orderToDelete)
+        click.echo(f"Deleted {orderToDelete}")
+
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'List generic orders', list_generic_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Copy generic orders', copy_generic_orders.callback.__name__.replace("_", "-"), ],
@@ -62,7 +84,7 @@ PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str
 
 @click.group()
 @click.pass_context
-def generic_orders(ctx: click.Context):
+def generic_pending_orders(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -101,5 +123,5 @@ def generic_orders(ctx: click.Context):
         else:
             return
 
-generic_orders.add_command(list_generic_orders)
-generic_orders.add_command(copy_generic_orders)
+generic_pending_orders.add_command(list_generic_orders)
+generic_pending_orders.add_command(copy_generic_orders)

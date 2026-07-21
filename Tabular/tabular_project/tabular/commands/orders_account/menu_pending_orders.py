@@ -16,7 +16,7 @@ from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.order.generic_order_util import copyValuesIntoGenericOrder
 from tabular.util.util.symbols_util import getSymbolFromName
 from MetaTrader5 import TradeOrder
-from tabular.commands.orders_generic.generic_orders import generic_orders
+from tabular.commands.orders_generic.generic_pending_orders import generic_pending_orders
 
 console = Console()
 databaseService: DatabaseService = None
@@ -74,7 +74,7 @@ def current_pending_orders():
     databaseService.updatePendingOrders(existingOrders)
     databaseService.addPendingOrders(newOrders)
     databaseService.removePendingOrders(removedOrders)
-    return ["", "", generic_orders.callback.__name__.replace("_", "-")]
+    return ["", "", generic_pending_orders.callback.__name__.replace("_", "-")]
 
 @click.command()
 def list_pending_orders():

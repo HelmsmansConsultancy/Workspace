@@ -54,7 +54,7 @@ OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, s
 
 @click.group()
 @click.pass_context
-def generic_positions(ctx: click.Context):
+def generic_open_positions(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -87,4 +87,4 @@ def generic_positions(ctx: click.Context):
         else:
             return result
         
-generic_positions.add_command(current_open_positions)
+generic_open_positions.add_command(current_open_positions)

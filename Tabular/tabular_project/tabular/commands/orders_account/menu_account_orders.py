@@ -5,20 +5,20 @@ from rich.console import Console
 from tabular.commands.orders_account.menu_pending_orders import pending_orders
 from tabular.commands.orders_account.menu_open_positions import specific_open_positions
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menu.menus_explain import explain_pending_orders, explain_open_positions, explain_empty
+from tabular.util.menu.menus_explain import explain_generic_pending_orders, explain_specific_open_positions, explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 
 console = Console()
 
 ACCOUNT_ORDERS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [\
-    [no_active_account, explain_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_open_positions, 'Open Position', specific_open_positions.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_generic_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_specific_open_positions, 'Open Position', specific_open_positions.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def account_orders(ctx):
+def menu_account_orders(ctx):
     choice = None
     while True:
         click.echo(empty_string)
@@ -40,5 +40,5 @@ def account_orders(ctx):
         else:
             return
 
-account_orders.add_command(pending_orders)
-account_orders.add_command(specific_open_positions)
+menu_account_orders.add_command(pending_orders)
+menu_account_orders.add_command(specific_open_positions)

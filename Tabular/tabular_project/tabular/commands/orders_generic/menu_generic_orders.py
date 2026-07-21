@@ -1,24 +1,24 @@
 import click
 from typing import Callable 
 from rich.console import Console
-from tabular.commands.orders_generic.generic_orders import generic_orders
-from tabular.commands.orders_generic.generic_positions import generic_positions
+from tabular.commands.orders_generic.generic_pending_orders import generic_pending_orders
+from tabular.commands.orders_generic.generic_open_positions import generic_open_positions
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menu.menus_explain import explain_pending_orders, explain_open_positions, explain_symbols, explain_empty, explain_settings
+from tabular.util.menu.menus_explain import explain_generic_pending_orders, explain_generic_open_positions, explain_empty, explain_settings
 from tabular.util.menu.menus_utils import interactive_menu
 
 console = Console()
 
 ACCOUNT_ORDERS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [\
-    [no_active_account, explain_pending_orders, 'Pending Orders', generic_orders.callback.__name__.replace("_", "-"), ],
-    [no_active_account, explain_open_positions, 'Open Position', generic_positions.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_generic_pending_orders, 'Pending Orders', generic_pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_generic_open_positions, 'Open Position', generic_open_positions.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
 
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def overview_orders(ctx):
+def menu_generic_orders(ctx):
     choice = None
     while True:
         click.echo(empty_string)
@@ -36,5 +36,5 @@ def overview_orders(ctx):
         else:
             return
 
-overview_orders.add_command(generic_orders)
-overview_orders.add_command(generic_positions)
+menu_generic_orders.add_command(generic_pending_orders)
+menu_generic_orders.add_command(generic_open_positions)
