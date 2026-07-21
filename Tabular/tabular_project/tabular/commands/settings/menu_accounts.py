@@ -1,6 +1,6 @@
 import click
 import os
-from pathlib import Path
+# from pathlib import Path
 from decimal import Decimal, ROUND_HALF_UP
 from MetaTrader5 import AccountInfo
 from typing import Callable 
@@ -250,7 +250,7 @@ def accounts(ctx: click.Context):
         
         if bool(choice):
             next_menu = ctx.invoke(ctx.command.commands[choice])
-            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            # click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
                 return next_menu
             else: 

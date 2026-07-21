@@ -85,7 +85,7 @@ def explain_specific_orders(enabled = True):
         message += f"\t\t<No database available>"
     return message
 
-def explain_generic_pending_orders(enabled:bool = True):
+def explain_specific_pending_orders(enabled:bool = True):
     connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     if bool(connected_account):
@@ -138,15 +138,15 @@ def explain_settings_short(enabled:bool = True):
     if databaseService is not None:
         mt5_installations = databaseService.countMetatraders()
         if mt5_installations > 0:
-            message = f" <{mt5_installations} MT5 installation(s)>"
+            message = f" <{mt5_installations} MT5(s)>"
         else:
-            message = " <No MT5 installations found.>"
+            message = " <No MT5(s)>"
     else:
-        message = " <No database available>"
+        message = " <No database>"
 
     connected_mt5: MetatraderConfig | None = SingletonService().get(S.CONNECTED_MT5)
     if bool(connected_mt5):
-        message += f" <Connected to: {connected_mt5.name}>"
+        message += f" <Connected: {connected_mt5.name}>"
     else:
         message += " <Not connected>"
     
@@ -164,7 +164,7 @@ def explain_settings_short(enabled:bool = True):
 
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     if bool(connected_account):
-        message += f" <Connected with: {connected_account.name}>"
+        message += f" <Connected: {connected_account.name:.30}>"
     else:
         message += " <Not connected>"
     

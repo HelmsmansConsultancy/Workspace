@@ -33,10 +33,10 @@ class SpecificPendingOrder(Base):
         pass
 
     def __repr__(self):
-        return f"<SpecificPendingOrder(id={self.id}, account_id='{self.account_id}', symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{fmt_price(self.volune, 2)}', digits'={self.digits}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
+        return f"<SpecificPendingOrder(id={self.id}, account_id='{self.account_id}', symbol='{self.symbol}', symbol_id='{self.symbol_id}', ticket='{self.ticket}', volume='{fmt_price(self.volune, 2)}', digits'={self.digits}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}', magic='{self.magic}', comment='{self.comment}', external_id='{self.external_id}', type_order='{self.type_order}', type_time='{self.type_time}, type_filling='{self.type_filling}')>"
     
     def __str__(self):
-        return f"<SPO(ticket='{self.ticket}' symbol_id='{self.symbol_id}', volume='{fmt_price(self.volume, 2)}', digits'={self.digits}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}' )>"
+        return f"<SPO(ticket='{self.ticket}'symbol='{self.symbol}', volume='{fmt_price(self.volume, 2)}', digits'={self.digits}', entry='{fmt_price(self.entry, self.digits)}', sl='{fmt_price(self.sl, self.digits)}', tp='{fmt_price(self.tp, self.digits)}' )>"
     
     
 

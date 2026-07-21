@@ -153,7 +153,7 @@ def metatrader5(ctx):
         
         if bool(choice):
             next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
-            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            # click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
                     return next_menu
             else: 

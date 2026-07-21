@@ -6,7 +6,8 @@ from tabular.service.singleton_service import SingletonService
 from tabular.service.s import S
 from rich.console import Console
 from MetaTrader5 import AccountInfo, TerminalInfo, TradeOrder, TradePosition, SymbolInfo
-from tabular.data.orders.specific_pending_order import SpecificPendingOrder
+from tabular.data.orders.generic_pending_order import GenericPendingOrder
+from tabular.util.util.price_util import to_decimal
 
 console = Console()
 
@@ -40,33 +41,36 @@ class Metatrader5Service():
         else:
             print(f"Order {ticket} removed.")
 
-    def placePendingOrder(self, pendingOrder: SpecificPendingOrder) -> SpecificPendingOrder:
-        if not meta_trader_5.symbol_select(pendingOrder.symbol, True):
+    def placePendingOrder(self, spo: GenericPendingOrder) -> TradeOrder:
+        if not meta_trader_5.symbol_select(spo.symbol, True):
             return None
         
         request = {
-            "action": meta_trader_5.TRADE_ACTION_PENDING,       # pending order, not market execution
-            "symbol": pendingOrder.symbol,
-            "volume": pendingOrder.volume,                             # lot size
-            "type": meta_trader_5.ORDER_TYPE_BUY_LIMIT,          # order type (see options below)
-            "price": pendingOrder.entry,       # the pending price level
-            "sl": pendingOrder.sl,         # stop loss (optional)
-            "tp": pendingOrder.tp,          # take profit (optional)
+            "action": meta_trader_5.TRADE_ACTION_PENDING,
+            "symbol": spo.symbol,
+            "volume": float(to_decimal(spo.volume, 2)),
+            "type": meta_trader_5.ORDER_TYPE_BUY_LIMIT if spo.isBuy() else meta_trader_5.ORDER_TYPE_SELL_LIMIT, 
+            "price": float(to_decimal(spo.entry, spo.digits)),
+            "sl": float(to_decimal(spo.sl, spo.digits)),
+            "tp": float(to_decimal(spo.tp, spo.digits)), 
             "deviation": 0,
-            "magic": pendingOrder.magic,                           # your EA/script identifier
-            "comment": pendingOrder.comment,
-            "type_time": meta_trader_5.ORDER_TIME_GTC,           # good till cancelled
+            "magic": spo.magic,                         
+            "comment": spo.comment,
+            "type_time": meta_trader_5.ORDER_TIME_GTC,        
             "type_filling": meta_trader_5.ORDER_FILLING_RETURN,
         }
+        self.console.print(f"{request}")
         
         result = meta_trader_5.order_send(request)
         
-        if result.retcode != meta_trader_5.TRADE_RETCODE_DONE:
-            print(f"Order failed, retcode={result.retcode}")
+        if result.retcode == meta_trader_5.TRADE_RETCODE_DONE:
             print(result)
+            orders = meta_trader_5.orders_get(ticket=result.order)
+            trade_order = orders[0] if orders else None
+            return trade_order
         else:
-            print(f"Pending order placed! Ticket: {result.order}")
-            return pendingOrder
+            print(f"Order failed, retcode={result.retcode}")
+            return
 
     def getSymbolInfo(self, accountId: int) -> list[SymbolInfo]:
         # get the SymbolInfo

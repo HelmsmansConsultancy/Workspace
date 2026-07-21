@@ -2,17 +2,17 @@ from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from MetaTrader5 import TradeOrder
 from types import SimpleNamespace
 
-def copyValuesIntoPendingOrder(tradeOrder: TradeOrder, pendingOrder: SpecificPendingOrder):
+def copyValuesIntoPendingOrder(tradeOrder: TradeOrder, spo: SpecificPendingOrder):
     d = SimpleNamespace(**tradeOrder._asdict())
-    pendingOrder.ticket=d.ticket
-    pendingOrder.magic=d.magic
-    pendingOrder.type_order=d.type
-    pendingOrder.type_time=d.type_time
-    pendingOrder.type_filling=d.type_filling
+    spo.ticket=d.ticket
+    spo.magic=d.magic
+    spo.type_order=d.type
+    spo.type_time=d.type_time
+    spo.type_filling=d.type_filling
     # pendingOrder.digits=d.digits There are no digits in tradeorder
-    pendingOrder.entry=d.price_open
-    pendingOrder.sl=d.sl
-    pendingOrder.tp=d.tp
-    pendingOrder.volume=d.volume_current
-    pendingOrder.comment=d.comment
-    pendingOrder.external_id=d.external_id
+    spo.entry=d.price_open
+    spo.sl=d.sl
+    spo.tp=d.tp
+    spo.volume=d.volume_current
+    spo.comment=d.comment
+    spo.external_id=d.external_id

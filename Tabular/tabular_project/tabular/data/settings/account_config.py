@@ -28,6 +28,6 @@ class AccountConfig(Base):
         return f"<AccountConfig(id={self.id}, login={self.account_login}, name='{self.name}', password='{bool(self.password)}', server='{self.server}', currency='{self.currency}', company='{self.company}')>"
     
     def __str__(self):
-        return f"<AccountConfig(id={self.id}, login={self.account_login}, name='{self.name}')>"
+        return f"<AccountConfig(id={self.id}, login={self.account_login}, name='{self.name:.20}')>"
     
     

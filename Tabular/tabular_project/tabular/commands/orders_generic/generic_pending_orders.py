@@ -1,5 +1,5 @@
 import click
-from pathlib import Path
+# from pathlib import Path
 from rich.console import Console
 from typing import Callable
 from tabular.service.singleton_service import SingletonService
@@ -11,6 +11,11 @@ from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.orders.generic_pending_order import GenericPendingOrder
+from MetaTrader5 import  TradeOrder
+from tabular.data.orders.specific_pending_order import SpecificPendingOrder
+from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
+from tabular.util.util.symbols_util import getSymbolFromName
+from tabular.data.symbols.symbol_info import SymbolInfomation
 
 console = Console()
 databaseService: DatabaseService = None
@@ -52,7 +57,21 @@ def copy_generic_orders():
         orderToPlace: GenericPendingOrder = genericOrders[choice - 1]
         databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
         
-        metatrader5Service.placePendingOrder()
+        tradeOrder: TradeOrder = metatrader5Service.placePendingOrder(orderToPlace)
+        
+        newOrder = SpecificPendingOrder()
+        newOrder.generic_id = orderToPlace.id
+        newOrder.account_id = connected_account.id
+
+        copyValuesIntoPendingOrder(tradeOrder, newOrder)
+
+        symbol = getSymbolFromName(tradeOrder.symbol)
+        symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
+        newOrder.symbol_id = symbolInfomation.id
+        newOrder.digits = symbolInfomation.digits
+        newOrder.symbol = symbolInfomation.symbol
+
+        databaseService.addPendingOrders([newOrder])
 
 
 @click.command()
@@ -61,7 +80,7 @@ def delete_pending_order():
     global databaseService
     global metatrader5Service
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    pendingOrders: list[GenericPendingOrder] = databaseService.getGenericPendingOrders(connected_account.id)
+    pendingOrders: list[GenericPendingOrder] = databaseService.getGenericPendingOrders()
     if len(pendingOrders) == 0:
         click.echo("No Pending Orders found.")
         return
@@ -112,7 +131,7 @@ def generic_pending_orders(ctx: click.Context):
 
         if bool(choice):
             next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
-            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            # click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
                 if len(next_menu) > 1:
                     return next_menu[1:]

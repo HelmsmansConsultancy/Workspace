@@ -56,7 +56,6 @@ class DatabaseService():
             return found
         
     def deleteSpecificPendingOrder(self, order: SpecificPendingOrder) -> None:
-        self.console.print(f"Deleting {order}")
         with Session(self.engine) as session:
             session.delete(order)
 
@@ -221,7 +220,6 @@ class DatabaseService():
     def removePendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
-                # self.console.print(f"deleting: {order}")
                 session.delete(order)
             session.commit()
             
@@ -263,7 +261,6 @@ class DatabaseService():
     def removeOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
         with Session(self.engine) as session:
             for position in openPositions:
-                # self.console.print(f"deleting: {position}")
                 session.delete(position)
             session.commit()
 

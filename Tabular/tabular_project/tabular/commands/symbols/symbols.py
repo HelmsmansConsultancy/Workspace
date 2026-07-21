@@ -1,5 +1,5 @@
 import click
-from pathlib import Path
+# from pathlib import Path
 from rich.console import Console
 from typing import Callable
 from MetaTrader5 import SymbolInfo
@@ -108,7 +108,7 @@ def symbols(ctx: click.Context):
         result = None
         if bool(choice):
             next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
-            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            # click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
                 if len(next_menu) > 1:
                     return next_menu[1:]

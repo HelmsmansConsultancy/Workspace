@@ -1,17 +1,17 @@
 import click
-from pathlib import Path
+# from pathlib import Path
 from typing import Callable 
 from rich.console import Console
-from tabular.commands.orders_account.menu_pending_orders import pending_orders
+from tabular.commands.orders_account.menu_pending_orders import specific_pending_orders
 from tabular.commands.orders_account.menu_open_positions import specific_open_positions
 from tabular.util.menu.menus_allow import empty_string, allow_allways, no_active_account
-from tabular.util.menu.menus_explain import explain_generic_pending_orders, explain_specific_open_positions, explain_empty
+from tabular.util.menu.menus_explain import explain_specific_pending_orders, explain_specific_open_positions, explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 
 console = Console()
 
 ACCOUNT_ORDERS_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [\
-    [no_active_account, explain_generic_pending_orders, 'Pending Orders', pending_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_specific_pending_orders, 'Pending Orders', specific_pending_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_specific_open_positions, 'Open Position', specific_open_positions.callback.__name__.replace("_", "-"), ],
     [allow_allways, explain_empty, 'Return to previous menu', None, ]
 ]
@@ -29,7 +29,7 @@ def menu_account_orders(ctx):
         
         if bool(choice):
             next_menu: list[str] = ctx.invoke(ctx.command.commands[choice])
-            click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
+            # click.echo(f"Next_menu {Path(__file__).name}: {next_menu}")
             if bool(next_menu):
                 if len(next_menu) > 1:
                     return next_menu[1:]
@@ -40,5 +40,5 @@ def menu_account_orders(ctx):
         else:
             return
 
-menu_account_orders.add_command(pending_orders)
+menu_account_orders.add_command(specific_pending_orders)
 menu_account_orders.add_command(specific_open_positions)

@@ -47,7 +47,7 @@ def current_pending_orders():
             newOrder.account_id = connected_account.id
 
             copyValuesIntoPendingOrder(tradeOrder, newOrder)
-
+            click.echo(f"Ticket {tradeOrder.ticket}")
             symbol = getSymbolFromName(tradeOrder.symbol)
             symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
             newOrder.symbol_id = symbolInfomation.id
@@ -60,6 +60,7 @@ def current_pending_orders():
                 newOrder.generic_id = genericOrder.id
             else:
                 genericOrder: GenericPendingOrder = GenericPendingOrder()
+                
                 copyValuesIntoGenericOrder(tradeOrder, genericOrder)
                 genericOrder.symbol_id = symbolInfomation.id
                 genericOrder.symbol = symbolInfomation.symbol
@@ -122,7 +123,7 @@ PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str
 
 @click.group()
 @click.pass_context
-def pending_orders(ctx: click.Context):
+def specific_pending_orders(ctx: click.Context):
     """Status of pending orders."""
     global databaseService
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
@@ -155,6 +156,6 @@ def pending_orders(ctx: click.Context):
         else:
             return result
 
-pending_orders.add_command(current_pending_orders)
-pending_orders.add_command(list_pending_orders)
-pending_orders.add_command(delete_pending_order)
+specific_pending_orders.add_command(current_pending_orders)
+specific_pending_orders.add_command(list_pending_orders)
+specific_pending_orders.add_command(delete_pending_order)
