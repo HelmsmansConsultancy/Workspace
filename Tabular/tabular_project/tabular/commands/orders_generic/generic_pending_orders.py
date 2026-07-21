@@ -37,6 +37,28 @@ def list_generic_orders():
         click.echo("No database")
 
 @click.command()
+def change_volume():
+    """ Change volume """
+    global databaseService 
+
+    genericOrders: list[GenericPendingOrder] = databaseService.getGenericOrders()
+    if len(genericOrders) == 0:
+        click.echo("No Generic Orders found.")
+        return
+
+    click.echo("Select an Order to Copy:")
+    for index, order in enumerate(genericOrders, start=1):
+        click.echo(f"{index}. {order}")
+
+    choice = click.prompt("Enter the number of the Account to connect to", type=int)
+    if 1 <= choice <= len(genericOrders):
+        orderToChange: GenericPendingOrder = genericOrders[choice - 1]
+        volume = float(input("Login (account number): ").strip())
+        orderToChange.volume = volume
+        databaseService.updatePendingOrders([orderToChange])
+        click.echo(f"Order changed: {orderToChange}")
+
+@click.command()
 def copy_generic_orders():
     """ Copy a generic pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
@@ -52,26 +74,29 @@ def copy_generic_orders():
     for index, order in enumerate(genericOrders, start=1):
         click.echo(f"{index}. {order}")
 
-    choice = click.prompt("Enter the number of the Account to connect to", type=int)
+    choice = click.prompt("Enter the number of the Trade to Copy", type=int)
     if 1 <= choice <= len(genericOrders):
         orderToPlace: GenericPendingOrder = genericOrders[choice - 1]
-        databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
+        symbolInformation : SymbolInfomation =databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
+        click.echo(empty_string)
+        click.echo(f"Trade to Copy: {orderToPlace}")
         
-        tradeOrder: TradeOrder = metatrader5Service.placePendingOrder(orderToPlace)
-        
-        newOrder = SpecificPendingOrder()
-        newOrder.generic_id = orderToPlace.id
-        newOrder.account_id = connected_account.id
+        tradeOrder: TradeOrder = metatrader5Service.placePendingOrder(orderToPlace, symbolInformation.name)
+        if bool(tradeOrder):
+            click.echo(f"Placed order {tradeOrder}")
+            newOrder = SpecificPendingOrder()
+            newOrder.generic_id = orderToPlace.id
+            newOrder.account_id = connected_account.id
 
-        copyValuesIntoPendingOrder(tradeOrder, newOrder)
+            copyValuesIntoPendingOrder(tradeOrder, newOrder)
 
-        symbol = getSymbolFromName(tradeOrder.symbol)
-        symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
-        newOrder.symbol_id = symbolInfomation.id
-        newOrder.digits = symbolInfomation.digits
-        newOrder.symbol = symbolInfomation.symbol
+            symbol = getSymbolFromName(tradeOrder.symbol)
+            symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
+            newOrder.symbol_id = symbolInfomation.id
+            newOrder.digits = symbolInfomation.digits
+            newOrder.symbol = symbolInfomation.symbol
 
-        databaseService.addPendingOrders([newOrder])
+            databaseService.addPendingOrders([newOrder])
 
 
 @click.command()
@@ -97,6 +122,7 @@ def delete_pending_order():
 
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'List generic orders', list_generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Change volume', change_volume.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Copy generic orders', copy_generic_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
@@ -143,4 +169,5 @@ def generic_pending_orders(ctx: click.Context):
             return
 
 generic_pending_orders.add_command(list_generic_orders)
+generic_pending_orders.add_command(change_volume)
 generic_pending_orders.add_command(copy_generic_orders)

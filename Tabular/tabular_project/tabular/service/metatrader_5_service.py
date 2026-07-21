@@ -31,8 +31,9 @@ class Metatrader5Service():
     def deletePendingOrder(self, ticket : int) -> None:
         request = {
             "action": meta_trader_5.TRADE_ACTION_REMOVE,
-            "order":  ticket,   # int: the pending order's ticket
+            "order":  ticket,
         }
+        self.console.print(f"{request}")
 
         result = meta_trader_5.order_send(request)
         
@@ -41,13 +42,14 @@ class Metatrader5Service():
         else:
             print(f"Order {ticket} removed.")
 
-    def placePendingOrder(self, spo: GenericPendingOrder) -> TradeOrder:
-        if not meta_trader_5.symbol_select(spo.symbol, True):
+    def placePendingOrder(self, spo: GenericPendingOrder, symbol: str) -> TradeOrder:
+        self.console.print(f"Symbol Selected {symbol}")
+        if not meta_trader_5.symbol_select(symbol, True):
             return None
-        
+
         request = {
             "action": meta_trader_5.TRADE_ACTION_PENDING,
-            "symbol": spo.symbol,
+            "symbol": symbol,
             "volume": float(to_decimal(spo.volume, 2)),
             "type": meta_trader_5.ORDER_TYPE_BUY_LIMIT if spo.isBuy() else meta_trader_5.ORDER_TYPE_SELL_LIMIT, 
             "price": float(to_decimal(spo.entry, spo.digits)),
