@@ -146,13 +146,6 @@ class DatabaseService():
         with Session(self.engine) as session:
             session.delete(order)
 
-
-    def removeOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
-        with Session(self.engine) as session:
-            for position in openPositions:
-                session.delete(position)
-            session.commit()
-
     def deleteMetatrader(self, metatraderId: int) -> None:
         with Session(self.engine) as session:
             metatrader = session.query(MetatraderConfig).filter(MetatraderConfig.id == metatraderId).first()
@@ -160,6 +153,18 @@ class DatabaseService():
                 session.delete(metatrader)
                 session.commit()
 
+    def removeSpecificOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
+        with Session(self.engine) as session:
+            for position in openPositions:
+                session.delete(position)
+            session.commit()
+
+    def removeSpecificPendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
+        with Session(self.engine) as session:
+            for order in pendingOrders:
+                session.delete(order)
+            session.commit()
+     
 
 ########################################
 #
@@ -256,7 +261,7 @@ class DatabaseService():
 #
 #########################################
 
-    def listSpecificPendingOrder(self, accountId) -> list[SpecificPendingOrder]:
+    def listSpecificPendingOrderByAccount(self, accountId) -> list[SpecificPendingOrder]:
         with Session(self.engine) as session:  
             pendingOrders = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).all()
             return pendingOrders
@@ -266,6 +271,11 @@ class DatabaseService():
             accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.account_id==accountId).all()
             return accountMetatraderConnections
 
+    def listSpecificSymbolInfomationsByAccount(self, accountId: int) -> list[SpecificSymbolInfomation]:
+        with Session(self.engine) as session:
+            symbolInfomations = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId).all()
+            return symbolInfomations
+        
 
 ########################################
 #
@@ -291,6 +301,16 @@ class DatabaseService():
             metatraders = session.query(MetatraderConfig).filter(MetatraderConfig.path == metatraderPath).all()
             return metatraders
     
+    def findAccountConfigById(self, account_id: int) -> AccountConfig | None:
+        with Session(self.engine) as session:
+            account_config = session.get(AccountConfig, account_id)
+            return account_config
+        
+    def findAccountStatusByAccountId(self, account_id: int) -> AccountStatus:
+        with Session(self.engine) as session:
+            account_state = session.query(AccountStatus).filter(AccountStatus.account_id == account_id).first()
+            return account_state
+    
 
 
 ########################################
@@ -313,22 +333,12 @@ class DatabaseService():
             return found
 
      
-    def getAccountStatus(self, account_id: int) -> AccountStatus:
-        with Session(self.engine) as session:
-            account_state = session.query(AccountStatus).filter(AccountStatus.account_id == account_id).first()
-            return account_state
-    
 
-    def find_account_by_login_and_company(self, accountLogin: int, company: str) -> AccountConfig | None:
+    def findAccountConfigByLoginAndCompany(self, accountLogin: int, company: str) -> AccountConfig | None:
         with Session(self.engine) as session:
             account_config = session.query(AccountConfig).filter(AccountConfig.account_login==accountLogin, AccountConfig.company==company).first()
             return account_config
 
-    def getAccount(self, account_id: int) -> AccountConfig | None:
-        with Session(self.engine) as session:
-            account_config = session.get(AccountConfig, account_id)
-            return account_config
-        
         
     def addAccountMetatraderConnection(self, accountMetatraderConnection: AccountMetatraderConnection):
         with Session(self.engine) as session:
@@ -339,13 +349,7 @@ class DatabaseService():
         with Session(self.engine) as session:
             connection: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.account_id==accountId, AccountMetatraderConnection.metatrader_id==metatraderId).first()
             return connection
-
-    def removePendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
-        with Session(self.engine) as session:
-            for order in pendingOrders:
-                session.delete(order)
-            session.commit()
-        
+   
 
           
     def getTradeDeals(self, accountId) -> list[SpecificOpenPosition]:
@@ -354,11 +358,6 @@ class DatabaseService():
             return openPositions
 
 
-    def getSymbolInformation(self, accountId: int) -> list[SpecificSymbolInfomation]:
-        with Session(self.engine) as session:
-            symbolInfomations = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId).all()
-            return symbolInfomations
-        
     def getSymbolInformationBySymbol(self, accountId: int, symbol: str) -> SpecificSymbolInfomation:
         with Session(self.engine) as session:
             symbol: SpecificSymbolInfomation = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId, SpecificSymbolInfomation.symbol == symbol).first()

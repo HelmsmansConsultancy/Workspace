@@ -104,7 +104,7 @@ def create_pending_order():
     """ Manually create a pending order"""
     global databaseService
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    symbolInformations: list[SpecificSymbolInfomation] = databaseService.getSymbolInformation(connected_account.id)
+    symbolInformations: list[SpecificSymbolInfomation] = databaseService.listSpecificSymbolInfomationsByAccount(connected_account.id)
     if len(symbolInformations) > 0:
         for symbol in symbolInformations:
             click.echo(f"{symbol}") 

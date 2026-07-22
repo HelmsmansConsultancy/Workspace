@@ -33,7 +33,7 @@ def get_symbolinfo():
     
     connect_account = SingletonService().get(S.CONNECTED_ACCOUNT)
     symbolInfos: list[SymbolInfo] = metatrader5Service.getSymbolInfo(connect_account.id)
-    symbolInformations: list[SpecificSymbolInfomation] = databaseService.getSymbolInformation(connect_account.id)
+    symbolInformations: list[SpecificSymbolInfomation] = databaseService.listSpecificSymbolInfomationsByAccount(connect_account.id)
     newSymbols: list[SpecificSymbolInfomation] = []
     existingSymbols: list[SpecificSymbolInfomation] = []
     for symbolInfo in symbolInfos:
@@ -60,7 +60,7 @@ def list_symbolinfo():
     connected_account: AccountConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
     click.echo(empty_string)
     if bool(connected_account):
-        symbols = databaseService.getSymbolInformation(connected_account.id)
+        symbols = databaseService.listSpecificSymbolInfomationsByAccount(connected_account.id)
         if len(symbols) > 0:
             for symbol in symbols:
                 click.echo(f"{symbol}") 

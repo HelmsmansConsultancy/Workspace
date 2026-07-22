@@ -44,7 +44,7 @@ def current_open_positions():
     removedPositions = list(set(openPositions) - set(existingOrders))
     databaseService.updateSpecificOpenPositions(existingOrders)
     databaseService.saveSpecificOpenPositions(newPositions)
-    databaseService.removeOpenPositions(removedPositions)
+    databaseService.removeSpecificOpenPositions(removedPositions)
 
 OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'Get current positions', current_open_positions.callback.__name__.replace("_", "-"), ],

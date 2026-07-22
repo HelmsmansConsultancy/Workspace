@@ -136,7 +136,7 @@ def metatrader5(ctx):
                 click.echo(f"- {mt5}")
                 accountMetatraderConnections: AccountMetatraderConnection = databaseService.listAccountMetatraderConnectionByMetatrader(mt5.id)
                 for accountMetatraderConnection in accountMetatraderConnections:
-                    account = databaseService.getAccount(accountMetatraderConnection.account_id)
+                    account = databaseService.findAccountConfigById(accountMetatraderConnection.account_id)
                     click.echo(f"\t- {account}")
         else:
             click.echo("No MT5 installations found.")

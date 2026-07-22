@@ -43,7 +43,7 @@ def create_account_mt5():
         click.echo("No connected MT5 installation found. Please connect to an MT5 installation first.")
         return
     account_info: AccountInfo = metatrader5Service.getAccountInfo()
-    account_config = databaseService.find_account_by_login_and_company(account_info.login, account_info.company)
+    account_config = databaseService.findAccountConfigByLoginAndCompany(account_info.login, account_info.company)
     if bool(account_config):
         click.echo(f"Account with login {account_info.login} and company {account_info.company} already exists in the database.")
         return
@@ -115,7 +115,7 @@ def create_account_with_password():
         click.echo(f"Could not connect to metatrader with {account_login} - {'*' * len(password)} - {server}")
         return
     else:
-        account_config: AccountConfig = databaseService.find_account_by_login_and_company(account_info.login, account_info.company)
+        account_config: AccountConfig = databaseService.findAccountConfigByLoginAndCompany(account_info.login, account_info.company)
         click.echo(f"{account_config}")
         if not bool(account_config):
             account_config = AccountConfig(
@@ -129,7 +129,7 @@ def create_account_with_password():
                 trade_mode=account_info.trade_mode,
             )
             databaseService.saveAccountConfig(account_config)
-        account_status: AccountStatus = databaseService.getAccountStatus(account_config.id)
+        account_status: AccountStatus = databaseService.findAccountStatusByAccountId(account_config.id)
         click.echo(f"{account_status}")
         if not bool(account_status):
             new_account_status = AccountStatus(
@@ -195,7 +195,7 @@ def connect_account():
     if 1 <= choice <= len(account_configs):
         account_to_connect: AccountConfig = account_configs[choice - 1]
         SingletonService().put(S.CONNECTED_ACCOUNT, account_to_connect)
-        account_status: AccountStatus = databaseService.getAccountStatus(account_to_connect.id)
+        account_status: AccountStatus = databaseService.findAccountStatusByAccountId(account_to_connect.id)
         account_info: AccountInfo = metatrader5Service.getAccountInfo()
         click.echo(f"{account_status}")
         if bool(account_status):
@@ -237,7 +237,7 @@ def accounts(ctx: click.Context):
         if bool(account_configs) and len(account_configs) > 0:
             for account_config in account_configs:
                 click.echo(f"- {account_config!r}")
-                account_state = databaseService.getAccountStatus(account_config.id)
+                account_state = databaseService.findAccountStatusByAccountId(account_config.id)
                 if bool(account_state):
                     click.echo(f"\t - {account_state!r}")
         else:
