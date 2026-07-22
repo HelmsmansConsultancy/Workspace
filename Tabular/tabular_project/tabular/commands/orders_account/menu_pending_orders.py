@@ -28,7 +28,7 @@ def current_pending_orders():
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
 
     tradeOrders: list[TradeOrder] = metatrader5Service.getPendingOrders(connected_account.id)
-    pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    pendingOrders: list[SpecificPendingOrder] = databaseService.listSpecificPendingOrder(connected_account.id)
 
     existingOrders: list[SpecificPendingOrder] = []
     newOrders: list[SpecificPendingOrder] = []
@@ -72,8 +72,8 @@ def current_pending_orders():
             newOrders.append(newOrder)
     
     removedOrders = list(set(pendingOrders) - set(existingOrders))
-    databaseService.updatePendingOrders(existingOrders)
-    databaseService.addPendingOrders(newOrders)
+    databaseService.updateSpecificPendingOrder(existingOrders)
+    databaseService.saveSpecificPendingOrders(newOrders)
     databaseService.removePendingOrders(removedOrders)
     return ["", "", generic_pending_orders.callback.__name__.replace("_", "-")]
 
@@ -81,7 +81,7 @@ def current_pending_orders():
 def list_pending_orders():
     """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    pendingOrders: list[SpecificPendingOrder] = databaseService.listSpecificPendingOrder(connected_account.id)
 
     if bool(pendingOrders):
         if len(pendingOrders) > 0:
@@ -98,7 +98,7 @@ def delete_pending_order():
     global databaseService
     global metatrader5Service
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    pendingOrders: list[SpecificPendingOrder] = databaseService.getPendingOrders(connected_account.id)
+    pendingOrders: list[SpecificPendingOrder] = databaseService.listSpecificPendingOrder(connected_account.id)
     if len(pendingOrders) == 0:
         click.echo("No Pending Orders found.")
         return
@@ -135,7 +135,7 @@ def specific_pending_orders(ctx: click.Context):
     while True:
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
-            pending_orders = databaseService.getPendingOrders(connected_account.id)
+            pending_orders = databaseService.listSpecificPendingOrder(connected_account.id)
             if len(pending_orders) > 0:
                 click.echo(empty_string)
                 for pending_order in pending_orders:

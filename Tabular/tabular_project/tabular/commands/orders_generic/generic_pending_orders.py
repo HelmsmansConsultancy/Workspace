@@ -26,7 +26,7 @@ metatrader5Service: Metatrader5Service = None
 def list_generic_orders():
     """ List Pending order"""
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    genericOrders: list[GenericPendingOrder] = databaseService.getGenericOrders()
+    genericOrders: list[GenericPendingOrder] = databaseService.listGenericPendingOrder()
 
     if bool(genericOrders):
         if len(genericOrders) > 0:
@@ -42,7 +42,7 @@ def change_volume():
     """ Change volume """
     global databaseService 
 
-    genericOrders: list[GenericPendingOrder] = databaseService.getGenericOrders()
+    genericOrders: list[GenericPendingOrder] = databaseService.listGenericPendingOrder()
     if len(genericOrders) == 0:
         click.echo("No Generic Orders found.")
         return
@@ -56,7 +56,7 @@ def change_volume():
         orderToChange: GenericPendingOrder = genericOrders[choice - 1]
         volume = float(input("Volume to change to: ").strip())
         orderToChange.volume = volume
-        databaseService.updatePendingOrders([orderToChange])
+        databaseService.updateSpecificPendingOrder([orderToChange])
         click.echo(f"Order changed: {orderToChange}")
 
 @click.command()
@@ -66,7 +66,7 @@ def copy_generic_orders():
     global databaseService
     global metatrader5Service
 
-    genericOrders: list[GenericPendingOrder] = databaseService.getGenericOrders()
+    genericOrders: list[GenericPendingOrder] = databaseService.listGenericPendingOrder()
     if len(genericOrders) == 0:
         click.echo("No Generic Orders found.")
         return
@@ -97,7 +97,7 @@ def copy_generic_orders():
             newOrder.digits = symbolInfomation.digits
             newOrder.symbol = symbolInfomation.symbol
 
-            databaseService.addPendingOrders([newOrder])
+            databaseService.saveSpecificPendingOrders([newOrder])
 
 @click.command()
 def create_pending_order():
@@ -192,7 +192,7 @@ def generic_pending_orders(ctx: click.Context):
     while True:
         connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
         if bool(connected_account):
-            generic_orders = databaseService.getGenericOrders();
+            generic_orders = databaseService.listGenericPendingOrder();
             if len(generic_orders) > 0:
                 click.echo(empty_string)
                 for generic_order in generic_orders:

@@ -134,7 +134,7 @@ def metatrader5(ctx):
         if bool(mt5_installations) and len(mt5_installations) > 0:
             for mt5 in mt5_installations:
                 click.echo(f"- {mt5}")
-                accountMetatraderConnections: AccountMetatraderConnection = databaseService.list_account_metatrader_connections_by_metatrader(mt5.id)
+                accountMetatraderConnections: AccountMetatraderConnection = databaseService.listAccountMetatraderConnectionByMetatrader(mt5.id)
                 for accountMetatraderConnection in accountMetatraderConnections:
                     account = databaseService.getAccount(accountMetatraderConnection.account_id)
                     click.echo(f"\t- {account}")
