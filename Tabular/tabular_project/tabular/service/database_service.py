@@ -79,6 +79,23 @@ class DatabaseService():
 
 ########################################
 #
+#   UPDATE
+#
+#########################################
+
+    def updateAccountConfig(self,  accountConfig: AccountConfig) -> None:
+        with Session(self.engine) as session:
+            session.merge(accountConfig)
+            session.commit()
+
+    def updateAccountStatus(self,  accountStatus: AccountStatus) -> None:
+        with Session(self.engine) as session:
+            session.merge(accountStatus)
+            session.commit()
+
+
+########################################
+#
 #   DELETE
 #
 #########################################
@@ -198,16 +215,6 @@ class DatabaseService():
             account_config = session.get(AccountConfig, account_id)
             return account_config
         
-    def updateAccount(self,  accountConfig: AccountConfig) -> None:
-        with Session(self.engine) as session:
-            session.merge(accountConfig)
-            session.commit()
-
-    def updateAccountStatus(self,  accountStatus: AccountStatus) -> None:
-        with Session(self.engine) as session:
-            session.merge(accountStatus)
-            session.commit()
-
         
     def addAccountMetatraderConnection(self, accountMetatraderConnection: AccountMetatraderConnection):
         with Session(self.engine) as session:

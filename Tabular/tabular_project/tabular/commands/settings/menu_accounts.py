@@ -172,7 +172,7 @@ def change_account_password():
         confirm = getpass("Confirm new password: ")
         if password == confirm:
             account_to_change.password = password
-            databaseService.updateAccount(account_to_change)
+            databaseService.updateAccountConfig(account_to_change)
             click.echo(f"Password for {account_to_change.account_login} updated")
         else:
             click.echo(f"Password for {account_to_change.account_login} did not match!")
