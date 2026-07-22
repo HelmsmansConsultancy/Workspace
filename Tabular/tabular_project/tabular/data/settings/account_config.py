@@ -18,7 +18,7 @@ class AccountConfig(Base):
     company: Mapped[str] = mapped_column("company")
     currency: Mapped[str] = mapped_column("currency")
 
-    leverage: Mapped[Optional[int]] = mapped_column("leverage", Integer, nullable=True)
+    leverage: Mapped[Optional[int]] = mapped_column("leverage")
 
     password: Mapped[Optional[str]] = mapped_column("password")
     name: Mapped[str] = mapped_column("name")
