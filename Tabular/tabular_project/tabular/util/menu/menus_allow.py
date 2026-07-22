@@ -15,7 +15,7 @@ def allow_allways():
 
 def no_metatraders():
     databaseService: DatabaseService =  SingletonService().get(S.DATABASE_SERVICE)
-    metatraders = databaseService.countMetatraders()
+    metatraders = databaseService.countMetatraderConfigs()
     if metatraders > 0:
         return True
     else:

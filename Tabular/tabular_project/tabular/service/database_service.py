@@ -93,6 +93,14 @@ class DatabaseService():
             session.merge(accountStatus)
             session.commit()
 
+    def updateSpecificSymbolInfomation(self, symbols: SpecificSymbolInfomation | list[SpecificSymbolInfomation]) -> None:
+        with Session(self.engine) as session:
+            if isinstance(symbols, list):
+                for symbol in symbols:
+                    session.merge(symbol)
+            else:
+                session.merge(symbols)
+            session.commit()
 
 ########################################
 #
@@ -134,6 +142,20 @@ class DatabaseService():
             count: int = session.execute(text(f'SELECT COUNT(*) FROM "{tableName}"')).scalar()
             return count
 
+    def countMetatraderConfigs(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(MetatraderConfig).count()
+            return count
+
+    def countAccounts(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(AccountConfig).count()
+            return count
+        
+    def countGenericOpenPositions(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(GenericOpenPosition).count()
+            return count
        
 
 ########################################
@@ -141,8 +163,12 @@ class DatabaseService():
 #   COUNT BY ACCOUNT
 #
 #########################################
-
-
+    
+    def countSpecificOpenPositions(self, accountId) -> int:
+        with Session(self.engine) as session:
+            count = session.query(SpecificOpenPosition).filter(SpecificOpenPosition.account_id == accountId).count()
+            return count
+        
     def countSpecificPendingOrders(self, accountId) -> int:
         with Session(self.engine) as session:
             count = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).count()
@@ -168,7 +194,7 @@ class DatabaseService():
         with Session(self.engine) as session:
             account_configs = session.query(AccountConfig).all()
             return account_configs
-    
+
     def listAccountStates(self) -> list[AccountStatus]:
         with Session(self.engine) as session:
             account_states = session.query(AccountStatus).all()
@@ -200,10 +226,6 @@ class DatabaseService():
             account_state = session.query(AccountStatus).filter(AccountStatus.account_id == account_id).first()
             return account_state
     
-    def countAccounts(self) -> int:
-        with Session(self.engine) as session:
-            count = session.query(AccountConfig).count()
-            return count
 
     def find_account_by_login_and_company(self, accountLogin: int, company: str) -> AccountConfig | None:
         with Session(self.engine) as session:
@@ -240,11 +262,6 @@ class DatabaseService():
         with Session(self.engine) as session:
             metatraders = session.query(MetatraderConfig).all()
             return metatraders
-
-    def countMetatraders(self) -> int:
-        with Session(self.engine) as session:
-            count = session.query(MetatraderConfig).count()
-            return count
 
     def addMetatrader(self, metatraderConfig: MetatraderConfig) -> MetatraderConfig:
         with Session(self.engine) as session:
@@ -296,21 +313,7 @@ class DatabaseService():
             for order in pendingOrders:
                 session.delete(order)
             session.commit()
-            
-    def countSpecificOpenPositions(self, accountId) -> int:
-        with Session(self.engine) as session:
-            count = session.query(SpecificOpenPosition).filter(SpecificOpenPosition.account_id == accountId).count()
-            return count
         
-    def countGenericOpenPositions(self) -> int:
-        with Session(self.engine) as session:
-            count = session.query(SpecificOpenPosition).count()
-            return count
-        
-    def countGenericPositions(self) -> int:
-        with Session(self.engine) as session:
-            count = session.query(GenericOpenPosition).count()
-            return count
 
           
     def getTradeDeals(self, accountId) -> list[SpecificOpenPosition]:
@@ -347,11 +350,6 @@ class DatabaseService():
             symbol: SpecificSymbolInfomation = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId, SpecificSymbolInfomation.symbol == symbol).first()
             return symbol
 
-    def updateSymbolInformation(self, existingSymbols: list[SpecificSymbolInfomation]) -> None:
-        with Session(self.engine) as session:
-            for symbol in existingSymbols:
-                session.merge(symbol)
-            session.commit()
 
     def getGenericPendingOrders(self) -> list[GenericPendingOrder]:
         with Session(self.engine) as session:

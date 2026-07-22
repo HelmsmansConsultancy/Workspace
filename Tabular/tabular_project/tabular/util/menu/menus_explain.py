@@ -114,7 +114,7 @@ def explain_MT5(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     message = ""
     if databaseService is not None:
-        mt5_installations = databaseService.countMetatraders()
+        mt5_installations = databaseService.countMetatraderConfigs()
         if mt5_installations > 0:
             message = f"\t\t<{mt5_installations} MT5 installation(s)>"
         else:
@@ -136,7 +136,7 @@ def explain_settings_short(enabled:bool = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
     
     if databaseService is not None:
-        mt5_installations = databaseService.countMetatraders()
+        mt5_installations = databaseService.countMetatraderConfigs()
         if mt5_installations > 0:
             message = f" <{mt5_installations} MT5(s)>"
         else:
@@ -184,7 +184,7 @@ def explain_settings(enabled:bool = True):
         message += " (Disabled)"
     
     if databaseService is not None:
-        mt5_installations = databaseService.countMetatraders()
+        mt5_installations = databaseService.countMetatraderConfigs()
         if mt5_installations > 0:
             message += f" <{mt5_installations} MT5 installation(s)>"
         else:

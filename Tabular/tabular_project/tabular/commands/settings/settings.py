@@ -53,7 +53,7 @@ def settings(ctx: click.Context):
             message = "<No database available>"
         
         if databaseService is not None:
-            mt5_installations = databaseService.countMetatraders()
+            mt5_installations = databaseService.countMetatraderConfigs()
             if mt5_installations > 0:
                 message += f" <{mt5_installations} MT5(s)>"
             else:
