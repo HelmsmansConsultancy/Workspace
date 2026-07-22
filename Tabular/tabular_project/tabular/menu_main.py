@@ -17,11 +17,9 @@ from tabular.service.s import S
 from tabular.service.singleton_service import SingletonService
 from tabular.service.database_service import DatabaseService
 from tabular.service.metatrader_5_service import Metatrader5Service
-from tabular.data.base.application_config import ApplicationConfig
 
 
 console = Console()
-applicationConfig: ApplicationConfig = None
 databaseService: DatabaseService = None
 metatrader5Service: Metatrader5Service = None
 
@@ -57,13 +55,7 @@ def main(ctx: click.Context, db_file: str):
     click.echo("Tabular starting...")
     global databaseService
     global metatrader5Service
-    global applicationConfig
     global menuService
-
-    applicationConfig    = ApplicationConfig()
-    if bool(db_file) and db_file.endswith(".db"):
-        applicationConfig.db_file = db_file
-    SingletonService().put(S.APPLICATION_CONFIG, applicationConfig)
 
     databaseService = DatabaseService()
     SingletonService().put(S.DATABASE_SERVICE, databaseService)

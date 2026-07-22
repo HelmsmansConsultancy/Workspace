@@ -12,7 +12,7 @@ from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explai
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.settings.account_config import AccountConfig
-from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
+from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from tabular.util.util.symbols_util import copyValuesInto
 from tabular.commands.orders_account.menu_account_orders import menu_account_orders
 

@@ -10,7 +10,6 @@ from tabular.util.menu.menus_allow import empty_string, allow_allways
 from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explain_empty, explain_MT5
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.base.application_config import ApplicationConfig
 from tabular.commands.settings.menu_metatrader5 import metatrader5
 from tabular.commands.settings.menu_database import database
 from tabular.commands.settings.menu_accounts import accounts

@@ -1,11 +1,11 @@
 from typing import  Optional
-from tabular.data.base.base import Base
+from tabular.data.base import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 class MetatraderConfig(Base):
-    __tablename__ = "METATRADER_CONFIG"
+    __tablename__ = "MT_CONF"
 
     id: Mapped[int]             = mapped_column("id",   primary_key=True,  autoincrement=True)
 

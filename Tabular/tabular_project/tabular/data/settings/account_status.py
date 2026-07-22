@@ -1,16 +1,14 @@
 from decimal import Decimal
 from sqlalchemy import Boolean, Numeric, ForeignKey
-from tabular.data.base.base import Base
-from tabular.data.settings.account_config import AccountConfig
+from tabular.data.base import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 class AccountStatus(Base):
-    __tablename__ = "ACCOUNT_STATUS"
+    __tablename__ = "ACC_STAT"
 
-    account_id: Mapped[int] = mapped_column("account_id", ForeignKey("ACCOUNT_CONFIG.id"), primary_key=True)
-    accountConfig: AccountConfig = relationship(AccountConfig, "")
+    account_id: Mapped[int] = mapped_column("account_id", ForeignKey("ACC_CONF.id"), primary_key=True)
 
     balance: Mapped[Decimal] = mapped_column("balance", Numeric(12, 2), nullable=False)
     equity: Mapped[Decimal] = mapped_column("equity", Numeric(12, 2), nullable=False)
@@ -30,5 +28,5 @@ class AccountStatus(Base):
         return f"<AccountStatus(account_id={self.account_id}, trade_allowed={self.trade_allowed}, trade_expert={self.trade_expert}, balance={self.balance}, equity={self.equity}, Running profit={self.profit})>"
 
     def __str__(self):
-        return f"<AccountStatus(account_id={self.account_id}, balance={self.balance}, equity={self.equity})>"
+        return f"<AS(account_id={self.account_id}, balance={self.balance}, equity={self.equity})>"
     

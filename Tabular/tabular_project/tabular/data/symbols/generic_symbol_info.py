@@ -1,19 +1,18 @@
-from tabular.data.base.base import Base
-from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
-from sqlalchemy import Column, Integer, String, Float
+from tabular.data.base import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+#from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 
 class GenericSymbolInfomation(Base):
-    __tablename__ = "GENERIC_SYMBOL_INFORMATION"
+    __tablename__ = "GEN_SYMBOL_INFO"
 
-    specificSymbolInfomations: Mapped[list[SpecificSymbolInfomation]] = relationship(SpecificSymbolInfomation, back_populates="specificSymbolInfomations")
+#    specificSymbolInfomations: Mapped[set[SpecificSymbolInfomation]] = relationship(back_populates="specificSymbolInfomations")
 
-    id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
-    symbol: Mapped[str] = mapped_column("symbol",String, nullable=False)
-    digits: Mapped[int] = mapped_column("digits", Integer, nullable=False)
-    point: Mapped[float] = mapped_column("point", Float, nullable=False)
+    id: Mapped[int] = mapped_column("id", primary_key=True)
+    symbol: Mapped[str] = mapped_column("symbol")
+    digits: Mapped[int] = mapped_column("digits")
+    point: Mapped[float] = mapped_column("point")
 
     def __init__(self, account_id: int):
         self.account_id = account_id

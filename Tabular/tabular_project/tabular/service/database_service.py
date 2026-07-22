@@ -1,5 +1,5 @@
-import os
-from sqlalchemy import create_engine, inspect, text
+
+from sqlalchemy import inspect, text
 from sqlalchemy.orm import Session
 from rich.console import Console
 from tabular.service.s import S
@@ -8,37 +8,26 @@ from tabular.data.settings.account_status import AccountStatus
 from tabular.data.settings.account_metatrader_connection import AccountMetatraderConnection
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
-from tabular.data.base.base import Base
+from tabular.data.base import Base
+from tabular.service.database_generator import DatabaseGenerator
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from tabular.data.orders.specific_open_position import SpecificOpenPosition
-from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
+from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from tabular.data.orders.generic_pending_order import GenericPendingOrder
 from tabular.data.orders.generic_open_position import GenericOpenPosition
 
 class DatabaseService():
     db_file: str
     db_url: str
-    engine: create_engine
+    engine: None
 
     TOL = [5, 0.5, 0.05, 0.005, 0.0005, 0.00005, 0.000005, 0.000005]
-    TOL3 = 0.005
-    TOL4 = 0.0005
-    TOL5 = 0.0005
 
     def __init__(self):
-        global applicationConfig
         self.console = Console()
-        applicationConfig = SingletonService().get(S.APPLICATION_CONFIG)
-        if bool(applicationConfig):
-            self.db_file = applicationConfig.db_file
-        else:
-            self.db_file = os.getcwd()  + ".db"
-            self.console.print("No ApplicationConfig !!!")
-        self.db_url = f"sqlite:///{self.db_file}"
-        self.console.print(f"Starting database at: {self.db_file}")
-        self.engine = create_engine(self.db_url, echo=False, future=True)
-        Base.metadata.create_all(self.engine)
+        self.engine = DatabaseGenerator().generateEngine()
+
 
 ########################################
 #

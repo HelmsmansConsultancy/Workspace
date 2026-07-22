@@ -1,4 +1,4 @@
-from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
+from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from MetaTrader5 import SymbolInfo
 from types import SimpleNamespace
 

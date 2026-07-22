@@ -1,35 +1,36 @@
-from tabular.data.base.base import Base
-from sqlalchemy import Column, Integer, Float, ForeignKey, String
+from tabular.data.base import Base
+from typing import Optional
+from sqlalchemy import ForeignKey
 from tabular.util.util.price_util import fmt_price
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 class SpecificOpenPosition(Base):
-    __tablename__ = "SPECIFIC_OPEN_POSITION"
+    __tablename__ = "SPEC_OPEN_POS"
 
     id: Mapped[int] = mapped_column("id", primary_key=True)
-    account_id: Mapped[int] = mapped_column("account_id", ForeignKey("ACCOUNT_CONFIG.id"), nullable=False)
+    account_id: Mapped[int] = mapped_column("account_id", ForeignKey("ACC_CONF.id"))
     
-    symbol_id:  Mapped[int] = mapped_column("symbol_id", ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
-    symbol: Mapped[str] = mapped_column("symbol", nullable=False)
+    symbol_id:  Mapped[int] = mapped_column("symbol_id", ForeignKey("SPEC_SYMBOL_INFO.id"))
+    symbol: Mapped[str] = mapped_column("symbol")
 
-    generic_id:  Mapped[int] = mapped_column("generic_id", ForeignKey("GENERIC_OPEN_POSITION.id"), nullable=False)
+    generic_id:  Mapped[int] = mapped_column("generic_id", ForeignKey("GEN_OPEN_POS.id"))
 
-    ticket: Mapped[int] = mapped_column("ticket", nullable=False)
-    magic: Mapped[int] = mapped_column("magic", nullable=True)
-    comment: Mapped[str] = mapped_column("comment", nullable=True)
-    external_id: Mapped[str] = mapped_column("external_id", nullable=True)
+    ticket: Mapped[int] = mapped_column("ticket")
+    magic: Mapped[Optional[int]] = mapped_column("magic")
+    comment: Mapped[Optional[str]] = mapped_column("comment")
+    external_id: Mapped[Optional[str]] = mapped_column("external_id")
 
-    type_order: Mapped[int] = mapped_column("type_order", nullable=False)
-    profit: Mapped[float] = mapped_column("profit", nullable=False)
-    swap: Mapped[float] = mapped_column("swap", nullable=False)
-    digits: Mapped[int] = mapped_column("digits", nullable=False)
+    type_order: Mapped[int] = mapped_column("type_order")
+    profit: Mapped[float] = mapped_column("profit")
+    swap: Mapped[float] = mapped_column("swap")
+    digits: Mapped[int] = mapped_column("digits")
 
-    volume: Mapped[float] = mapped_column("volume", nullable=False)
-    entry: Mapped[float] = mapped_column("entry", nullable=False)
-    sl: Mapped[float] = mapped_column("sl", nullable=False)
-    tp: Mapped[float] = mapped_column("tp", nullable=False)
+    volume: Mapped[float] = mapped_column("volume")
+    entry: Mapped[float] = mapped_column("entry")
+    sl: Mapped[float] = mapped_column("sl")
+    tp: Mapped[float] = mapped_column("tp")
 
     def __init__(self):
         pass

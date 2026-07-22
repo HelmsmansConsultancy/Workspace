@@ -1,17 +1,18 @@
-from sqlalchemy import  Integer, String
 from typing import  Optional
-from tabular.data.base.base import Base
-from tabular.data.settings.account_status import AccountStatus
+from tabular.data.base import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+#from tabular.data.settings.account_status import AccountStatus
+#from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 
 class AccountConfig(Base):
-    __tablename__ = "ACCOUNT_CONFIG"
+    __tablename__ = "ACC_CONF"
 
-    id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
+    id: Mapped[int] = mapped_column("id", primary_key=True)
 
-    accountStatus: AccountStatus = relationship()
+#    accountStatus: Mapped[AccountStatus] = relationship(AccountStatus, back_populates="accountConfig", uselist=False)
+#    specificSymbolInfomations: Mapped[set[SpecificSymbolInfomation]] = relationship()
 
     account_login: Mapped[int] = mapped_column("login")
     trade_mode: Mapped[Optional[int]] = mapped_column("trade_mode" )

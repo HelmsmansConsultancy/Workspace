@@ -16,7 +16,7 @@ from MetaTrader5 import  TradeOrder
 from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.util.symbols_util import getSymbolFromName
-from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
+from tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 
 console = Console()
 databaseService: DatabaseService = None
