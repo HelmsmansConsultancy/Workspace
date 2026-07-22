@@ -73,7 +73,7 @@ def main(ctx: click.Context, db_file: str):
 
     start_dir=os.getcwd()
     SingletonService().put(S.START_DIR, start_dir)
-    accounts = databaseService.accounts()
+    accounts = databaseService.listAccountConfigs()
     SingletonService().put(S.ACCOUNTS, accounts)
 
     choice = None

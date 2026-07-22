@@ -58,7 +58,7 @@ def create_account_mt5():
             server=account_info.server,
             trade_mode=account_info.trade_mode
         )
-        databaseService.addAccount(account_config)
+        databaseService.saveAccountConfig(account_config)
         account_status = AccountStatus(
             account_id=account_config.id,
             balance=Decimal(account_info.balance).quantize(S.CENT, rounding=ROUND_HALF_UP),
@@ -67,7 +67,7 @@ def create_account_mt5():
             trade_allowed=account_info.trade_allowed,
             trade_expert=account_info.trade_expert,
         )
-        databaseService.addAccountStatus(account_status)
+        databaseService.saveAccountStatus(account_status)
         result = databaseService.getAccountMetatraderConnection(account_config.account_login, connected_mt5.id)
         if bool(result):
             new_account_metatrader_connection = AccountMetatraderConnection(
@@ -128,7 +128,7 @@ def create_account_with_password():
                 server=account_info.server,
                 trade_mode=account_info.trade_mode,
             )
-            databaseService.addAccount(account_config)
+            databaseService.saveAccountConfig(account_config)
         account_status: AccountStatus = databaseService.getAccountStatus(account_config.id)
         click.echo(f"{account_status}")
         if not bool(account_status):
@@ -140,7 +140,7 @@ def create_account_with_password():
                 trade_allowed=account_info.trade_allowed,
                 trade_expert=account_info.trade_expert,
             )
-            databaseService.addAccountStatus(new_account_status)
+            databaseService.saveAccountStatus(new_account_status)
         account_metatrader_connection: AccountMetatraderConnection = databaseService.getAccountMetatraderConnection(account_config.id, connected_mt5.id)
         click.echo(f"{account_metatrader_connection}")
         if not bool(account_metatrader_connection):
@@ -156,7 +156,7 @@ def create_account_with_password():
 @click.command()
 def change_account_password():
 
-    account_configs: list[AccountConfig] = databaseService.list_account_configs()
+    account_configs: list[AccountConfig] = databaseService.listAccountConfigs()
     if len(account_configs) == 0:
         click.echo("No Account Configs found.")
         return
@@ -182,7 +182,7 @@ def change_account_password():
 def connect_account():
     """Connect account."""
     global metatrader5Service
-    account_configs: list[AccountConfig] = databaseService.list_account_configs()
+    account_configs: list[AccountConfig] = databaseService.listAccountConfigs()
     if len(account_configs) == 0:
         click.echo("No Account Configs found.")
         return
@@ -230,8 +230,8 @@ def accounts(ctx: click.Context):
     choice = None
     while True:
         """Show basic menu data"""
-        account_configs: list[AccountConfig] = databaseService.list_account_configs()
-        account_states: list[AccountStatus] = databaseService.list_account_states()
+        account_configs: list[AccountConfig] = databaseService.listAccountConfigs()
+        account_states: list[AccountStatus] = databaseService.listAccountStates()
         click.echo(empty_string)
         click.echo("Accounts:")
         if bool(account_configs) and len(account_configs) > 0:

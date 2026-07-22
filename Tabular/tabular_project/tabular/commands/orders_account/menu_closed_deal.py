@@ -43,7 +43,7 @@ def history_trade_deals():
     
     removedPositions = list(set(openPositions) - set(existingOrders))
     databaseService.updateOpenPositions(existingOrders)
-    databaseService.addOpenPositions(newPositions)
+    databaseService.saveSpecificOpenPositions(newPositions)
     databaseService.removeOpenPositions(removedPositions)
 
 OPEN_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [

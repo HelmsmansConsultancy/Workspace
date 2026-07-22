@@ -49,7 +49,7 @@ def get_symbolinfo():
             copyValuesInto(symbolInfo, newSymbol)
             click.echo(f"New: {newSymbol}")
             newSymbols.append(newSymbol)
-    databaseService.addSymbolInfo(newSymbols)
+    databaseService.saveSpecificSymbolInfomations(newSymbols)
     databaseService.updateSymbolInformation(existingSymbols)
     return ["", menu_account_orders.callback.__name__.replace("_", "-")]
 

@@ -40,7 +40,7 @@ def settings(ctx: click.Context):
     databaseService = SingletonService().get(S.DATABASE_SERVICE)
     metatrader5Service = SingletonService().get(S.METATRADER5_SERVICE)
 
-    accounts = databaseService.accounts()
+    accounts = databaseService.listAccountConfigs()
 
     choice = None
     while True:

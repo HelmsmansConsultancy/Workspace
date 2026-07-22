@@ -10,14 +10,11 @@ from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.service.singleton_service import SingletonService
 from tabular.data.base.base import Base
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.base.application_config import ApplicationConfig
 from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from tabular.data.orders.specific_open_position import SpecificOpenPosition
 from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from tabular.data.orders.generic_pending_order import GenericPendingOrder
 from tabular.data.orders.generic_open_position import GenericOpenPosition
-
-applicationConfig: ApplicationConfig = None
 
 class DatabaseService():
     db_file: str
@@ -43,6 +40,131 @@ class DatabaseService():
         self.engine = create_engine(self.db_url, echo=False, future=True)
         Base.metadata.create_all(self.engine)
 
+########################################
+#
+#   SAVE
+#
+#########################################
+
+    def saveAccountConfig(self, accountConfig: AccountConfig) -> int:
+        with Session(self.engine) as session:
+            session.add(accountConfig)
+            session.commit()
+            return accountConfig.id
+    
+    def saveAccountStatus(self, accountStatus: AccountStatus) -> int:
+        with Session(self.engine) as session:
+            session.add(accountStatus)
+            session.commit()
+            return accountStatus.account_id
+
+    def saveSpecificSymbolInfomations(self, symbols: SpecificSymbolInfomation | list[SpecificSymbolInfomation]) -> None:
+        with Session(self.engine) as session:
+            if isinstance(symbols, list):
+                for symbol in symbols:
+                    session.add(symbol)
+            else:
+                session.add(symbols)
+            session.commit()
+
+    def saveSpecificOpenPositions(self, positions: SpecificOpenPosition | list[SpecificOpenPosition]) -> None:
+        with Session(self.engine) as session:
+            
+            if isinstance(positions, list):
+                for position in positions:
+                    session.add(position)
+            else:
+                session.add(positions)
+            session.commit()
+
+########################################
+#
+#   DELETE
+#
+#########################################
+        
+    def deleteSpecificPendingOrder(self, order: SpecificPendingOrder) -> None:
+        with Session(self.engine) as session:
+            session.delete(order)
+
+
+    def removeOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
+        with Session(self.engine) as session:
+            for position in openPositions:
+                session.delete(position)
+            session.commit()
+
+
+
+########################################
+#
+#   COUNT
+#
+#########################################
+        
+    def countGenericOrders(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(GenericPendingOrder).count()
+            return count
+
+    def countGenericPendingOrders(self) -> int:
+        with Session(self.engine) as session:
+            count = session.query(GenericPendingOrder).count()
+            return count
+
+    def countRowsInTable(self, tableName: str) -> int:
+        with  Session(self.engine) as session:
+            count: int = session.execute(text(f'SELECT COUNT(*) FROM "{tableName}"')).scalar()
+            return count
+
+       
+
+########################################
+#
+#   COUNT BY ACCOUNT
+#
+#########################################
+
+
+    def countSpecificPendingOrders(self, accountId) -> int:
+        with Session(self.engine) as session:
+            count = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).count()
+            return count
+        
+    def countSymbolInformation(self, accountId: int) -> int:
+        with Session(self.engine) as session:
+            count = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId).count()
+            return count
+    
+########################################
+#
+#   LIST
+#
+#########################################
+
+    def listTablesInDatabase(self) -> list[str]:
+        inspector = inspect(self.engine)
+        tables = inspector.get_table_names()
+        return tables
+
+    def listAccountConfigs(self) -> list[AccountConfig]:
+        with Session(self.engine) as session:
+            account_configs = session.query(AccountConfig).all()
+            return account_configs
+    
+    def listAccountStates(self) -> list[AccountStatus]:
+        with Session(self.engine) as session:
+            account_states = session.query(AccountStatus).all()
+            return account_states
+
+
+########################################
+#
+#   SPECIAL
+#
+#########################################
+
+
     def getGenericOrderByStats(self, digits: int, entry: float, sl: float, tp: float) -> GenericPendingOrder:
         self.console.print(f"Searching entry {entry - self.TOL[digits]} - {entry + self.TOL[digits]}, sl {sl - self.TOL[digits]} - {entry + self.TOL[digits]}, tp {tp - self.TOL[digits]} - {tp + self.TOL[digits]}")
         with Session(self.engine) as session:
@@ -54,31 +176,8 @@ class DatabaseService():
             ).first()
             self.console.print(f"Found in DB: {found}")
             return found
-        
-    def deleteSpecificPendingOrder(self, order: SpecificPendingOrder) -> None:
-        with Session(self.engine) as session:
-            session.delete(order)
 
-    def listTables(self) -> list[str]:
-        inspector = inspect(self.engine)
-        tables = inspector.get_table_names()
-        return tables
-    
-    def countRows(self, tableName: str) -> int:
-        with  Session(self.engine) as session:
-            count: int = session.execute(text(f'SELECT COUNT(*) FROM "{tableName}"')).scalar()
-            return count
-
-    def list_account_configs(self) -> list[AccountConfig]:
-        with Session(self.engine) as session:
-            account_configs = session.query(AccountConfig).all()
-            return account_configs
-    
-    def list_account_states(self) -> list[AccountStatus]:
-        with Session(self.engine) as session:
-            account_states = session.query(AccountStatus).all()
-            return account_states
-        
+     
     def getAccountStatus(self, account_id: int) -> AccountStatus:
         with Session(self.engine) as session:
             account_state = session.query(AccountStatus).filter(AccountStatus.account_id == account_id).first()
@@ -98,24 +197,12 @@ class DatabaseService():
         with Session(self.engine) as session:
             account_config = session.get(AccountConfig, account_id)
             return account_config
-
-    def addAccount(self, accountConfig: AccountConfig) -> int:
-        with Session(self.engine) as session:
-            session.add(accountConfig)
-            session.commit()
-            return accountConfig.id
         
     def updateAccount(self,  accountConfig: AccountConfig) -> None:
         with Session(self.engine) as session:
             session.merge(accountConfig)
             session.commit()
 
-    def addAccountStatus(self, accountStatus: AccountStatus) -> int:
-        with Session(self.engine) as session:
-            session.add(accountStatus)
-            session.commit()
-            return accountStatus.account_id
-            
     def updateAccountStatus(self,  accountStatus: AccountStatus) -> None:
         with Session(self.engine) as session:
             session.merge(accountStatus)
@@ -178,26 +265,6 @@ class DatabaseService():
                 session.delete(metatrader)
                 session.commit()
 
-    def accounts(self) -> list[AccountConfig]:
-        with Session(self.engine) as session:
-            accounts = session.query(AccountConfig).all()
-            return accounts
-        
-    def countGenericOrders(self) -> int:
-        with Session(self.engine) as session:
-            count = session.query(GenericPendingOrder).count()
-            return count
-
-    def countSpecificPendingOrders(self, accountId) -> int:
-        with Session(self.engine) as session:
-            count = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).count()
-            return count
-        
-    def countGenericPendingOrders(self) -> int:
-        with Session(self.engine) as session:
-            count = session.query(GenericPendingOrder).count()
-            return count
-
     def getPendingOrders(self, accountId) -> list[SpecificPendingOrder]:
         with Session(self.engine) as session:  
             pendingOrders = session.query(SpecificPendingOrder).filter(SpecificPendingOrder.account_id == accountId).all()
@@ -251,18 +318,6 @@ class DatabaseService():
                 session.merge(position)
             session.commit()
     
-    def addOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
-        with Session(self.engine) as session:
-            for position in openPositions:
-                # self.console.print(f"adding: {position!r}")
-                session.add(position)
-            session.commit()
-
-    def removeOpenPositions(self, openPositions: list[SpecificOpenPosition]) -> None:
-        with Session(self.engine) as session:
-            for position in openPositions:
-                session.delete(position)
-            session.commit()
 
     def getSymbolInformation(self, accountId: int) -> list[SpecificSymbolInfomation]:
         with Session(self.engine) as session:
@@ -285,22 +340,9 @@ class DatabaseService():
             symbol: SpecificSymbolInfomation = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId, SpecificSymbolInfomation.symbol == symbol).first()
             return symbol
 
-    def countSymbolInformation(self, accountId: int) -> int:
-        with Session(self.engine) as session:
-            count = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId).count()
-            return count
-
-    def addSymbolInfo(self, symbols: list[SpecificSymbolInfomation]) -> None:
-        with Session(self.engine) as session:
-            for symbol in symbols:
-                # self.console.print(f"adding: {symbol!r}")
-                session.add(symbol)
-            session.commit()
-    
     def updateSymbolInformation(self, existingSymbols: list[SpecificSymbolInfomation]) -> None:
         with Session(self.engine) as session:
             for symbol in existingSymbols:
-                # self.console.print(f"adding: {symbol!r}")
                 session.merge(symbol)
             session.commit()
 

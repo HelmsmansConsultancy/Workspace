@@ -35,11 +35,11 @@ def create():
 def list_tables():
     """List all databases."""
     global databaseService
-    tables: list_tables[str] = databaseService.listTables()
+    tables: list_tables[str] = databaseService.listTablesInDatabase()
     click.echo(empty_string)
     click.echo("Tables in the database:")
     for table in tables:
-        rows: int = databaseService.countRows(table)
+        rows: int = databaseService.countRowsInTable(table)
         click.echo(f"- Table {table} {'\t' if len(table) < 15 else ''}{'\t' if len(table) < 25 else ''}\t {rows} Rows")
     click.echo(empty_string)
 
