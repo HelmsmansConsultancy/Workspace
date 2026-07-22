@@ -1,16 +1,22 @@
 from decimal import Decimal
-from sqlalchemy import Boolean, Column, Integer, Numeric, ForeignKey
+from sqlalchemy import Boolean, Numeric, ForeignKey
 from tabular.data.base.base import Base
+from tabular.data.settings.account_config import AccountConfig
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 class AccountStatus(Base):
     __tablename__ = "ACCOUNT_STATUS"
 
-    account_id: int = Column("account_id", Integer, ForeignKey("ACCOUNT_CONFIG.id"), primary_key=True)
-    balance: Decimal = Column("balance", Numeric(12, 2), nullable=False)
-    equity: Decimal = Column("equity", Numeric(12, 2), nullable=False)
-    profit: Decimal = Column("profit", Numeric(12, 2), nullable=False)
-    trade_allowed: bool = Column("trade_allowed", Boolean, nullable=True)
-    trade_expert: bool = Column("trade_expert", Boolean, nullable=True)
+    account_id: Mapped[int] = mapped_column("account_id", ForeignKey("ACCOUNT_CONFIG.id"), primary_key=True)
+    accountConfig: AccountConfig = relationship(AccountConfig, "")
+
+    balance: Mapped[Decimal] = mapped_column("balance", Numeric(12, 2), nullable=False)
+    equity: Mapped[Decimal] = mapped_column("equity", Numeric(12, 2), nullable=False)
+    profit: Mapped[Decimal] = mapped_column("profit", Numeric(12, 2), nullable=False)
+    trade_allowed: Mapped[bool] = mapped_column("trade_allowed", Boolean, nullable=True)
+    trade_expert: Mapped[bool] = mapped_column("trade_expert", Boolean, nullable=True)
 
     def __init__(self, account_id: int, balance: Decimal, equity: Decimal, profit: Decimal, trade_allowed: bool, trade_expert: bool):
         self.account_id = account_id

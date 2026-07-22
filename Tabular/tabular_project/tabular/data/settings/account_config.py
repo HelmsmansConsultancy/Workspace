@@ -1,18 +1,28 @@
-from sqlalchemy import  Column, Integer, String
+from sqlalchemy import  Integer, String
+from typing import  Optional
 from tabular.data.base.base import Base
+from tabular.data.settings.account_status import AccountStatus
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 class AccountConfig(Base):
     __tablename__ = "ACCOUNT_CONFIG"
 
-    id: int = Column("id", Integer, primary_key=True)
-    company: str = Column("company", String, nullable=False)
-    currency: str = Column("currency", String, nullable=False)
-    leverage: int = Column("leverage", Integer, nullable=True)
-    account_login: int = Column("login", Integer, nullable=False)
-    name: str = Column("name", String, nullable=False)
-    password: str = Column("password", String, nullable=True)
-    server: str = Column("server", String, nullable=False)
-    trade_mode: int = Column("trade_mode", Integer, nullable=True)
+    id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
+
+    accountStatus: AccountStatus = relationship()
+
+    account_login: Mapped[int] = mapped_column("login")
+    trade_mode: Mapped[Optional[int]] = mapped_column("trade_mode" )
+    company: Mapped[str] = mapped_column("company")
+    currency: Mapped[str] = mapped_column("currency")
+
+    leverage: Mapped[Optional[int]] = mapped_column("leverage", Integer, nullable=True)
+
+    password: Mapped[Optional[str]] = mapped_column("password")
+    name: Mapped[str] = mapped_column("name")
+    server: Mapped[str] = mapped_column("server")
 
     def __init__(self, company: str, currency: str, leverage: int, account_login: int, name: str, password: str, server: str, trade_mode: int):
         self.company = company

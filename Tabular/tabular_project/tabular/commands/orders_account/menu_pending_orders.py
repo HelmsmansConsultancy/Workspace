@@ -9,7 +9,7 @@ from tabular.util.menu.menus_allow import empty_string,  no_active_account
 from tabular.util.menu.menus_explain import explain_empty
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
-from tabular.data.symbols.symbol_info import SymbolInfomation
+from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from tabular.data.orders.generic_pending_order import GenericPendingOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
@@ -49,7 +49,7 @@ def current_pending_orders():
             copyValuesIntoPendingOrder(tradeOrder, newOrder)
             click.echo(f"Ticket {tradeOrder.ticket}")
             symbol = getSymbolFromName(tradeOrder.symbol)
-            symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
+            symbolInfomation: SpecificSymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
             newOrder.symbol_id = symbolInfomation.id
             newOrder.digits = symbolInfomation.digits
             newOrder.symbol = symbolInfomation.symbol

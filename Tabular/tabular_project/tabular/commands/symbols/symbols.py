@@ -12,7 +12,7 @@ from tabular.util.menu.menus_explain import explain_accounts, explain_DB, explai
 from tabular.util.menu.menus_utils import interactive_menu
 from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.settings.account_config import AccountConfig
-from tabular.data.symbols.symbol_info import SymbolInfomation
+from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from tabular.util.util.symbols_util import copyValuesInto
 from tabular.commands.orders_account.menu_account_orders import menu_account_orders
 
@@ -33,17 +33,17 @@ def get_symbolinfo():
     
     connect_account = SingletonService().get(S.CONNECTED_ACCOUNT)
     symbolInfos: list[SymbolInfo] = metatrader5Service.getSymbolInfo(connect_account.id)
-    symbols: list[SymbolInfomation] = databaseService.getSymbolInformation(connect_account.id)
-    newSymbols: list[SymbolInfomation] = []
-    existingSymbols: list[SymbolInfomation] = []
+    symbolInformations: list[SpecificSymbolInfomation] = databaseService.getSymbolInformation(connect_account.id)
+    newSymbols: list[SpecificSymbolInfomation] = []
+    existingSymbols: list[SpecificSymbolInfomation] = []
     for symbolInfo in symbolInfos:
-        existingSymbol = next((symbol for symbol in symbols if symbol.name == symbolInfo.name), None)
+        existingSymbol = next((symbol for symbol in symbolInformations if symbol.name == symbolInfo.name), None)
         if bool(existingSymbol): 
             copyValuesInto(symbolInfo, existingSymbol)
             click.echo(f"Existing: {existingSymbol}")
             existingSymbols.append(existingSymbol)
         else:
-            newSymbol =SymbolInfomation(
+            newSymbol =SpecificSymbolInfomation(
                 account_id=connect_account.id,      
             )
             copyValuesInto(symbolInfo, newSymbol)

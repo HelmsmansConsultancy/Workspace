@@ -13,7 +13,7 @@ from tabular.data.settings.metatrader_config import MetatraderConfig
 from tabular.data.base.application_config import ApplicationConfig
 from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from tabular.data.orders.specific_open_position import SpecificOpenPosition
-from tabular.data.symbols.symbol_info import SymbolInfomation
+from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from tabular.data.orders.generic_pending_order import GenericPendingOrder
 from tabular.data.orders.generic_open_position import GenericOpenPosition
 
@@ -264,9 +264,9 @@ class DatabaseService():
                 session.delete(position)
             session.commit()
 
-    def getSymbolInformation(self, accountId: int) -> list[SymbolInfomation]:
+    def getSymbolInformation(self, accountId: int) -> list[SpecificSymbolInfomation]:
         with Session(self.engine) as session:
-            symbolInfomations = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).all()
+            symbolInfomations = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId).all()
             return symbolInfomations
         
     def getGenericOrders(self) -> list[GenericPendingOrder]:
@@ -280,24 +280,24 @@ class DatabaseService():
             session.commit()
             return genericOrder.id
 
-    def getSymbolInformationBySymbol(self, accountId: int, symbol: str) -> SymbolInfomation:
+    def getSymbolInformationBySymbol(self, accountId: int, symbol: str) -> SpecificSymbolInfomation:
         with Session(self.engine) as session:
-            symbol: SymbolInfomation = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId, SymbolInfomation.symbol == symbol).first()
+            symbol: SpecificSymbolInfomation = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId, SpecificSymbolInfomation.symbol == symbol).first()
             return symbol
 
     def countSymbolInformation(self, accountId: int) -> int:
         with Session(self.engine) as session:
-            count = session.query(SymbolInfomation).filter(SymbolInfomation.account_id == accountId).count()
+            count = session.query(SpecificSymbolInfomation).filter(SpecificSymbolInfomation.account_id == accountId).count()
             return count
 
-    def addSymbolInfo(self, symbols: list[SymbolInfomation]) -> None:
+    def addSymbolInfo(self, symbols: list[SpecificSymbolInfomation]) -> None:
         with Session(self.engine) as session:
             for symbol in symbols:
                 # self.console.print(f"adding: {symbol!r}")
                 session.add(symbol)
             session.commit()
     
-    def updateSymbolInformation(self, existingSymbols: list[SymbolInfomation]) -> None:
+    def updateSymbolInformation(self, existingSymbols: list[SpecificSymbolInfomation]) -> None:
         with Session(self.engine) as session:
             for symbol in existingSymbols:
                 # self.console.print(f"adding: {symbol!r}")

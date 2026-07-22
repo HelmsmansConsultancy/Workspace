@@ -1,5 +1,6 @@
 import click
 # from pathlib import Path
+import MetaTrader5 as meta_trader_5
 from rich.console import Console
 from typing import Callable
 from tabular.service.singleton_service import SingletonService
@@ -15,7 +16,7 @@ from MetaTrader5 import  TradeOrder
 from tabular.data.orders.specific_pending_order import SpecificPendingOrder
 from tabular.util.order.pending_order_util import copyValuesIntoPendingOrder
 from tabular.util.util.symbols_util import getSymbolFromName
-from tabular.data.symbols.symbol_info import SymbolInfomation
+from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 
 console = Console()
 databaseService: DatabaseService = None
@@ -46,14 +47,14 @@ def change_volume():
         click.echo("No Generic Orders found.")
         return
 
-    click.echo("Select an Order to Copy:")
+    click.echo("Select an Order to Change the volume:")
     for index, order in enumerate(genericOrders, start=1):
         click.echo(f"{index}. {order}")
 
     choice = click.prompt("Enter the number of the Account to connect to", type=int)
     if 1 <= choice <= len(genericOrders):
         orderToChange: GenericPendingOrder = genericOrders[choice - 1]
-        volume = float(input("Login (account number): ").strip())
+        volume = float(input("Volume to change to: ").strip())
         orderToChange.volume = volume
         databaseService.updatePendingOrders([orderToChange])
         click.echo(f"Order changed: {orderToChange}")
@@ -77,7 +78,7 @@ def copy_generic_orders():
     choice = click.prompt("Enter the number of the Trade to Copy", type=int)
     if 1 <= choice <= len(genericOrders):
         orderToPlace: GenericPendingOrder = genericOrders[choice - 1]
-        symbolInformation : SymbolInfomation =databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
+        symbolInformation : SpecificSymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, orderToPlace.symbol)
         click.echo(empty_string)
         click.echo(f"Trade to Copy: {orderToPlace}")
         
@@ -91,13 +92,61 @@ def copy_generic_orders():
             copyValuesIntoPendingOrder(tradeOrder, newOrder)
 
             symbol = getSymbolFromName(tradeOrder.symbol)
-            symbolInfomation: SymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
+            symbolInfomation: SpecificSymbolInfomation = databaseService.getSymbolInformationBySymbol(connected_account.id, symbol)
             newOrder.symbol_id = symbolInfomation.id
             newOrder.digits = symbolInfomation.digits
             newOrder.symbol = symbolInfomation.symbol
 
             databaseService.addPendingOrders([newOrder])
 
+@click.command()
+def create_pending_order():
+    """ Manually create a pending order"""
+    global databaseService
+    connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
+    symbolInformations: list[SpecificSymbolInfomation] = databaseService.getSymbolInformation(connected_account.id)
+    if len(symbolInformations) > 0:
+        for symbol in symbolInformations:
+            click.echo(f"{symbol}") 
+    else:
+        click.echo(f"<No Symbol(s)  in Account  {connected_account.name}>")
+
+    
+    choice = click.prompt("Enter the number of the Symbol", type=int)
+    if not (1 <= choice <= len(symbolInformations)):
+        return
+    
+    symbolInformation = symbolInformations[choice - 1]
+    volume = float(input("Volume: ").strip())
+    entry = float(input("Entry price: ").strip())
+    sl = float(input("SL price: ").strip())
+    tp = float(input("TP price: ").strip())
+    magic = str(input("Magic: ").strip())
+    comment = str(input("Comment: ").strip())
+    external_id = str(input("External Id: ").strip())
+
+    order: GenericPendingOrder = GenericPendingOrder()
+    order.symbol_id = symbolInformation.id
+    order.symbol = symbolInformation.symbol
+    order.digits = symbolInformation.digits
+    order.volume = volume
+    order.entry = entry
+    order.sl = sl
+    order.tp = tp
+    order.comment = comment
+    order.external_id = external_id
+    order.magic = magic
+    order.type_order = meta_trader_5.ORDER_TYPE_BUY_LIMIT if order.isBuy() else meta_trader_5.ORDER_TYPE_SELL_LIMIT
+    order.type_time = meta_trader_5.ORDER_TIME_GTC
+    order.type_filling = meta_trader_5.ORDER_FILLING_FOK
+
+    genericOrderId = databaseService.addGenericOrder(order)
+    click.echo(f"Stored GenericPendingOrder with {genericOrderId}")
+
+
+@click.command()
+def delete_generic_orders():
+    pass
 
 @click.command()
 def delete_pending_order():
@@ -122,8 +171,10 @@ def delete_pending_order():
 
 PENDING_SUB_COMMANDS: list[tuple[Callable[[], bool],  Callable[[bool], str], str, str | None,]] = [
     [no_active_account, explain_empty, 'List generic orders', list_generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Create Pending Order', create_pending_order.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Change volume', change_volume.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Copy generic orders', copy_generic_orders.callback.__name__.replace("_", "-"), ],
+    [no_active_account, explain_empty, 'Delete generic orders', delete_generic_orders.callback.__name__.replace("_", "-"), ],
     [no_active_account, explain_empty, 'Return to previous menu', None, ],
 ]
 
@@ -171,3 +222,5 @@ def generic_pending_orders(ctx: click.Context):
 generic_pending_orders.add_command(list_generic_orders)
 generic_pending_orders.add_command(change_volume)
 generic_pending_orders.add_command(copy_generic_orders)
+generic_pending_orders.add_command(create_pending_order)
+generic_pending_orders.add_command(delete_generic_orders)

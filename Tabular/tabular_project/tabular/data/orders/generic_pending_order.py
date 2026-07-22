@@ -1,28 +1,31 @@
 from tabular.data.base.base import Base
 from sqlalchemy import Column, Integer, Float, ForeignKey, String
 from tabular.util.util.price_util import fmt_price
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 class GenericPendingOrder(Base):
     __tablename__ = "GENERIC_PENDING_ORDER"
 
-    id: int = Column("id", Integer, primary_key=True)
+    id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
     
-    symbol_id:  int = Column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
-    symbol: str = Column("symbol", String, nullable=False)
+    symbol_id:  Mapped[int] = mapped_column("symbol_id", Integer, ForeignKey("SYMBOL_INFORMATION.id"), nullable=False)
+    symbol: Mapped[str] = mapped_column("symbol", String, nullable=False)
 
-    magic: int = Column("magic", Integer, nullable=True)
-    comment: str = Column("comment", String, nullable=True)
-    external_id: str = Column("external_id", String, nullable=True)
+    magic: Mapped[int] = mapped_column("magic", Integer, nullable=True)
+    comment: Mapped[str] = mapped_column("comment", String, nullable=True)
+    external_id: Mapped[str] = mapped_column("external_id", String, nullable=True)
 
-    type_order: int = Column("type_order", Integer, nullable=False)
-    type_time: int = Column("type_time", Integer, nullable=False)
-    type_filling: int = Column("type_filling", Integer, nullable=False)
-    digits: int = Column("digits", Integer, nullable=False)
+    type_order: Mapped[int] = mapped_column("type_order", Integer, nullable=False)
+    type_time: Mapped[int] = mapped_column("type_time", Integer, nullable=False)
+    type_filling: Mapped[int] = mapped_column("type_filling", Integer, nullable=False)
+    digits: Mapped[int] = mapped_column("digits", Integer, nullable=False)
 
-    volume: float = Column("volume", Float, nullable=False)
-    entry: float = Column("entry", Float, nullable=False)
-    sl: float = Column("sl", Float, nullable=False)
-    tp: float = Column("tp", Float, nullable=False)
+    volume: Mapped[float] = mapped_column("volume", Float, nullable=False)
+    entry: Mapped[float] = mapped_column("entry", Float, nullable=False)
+    sl: Mapped[float] = mapped_column("sl", Float, nullable=False)
+    tp: Mapped[float] = mapped_column("tp", Float, nullable=False)
 
     def __init__(self):
         pass

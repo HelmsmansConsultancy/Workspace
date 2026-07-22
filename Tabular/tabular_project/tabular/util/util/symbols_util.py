@@ -1,8 +1,8 @@
-from tabular.data.symbols.symbol_info import SymbolInfomation
+from tabular_project.tabular.data.symbols.specific_symbol_info import SpecificSymbolInfomation
 from MetaTrader5 import SymbolInfo
 from types import SimpleNamespace
 
-def copyValuesInto(symbolInfo: SymbolInfo, symbol: SymbolInfomation):
+def copyValuesInto(symbolInfo: SymbolInfo, symbol: SpecificSymbolInfomation):
     s = SimpleNamespace(symbolInfo._asdict())
     symbol.name=s.name
     symbol.symbol = getSymbolFromName(s.name)

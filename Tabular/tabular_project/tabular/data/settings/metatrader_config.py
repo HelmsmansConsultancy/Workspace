@@ -1,21 +1,25 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from typing import  Optional
 from tabular.data.base.base import Base
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 class MetatraderConfig(Base):
     __tablename__ = "METATRADER_CONFIG"
 
-    id: int             = Column(Integer,   primary_key=True, nullable=False, autoincrement=True)
-    name: str           = Column(String,    nullable=False)
-    path: str           = Column(String,    nullable=False)
+    id: Mapped[int]             = mapped_column("id",   primary_key=True,  autoincrement=True)
 
-    trade_allowed: bool         = Column(Boolean,   nullable=True)
-    tradeapi_disabled: bool      = Column(Boolean,   nullable=True)
-    notifications_enabled: bool   = Column(Boolean,   nullable=True)
-    mqid: bool                 = Column(Boolean,   nullable=True)
+    name: Mapped[str]           = mapped_column()
+    path: Mapped[str]           = mapped_column()
 
-    terminal_version: str = Column(String,  nullable=True)
-    build: str          = Column(String,    nullable=True)
-    release_date: str   = Column(String,    nullable=True)
+    trade_allowed: Mapped[Optional[bool]]         = mapped_column()
+    tradeapi_disabled: Mapped[Optional[bool]]      = mapped_column()
+    notifications_enabled: Mapped[Optional[bool]]   = mapped_column()
+    mqid: Mapped[Optional[bool]]                 = mapped_column()
+
+    terminal_version: Mapped[Optional[str]] = mapped_column()
+    build: Mapped[Optional[str]]          = mapped_column()
+    release_date: Mapped[Optional[str]]   = mapped_column()
     
     def __init__(self, id: int = None, path: str = None, name: str = None):
         self.id = id
