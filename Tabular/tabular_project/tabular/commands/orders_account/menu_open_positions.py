@@ -42,7 +42,7 @@ def current_open_positions():
             newPositions.append(newOrder)
     
     removedPositions = list(set(openPositions) - set(existingOrders))
-    databaseService.updateOpenPositions(existingOrders)
+    databaseService.updateSpecificOpenPositions(existingOrders)
     databaseService.saveSpecificOpenPositions(newPositions)
     databaseService.removeOpenPositions(removedPositions)
 

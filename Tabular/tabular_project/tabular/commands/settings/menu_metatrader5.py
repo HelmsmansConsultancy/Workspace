@@ -37,8 +37,8 @@ def append_mt5():
     """ Select a MetaTrader 5 installation"""
     metatraderPath = pick_file(start_dir=os.getcwd(), file_extension=".exe")
     click.echo(f"Selected MT5 path: {metatraderPath}")
-    if bool(metatraderPath) and metatraderPath.endswith(".exe") and len(databaseService.getMetatradersByPath(metatraderPath)) == 0:
-        mt5_to_connect = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath, name=Path(metatraderPath).parent.name))
+    if bool(metatraderPath) and metatraderPath.endswith(".exe") and len(databaseService.findMetatraderConfigByPath(metatraderPath)) == 0:
+        mt5_to_connect = databaseService.saveMetatraderConfig(MetatraderConfig(path=metatraderPath, name=Path(metatraderPath).parent.name))
         click.echo(f"MT5 installation added with ID: {mt5_to_connect.id} and path: {mt5_to_connect.path}")
         updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
         databaseService.updateMetatraderConfig(updated_mt5_config)

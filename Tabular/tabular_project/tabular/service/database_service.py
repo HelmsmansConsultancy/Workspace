@@ -67,18 +67,25 @@ class DatabaseService():
                 session.add(symbols)
             session.commit()
 
-    def saveSpecificOpenPositions(self, positions: list[SpecificOpenPosition]) -> None:
+    def saveMetatraderConfig(self, metatraderConfig: MetatraderConfig) -> MetatraderConfig:
         with Session(self.engine) as session:
-            for position in positions:
-                session.add(position)
+            session.add(metatraderConfig)
             session.commit()
-    
+            session.refresh(metatraderConfig)
+            return metatraderConfig
+        
     def saveGenericPendingOrder(self, genericOrder: GenericPendingOrder) -> int:
         with Session(self.engine) as session:
             session.add(genericOrder)
             session.commit()
             return genericOrder.id
 
+    def saveSpecificOpenPositions(self, positions: list[SpecificOpenPosition]) -> None:
+        with Session(self.engine) as session:
+            for position in positions:
+                session.add(position)
+            session.commit()
+    
     def saveSpecificPendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
@@ -115,11 +122,18 @@ class DatabaseService():
                 session.merge(symbol)
             session.commit()
 
-    def updateSpecificPendingOrder(self, pendingOrders: list[SpecificPendingOrder] ) -> None:
+    def updateSpecificPendingOrders(self, pendingOrders: list[SpecificPendingOrder] ) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
                 # self.console.print(f"updating: {order}")
                 session.merge(order)
+            session.commit()
+    
+    def updateSpecificOpenPositions(self, openPositions: list[SpecificOpenPosition] ) -> None:
+        with Session(self.engine) as session:
+            for position in openPositions:
+                # self.console.print(f"updating: {position}")
+                session.merge(position)
             session.commit()
     
 ########################################
@@ -265,6 +279,20 @@ class DatabaseService():
             return accountMetatraderConnections
 
 
+
+########################################
+#
+#   FINDBY
+#
+#########################################
+
+    def findMetatraderConfigByPath(self, metatraderPath: str) -> list[MetatraderConfig]:
+        with Session(self.engine) as session:
+            metatraders = session.query(MetatraderConfig).filter(MetatraderConfig.path == metatraderPath).all()
+            return metatraders
+    
+
+
 ########################################
 #
 #   SPECIAL
@@ -312,19 +340,6 @@ class DatabaseService():
             connection: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.account_id==accountId, AccountMetatraderConnection.metatrader_id==metatraderId).first()
             return connection
 
-    def addMetatrader(self, metatraderConfig: MetatraderConfig) -> MetatraderConfig:
-        with Session(self.engine) as session:
-            session.add(metatraderConfig)
-            session.commit()
-            session.refresh(metatraderConfig)
-            return metatraderConfig
-        
-    def getMetatradersByPath(self, metatraderPath: str) -> list[MetatraderConfig]:
-        with Session(self.engine) as session:
-            metatraders = session.query(MetatraderConfig).filter(MetatraderConfig.path == metatraderPath).all()
-            return metatraders
-    
-
     def removePendingOrders(self, pendingOrders: list[SpecificPendingOrder]) -> None:
         with Session(self.engine) as session:
             for order in pendingOrders:
@@ -338,13 +353,6 @@ class DatabaseService():
             openPositions = session.query(SpecificOpenPosition).filter(SpecificOpenPosition.account_id == accountId).all()
             return openPositions
 
-    def updateOpenPositions(self, openPositions: list[SpecificOpenPosition] ) -> None:
-        with Session(self.engine) as session:
-            for position in openPositions:
-                # self.console.print(f"updating: {position}")
-                session.merge(position)
-            session.commit()
-    
 
     def getSymbolInformation(self, accountId: int) -> list[SpecificSymbolInfomation]:
         with Session(self.engine) as session:

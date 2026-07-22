@@ -56,7 +56,7 @@ def change_volume():
         orderToChange: GenericPendingOrder = genericOrders[choice - 1]
         volume = float(input("Volume to change to: ").strip())
         orderToChange.volume = volume
-        databaseService.updateSpecificPendingOrder([orderToChange])
+        databaseService.updateSpecificPendingOrders([orderToChange])
         click.echo(f"Order changed: {orderToChange}")
 
 @click.command()
@@ -154,7 +154,7 @@ def delete_pending_order():
     global databaseService
     global metatrader5Service
     connected_account: MetatraderConfig | None = SingletonService().get(S.CONNECTED_ACCOUNT)
-    pendingOrders: list[GenericPendingOrder] = databaseService.getGenericPendingOrders()
+    pendingOrders: list[GenericPendingOrder] = databaseService.listGenericPendingOrder()
     if len(pendingOrders) == 0:
         click.echo("No Pending Orders found.")
         return

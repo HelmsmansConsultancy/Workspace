@@ -72,7 +72,7 @@ def current_pending_orders():
             newOrders.append(newOrder)
     
     removedOrders = list(set(pendingOrders) - set(existingOrders))
-    databaseService.updateSpecificPendingOrder(existingOrders)
+    databaseService.updateSpecificPendingOrders(existingOrders)
     databaseService.saveSpecificPendingOrders(newOrders)
     databaseService.removePendingOrders(removedOrders)
     return ["", "", generic_pending_orders.callback.__name__.replace("_", "-")]
