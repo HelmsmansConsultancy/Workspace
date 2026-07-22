@@ -66,7 +66,7 @@ def current_pending_orders():
                 genericOrder.symbol = symbolInfomation.symbol
                 genericOrder.digits = symbolInfomation.digits
                 click.echo(f"Making GO {genericOrder}")
-                genericOrderId = databaseService.addGenericOrder(genericOrder)
+                genericOrderId = databaseService.saveGenericPendingOrder(genericOrder)
                 newOrder.generic_id = genericOrderId
 
             newOrders.append(newOrder)

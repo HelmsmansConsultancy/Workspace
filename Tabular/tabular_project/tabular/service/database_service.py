@@ -67,15 +67,17 @@ class DatabaseService():
                 session.add(symbols)
             session.commit()
 
-    def saveSpecificOpenPositions(self, positions: SpecificOpenPosition | list[SpecificOpenPosition]) -> None:
+    def saveSpecificOpenPositions(self, positions: list[SpecificOpenPosition]) -> None:
         with Session(self.engine) as session:
-            
-            if isinstance(positions, list):
-                for position in positions:
-                    session.add(position)
-            else:
-                session.add(positions)
+            for position in positions:
+                session.add(position)
             session.commit()
+    
+    def saveGenericPendingOrder(self, genericOrder: GenericPendingOrder) -> int:
+        with Session(self.engine) as session:
+            session.add(genericOrder)
+            session.commit()
+            return genericOrder.id
 
 ########################################
 #
@@ -93,13 +95,17 @@ class DatabaseService():
             session.merge(accountStatus)
             session.commit()
 
-    def updateSpecificSymbolInfomation(self, symbols: SpecificSymbolInfomation | list[SpecificSymbolInfomation]) -> None:
+    def updateMetatraderConfig(self, metatraderConfig: MetatraderConfig) -> None:
         with Session(self.engine) as session:
-            if isinstance(symbols, list):
-                for symbol in symbols:
-                    session.merge(symbol)
-            else:
-                session.merge(symbols)
+            existing_metatrader = session.query(MetatraderConfig).filter(MetatraderConfig.id == metatraderConfig.id).first()
+            if existing_metatrader:
+                session.merge(metatraderConfig)
+                session.commit()
+
+    def updateSpecificSymbolInfomations(self, symbols: list[SpecificSymbolInfomation]) -> None:
+        with Session(self.engine) as session:
+            for symbol in symbols:
+                session.merge(symbol)
             session.commit()
 
 ########################################
@@ -200,6 +206,11 @@ class DatabaseService():
             account_states = session.query(AccountStatus).all()
             return account_states
 
+    def listMetatraders(self) -> list[MetatraderConfig]:
+        with Session(self.engine) as session:
+            metatraders = session.query(MetatraderConfig).all()
+            return metatraders
+
 
 ########################################
 #
@@ -258,11 +269,6 @@ class DatabaseService():
             accountMetatraderConnections: AccountMetatraderConnection = session.query(AccountMetatraderConnection).filter(AccountMetatraderConnection.metatrader_id==metatrader_id).all()
             return accountMetatraderConnections
 
-    def listMetatraders(self) -> list[MetatraderConfig]:
-        with Session(self.engine) as session:
-            metatraders = session.query(MetatraderConfig).all()
-            return metatraders
-
     def addMetatrader(self, metatraderConfig: MetatraderConfig) -> MetatraderConfig:
         with Session(self.engine) as session:
             session.add(metatraderConfig)
@@ -270,13 +276,6 @@ class DatabaseService():
             session.refresh(metatraderConfig)
             return metatraderConfig
         
-    def updateMetatrader(self, metatraderConfig: MetatraderConfig) -> None:
-        with Session(self.engine) as session:
-            existing_metatrader = session.query(MetatraderConfig).filter(MetatraderConfig.id == metatraderConfig.id).first()
-            if existing_metatrader:
-                session.merge(metatraderConfig)
-                session.commit()
-
     def getMetatradersByPath(self, metatraderPath: str) -> list[MetatraderConfig]:
         with Session(self.engine) as session:
             metatraders = session.query(MetatraderConfig).filter(MetatraderConfig.path == metatraderPath).all()
@@ -339,7 +338,7 @@ class DatabaseService():
             genericOrders = session.query(GenericPendingOrder).all()
             return genericOrders
 
-    def addGenericOrder(self, genericOrder: GenericPendingOrder) -> int:
+    def saveGenericPendingOrder(self, genericOrder: GenericPendingOrder) -> int:
         with Session(self.engine) as session:
             session.add(genericOrder)
             session.commit()

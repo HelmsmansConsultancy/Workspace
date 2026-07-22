@@ -140,7 +140,7 @@ def create_pending_order():
     order.type_time = meta_trader_5.ORDER_TIME_GTC
     order.type_filling = meta_trader_5.ORDER_FILLING_FOK
 
-    genericOrderId = databaseService.addGenericOrder(order)
+    genericOrderId = databaseService.saveGenericPendingOrder(order)
     click.echo(f"Stored GenericPendingOrder with {genericOrderId}")
 
 

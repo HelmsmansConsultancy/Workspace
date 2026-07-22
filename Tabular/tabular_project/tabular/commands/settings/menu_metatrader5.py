@@ -41,7 +41,7 @@ def append_mt5():
         mt5_to_connect = databaseService.addMetatrader(MetatraderConfig(path=metatraderPath, name=Path(metatraderPath).parent.name))
         click.echo(f"MT5 installation added with ID: {mt5_to_connect.id} and path: {mt5_to_connect.path}")
         updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
-        databaseService.updateMetatrader(updated_mt5_config)
+        databaseService.updateMetatraderConfig(updated_mt5_config)
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
         click.echo(empty_string)
         return [accounts.callback.__name__.replace("_", "-")]
@@ -65,7 +65,7 @@ def connect_mt5():
     if 1 <= choice <= len(mt5_installations):
         mt5_to_connect: MetatraderConfig = mt5_installations[choice - 1]
         updated_mt5_config = metatrader5Service.connect_mt5(mt5_to_connect)
-        databaseService.updateMetatrader(updated_mt5_config)
+        databaseService.updateMetatraderConfig(updated_mt5_config)
         SingletonService().put(S.CONNECTED_MT5, mt5_to_connect)
         click.echo(empty_string)
     else:

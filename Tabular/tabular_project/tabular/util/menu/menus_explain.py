@@ -50,7 +50,7 @@ def explain_generic_orders(enabled = True):
     databaseService: DatabaseService = SingletonService().get(S.DATABASE_SERVICE)
 
     generic_orders = databaseService.countGenericOrders()
-    generic_positions = databaseService.countGenericPositions()
+    generic_positions = databaseService.countGenericOpenPositions()
     
     message = ""
     if generic_orders > 0:
